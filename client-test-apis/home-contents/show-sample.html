@@ -1,0 +1,98 @@
+<div class="container">
+  <h5>
+    Mẫu HTML gọi hàm API chuẩn có bố trí các icon
+    <button
+      type="button"
+      class="btn btn-sm btn-danger btn-current-limit"
+    ></button>
+  </h5>
+  <span id="api-name"></span>
+  <hr />
+  <form>
+    <div class="" id="dynamic-vars"></div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span
+          class="input-group-text input-params"
+          id="inputGroup-sizing-default"
+          >Tham số:</span
+        >
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        id="params"
+        aria-label="Default"
+        aria-describedby="inputGroup-sizing-default"
+      />
+    </div>
+    <div class="form-group">
+      <small class="form-text text-muted"
+        ><span class="" id="server-domain"></span
+      ></small>
+      <small id="sample-data" class="form-text text-muted"
+        >Vui lòng nhập các tham số theo yêu cầu của hàm API</small
+      >
+    </div>
+    <button type="button" class="btn btn-sm btn-primary btn-send-api">
+      SEND <i class="fa fa-send icon"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-rounded btn-info btn-file">
+      <input
+        class="file-upload file-overlay"
+        type="file"
+        multiple
+        accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                    .xls, .xlsx .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,
+                    .jpg, .jpeg, .png,
+                    image/*,.pdf,
+                    audio/*,
+                    video/*,
+                    .zip,
+                    .zar,
+                    .txt
+                    .json,
+                    .md,
+                    .svg
+                    .ico
+                    "
+      />
+      <i class="fa fa-folder-open icon"></i> Chọn các file để upload
+    </button>
+  </form>
+  <hr />
+</div>
+<div class="container-content">
+  <div class="" id="dynamic-table-model-detail" class="table-editable"></div>
+  <p class="col-12 text-left">
+    <button type="button" class="btn btn-sm btn-primary btn-read-prev">
+      <i class="fa fa-toggle-left icon"></i> Trang trước
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-success btn-current-page"
+    ></button>
+    <button type="button" class="btn btn-sm btn-warning btn-read-next">
+      Trang sau <i class="fa fa-toggle-right icon"></i>
+    </button>
+  </p>
+  <hr />
+  <p class="col-12 text-right">
+    <button
+      type="button"
+      class="btn btn-sm btn-rounded btn-info btn-table-import"
+    >
+    Import <i class="fa fa-cloud-upload icon"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-rounded btn-warning btn-table-export"
+    >
+    <i class="fa fa-cloud-download icon"></i> Export
+    </button>
+  </p>
+  <hr />
+  <div class="" id="show-message-status"></div>
+</div>
+
+<script></script>

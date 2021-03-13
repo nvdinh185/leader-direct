@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reset pass for user</title>
+    <link rel="icon" type="image/png" href="./icon/favicon.png" />
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="./css/bootstrap-4.3.1-min.css" />
+    <script src="./js/www.client.socket.login.js"></script>
+    <script src="./js/config/params_home.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/popper-1.14.3-min.js"></script>
+    <script src="./js/bootstrap-4.3.1-min.js"></script>
+    <script src="./js/get-query-param.js"></script>
+
+    <link rel="stylesheet" href="./css/loading-style.css" />
+    <link rel="stylesheet" href="./css/register-form.css" />
+    <link href="./css/toastr.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="./js/toastr.min.js"></script>
+    <script src="./js/main/1.www-notify-pretty.js"></script>
+    <script src="./js/main/2.http-get-post.js"></script>
+
+</head>
+
+<body>
+    <div id="login" class="main">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-12 col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="" method="post">
+                            <h3 class="text-center text-info">
+                                TẠO LẠI MẬT KHẨU MỚI
+                            </h3>
+                            <span id="error-pass" class="text-center text-info text-danger"></span>
+                            <div class="input-container">
+                                <i class="fa fa-user icon"></i>
+                                <input class="input-field" type="text" placeholder="Nhập tài khoản đã cấp"
+                                    name="username" id="username" />
+                            </div>
+
+                            <div class="input-container">
+                                <i class="fa fa-key icon"></i>
+                                <input class="input-field" type="text" placeholder="Nhập mã OTP nhận được" name="otp"
+                                    id="otp" />
+                            </div>
+
+                            <div class="input-container">
+                                <i class="fa fa-key icon"></i>
+                                <input class="input-field" type="password" placeholder="Nhập mật khẩu mới"
+                                    name="newPassword" id="newPassword" />
+                            </div>
+
+                            <div class="input-container">
+                                <i class="fa fa-key icon"></i>
+                                <input class="input-field" type="password" placeholder="Nhập lại mật khẩu mới"
+                                    name="renewPassword" id="renewPassword" />
+                            </div>
+
+                            <div class="form-group">
+                                <input type="button" id="send-reset" class="btn btn-info btn-md" value="Gủi đi" />
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $("#otp").val(new URL(window.location.href).searchParams.get("OTP"));
+
+        $("#send-reset").click(function () {
+           
+            let username = $("#username").val();
+            let otp = $("#otp").val();
+            let newPass = $("#newPassword").val();
+            let renewPass = $("#renewPassword").val();
+
+            if (!username) {
+                showToast(
+                    "warning",
+                    `Vui lòng nhập tài khoản đăng nhập của bạn`
+                );
+                return;
+            }
+
+            if (!otp || !newPass || !renewPass || newPass !== renewPass) {
+                showToast(
+                    "warning",
+                    "Bạn phải nhập đầy đủ thông tin và mật khẩu nhập lại phải đúng với mật khẩu trước đó"
+                );
+                return;
+            }
+
+            fakeLoading(5000, 100);
+            callAjaxPOSTApiAny(
+                "",
+                { username, OTP: otp, password: newPass },
+                `${API_PARAMS.getKey("SERVER_SOCKET", true) ||
+                API_PARAMS.SERVER_SOCKET
+                }${API_PARAMS.RESET_PASS}`
+            )
+                .then((result) => {
+
+                    $("#otp").val("");
+                    $("#newPassword").val("");
+                    $("#renewPassword").val("");
+
+                    showToast(
+                        "success",
+                        result.message +
+                        `Bạn đã reset mật khẩu thành công cho user ${username} của bạn Vui lòng lưu giữ mật khẩu của bạn, không để lộ cho bất kỳ ai để sử dụng trên hệ thống này`,
+                        null,
+                        5000
+                    );
+
+                    showHideLoading(false);
+
+                    setTimeout(() => {
+                        // bắt đầu chuyển sang trang chủ
+                        window.location.href = "/";
+                    }, 3000);
+
+                })
+                .catch((err) => {
+
+                    showToast(
+                        "error",
+                        err && err.responseJSON
+                            ? err.responseJSON.message
+                            : JSON.stringify(err),
+                        "toast-top-center",
+                        5000
+                    );
+                    showHideLoading(false);
+
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 3000);
+
+                });
+        });
+
+
+    </script>
+</body>
+
+</html>

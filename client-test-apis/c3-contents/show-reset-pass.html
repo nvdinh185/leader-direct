@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="./css/reset-pass.css" />
+
+<div id="reset-form" class="container">
+  <div class="main">
+    <form class="form">
+      <h2>Tạo lại mật khẩu mới</h2>
+      <label>Tài khoản đăng nhập :</label>
+      <input type="text" name="username" id="username" placeholder="Tên tài khoản đăng nhập của bạn" />
+      <label>Mã OTP :</label>
+      <input type="text" name="otp" id="otp" placeholder="Mã OTP nhận được từ email hoặc SMS" />
+      <label>Mật khẩu mới :</label>
+      <input type="password" name="newPassword" id="newPassword" placeholder="Tạo mật khẩu của bạn và ghi nhớ" />
+      <label>Nhập lại mật khẩu mới :</label>
+      <input type="password" name="renewPassword" id="renewPassword" placeholder="Nhập lại mật khẩu trên để nhớ" />
+      <span id="error-pass" style="color: red; display: none">Mật khẩu nhập lại phải trùng với mật khẩu</span>
+      <input type="button" name="send" id="send" value="send" />
+    </form>
+  </div>
+</div>
+<div id="msg-form" class="container" style="display: none">
+  <div class="main">
+    <h1 id="message">
+      Bạn đã reset mật khẩu thành công cho user của bạn Vui lòng lưu giữ mật
+      khẩu của bạn, không để lộ cho bất kỳ ai để sử dụng trên hệ thống này
+    </h1>
+  </div>
+</div>
+<script type="text/javascript">
+  // hàm test
+  function ajax(data) {
+    $("#error-pass").html(
+      "Mật khẩu nhập lại phải đúng với mật khẩu trước đó"
+    );
+    $("#error-pass").show();
+  }
+
+  // delay để kiểm tra kết quả
+  function debounce(fn, delay) {
+    return (args) => {
+      clearTimeout(fn.id);
+      fn.id = setTimeout(() => {
+        fn.call(this, args);
+      }, delay);
+    };
+  }
+
+  // lấy tham số trên đường dẫn link
+  $("#otp").val(new URL(window.location.href).searchParams.get("OTP"));
+
+  $("#send").click(function () {
+    let username = $("#username").val();
+    let otp = $("#otp").val();
+    let newPass = $("#newPassword").val();
+    let renewPass = $("#renewPassword").val();
+
+    if (!username) {
+      $("#error-pass").html("Bạn phải nhập tài khoản đăng nhập của bạn");
+      $("#error-pass").show();
+      return;
+    }
+
+    if (!otp || !newPass || !renewPass || newPass !== renewPass) {
+      $("#error-pass").html(
+        "Bạn phải nhập đầy đủ thông tin và mật khẩu nhập lại phải đúng với mật khẩu trước đó"
+      );
+      $("#error-pass").show();
+      return;
+    }
+    $("#error-pass").hide();
+    // goi Ajax post len sever
+    $.ajax({
+      type: "POST",
+      url: `${API_PARAMS.getKey("SERVER_SOCKET", true) ||
+        API_PARAMS.SERVER_SOCKET
+        }${API_PARAMS.RESET_PASS}`,
+      dataType: "json",                 // what you expect the server to return
+      contentType: "application/json",  // what you are sending - để bỏ qua chuỗi json có nhiều hơn một dấu ? liên tiếp
+      data: JSON.stringify({ username, OTP: otp, password: newPass }),
+      success: (result) => {
+        $("#error-pass").hide();
+        $("#otp").val("");
+        $("#newPassword").val("");
+        $("#renewPassword").val("");
+        $("#reset-form").hide();
+        $("#message").html(
+          result.message || "Bạn đã reset mật khẩu thành công"
+        );
+        $("#msg-form").show();
+
+        // window.location.replace(
+        //   `${API_PARAMS.getServerUrl()}?message=${result.message ||
+        //   "Bạn đã reset mật khẩu thành công vui lòng đăng nhập nhé"
+        //   }`
+        // );
+      },
+      error: (err) => {
+        $("#otp").val("");
+        $("#newPassword").val("");
+        $("#renewPassword").val("");
+        $("#reset-form").hide();
+        $("#message").html(err.responseJSON.message || "Lỗi reset pass");
+        $("#msg-form").show();
+
+      }
+    });
+  });
+
+  $("#renewPassword").keyup(function () {
+    let newPass = $("#newPassword").val();
+    let renewPass = $(this).val();
+    // sử dụng debounce để kiểm tra, sau 1 giây mà không có gõ thì mới gọi hàm
+    // debounce(ajax, 1000)($(this).val());
+    if (newPass !== renewPass) {
+      $("#error-pass").html(
+        "Mật khẩu nhập lại phải đúng với mật khẩu trước đó"
+      );
+      $("#error-pass").show();
+    } else {
+      $("#error-pass").hide();
+    }
+  });
+</script>

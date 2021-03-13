@@ -1,0 +1,1275 @@
+<div class="container">
+  <h5>
+    <!-- <button type="button" class="btn btn-sm btn-primary btn-go-back">Back</button>  -->
+    UPLOAD FILES (BIG)
+    <button
+      type="button"
+      class="btn btn-sm btn-danger btn-current-limit"
+    ></button>
+  </h5>
+  <span id="api-name"></span>
+  <hr />
+  <form>
+    <div class="" id="dynamic-vars"></div>
+    <!-- <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text input-params" id="inputGroup-sizing-default">Tham số:</span>
+      </div>
+      <input type="text" class="form-control" id="params" aria-label="Default"
+        aria-describedby="inputGroup-sizing-default">
+    </div> -->
+    <div class="form-group">
+      <small class="form-text text-muted"
+        ><span class="" id="server-domain"></span
+      ></small>
+      <!-- <small id="sample-data" class="form-text text-muted">Vui lòng nhập các tham số theo yêu cầu của hàm API</small> -->
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="check-is-private">Tùy chọn</label>
+      </div>
+      <select class="custom-select" id="check-is-private">
+        <option value="" selected>Loại sở hữu (Cộng đồng)</option>
+        <option value="">Cộng đồng</option>
+        <option value="1">Sở hữu riêng (không chia sẻ)</option>
+      </select>
+    </div>
+    <!-- <br /> -->
+    <div>
+      <button type="button" class="btn btn-sm btn-rounded btn-info btn-file">
+        <input
+          class="file-upload file-overlay"
+          type="file"
+          multiple
+          accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                  .xls, .xlsx .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,
+                  .jpg, .jpeg, .png,
+                  image/*,.pdf,
+                  audio/*,
+                  video/*,
+                  .zip,
+                  .zar,
+                  .txt
+                  .json,
+                  .md,
+                  .svg
+                  .ico
+                  "
+        />
+        Chọn các file để upload
+      </button>
+    </div>
+    <br />
+  </form>
+  <hr />
+</div>
+<div class="container-content">
+  <div id="dynamic-table-model-detail" class="table-editable text-center"></div>
+  <p class="col-12 text-left">
+    <button type="button" class="btn btn-sm btn-primary btn-read-prev">
+      <i class="fa fa-toggle-left icon"></i> Trang trước
+    </button>
+    <button type="button" class="btn btn-sm btn-success btn-current-page"></button>
+    <button type="button" class="btn btn-sm btn-warning btn-read-next">
+      Trang sau <i class="fa fa-toggle-right icon"></i>
+    </button>
+  </p>
+  <hr />
+  <p class="col-12 text-right">
+    <button
+      type="button"
+      class="btn btn-sm btn-rounded btn-info btn-table-import"
+    >
+      <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+    </button>
+  </p>
+  <hr />
+  <div class="" id="show-message-status"></div>
+</div>
+
+<script>
+  function showDomainLink(method, apiLink) {
+    $("#server-domain").text(
+      `${method ? `${method} ` : ``}${
+        API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+      }/media${apiLink ? `${apiLink}` : ``}`
+    );
+  }
+
+  // bắt đầu chương trình
+  initTableCommand();
+
+  // START - Bắt đầu thực hiện khai báo và chạy chương trình của trang này ở đây
+  function initTableCommand() {
+    $(".btn-table-import").hide();
+    $(".btn-table-export").hide();
+
+    // KIỂM TRA CÁC DỮ LIỆU ĐẦU VÀO HỢP LỆ
+
+    let api, modelParams;
+    try {
+      api = JSON.parse(API_PARAMS.getKey("api"));
+      modelParams = JSON.parse(API_PARAMS.getKey("model-params"));
+    } catch {}
+
+    // nếu không có token hoặc hàm api để test thì trở về list-apis
+    if (!api || !HOME_PARAMS.token) {
+      showToast(
+        "warning",
+        "Bạn phải đăng nhập trước khi sử dụng chức năng này",
+        "toast-top-center",
+        2000
+      );
+
+      setTimeout(() => {
+        // bắt đầu chuyển sang trang chủ
+        window.location.href = "index.html";
+      }, 1000);
+      return;
+    }
+
+    $("#api-name").html(
+      `<strong>${api.name}</strong>${
+        api.description ? `<br>${api.description}` : ""
+      }`
+    );
+
+    $("#sample-data").html(`${api.form_data || api.sample_data || ""}`);
+
+    let apiPath = `${api.api_router}${api.api_function}`;
+
+    // Hiển thị đường dẫn đầy đủ để copy cho dự án
+    showDomainLink(api.method, apiPath);
+
+    // split dấu / để lấy từng đường dẫn
+    let apiPathArray = apiPath.split("/");
+    // kiểm tra mỗi đường dẫn có dấu : thì trở thành biến để yêu cầu nhập liệu
+    let inputVars = apiPathArray.filter((x) => x.indexOf(":") === 0);
+    // tạo các ô nhập liệu cho inputVars
+    addVarInput(inputVars);
+
+    // ------- INIT PARAMS INPUT --------------//
+    // gán các giá trị ban đầu cho tham số lấy được truyền sang
+    if (modelParams.params) $("#params").val(modelParams.params); // giá trị mặt định cho tham số params
+    // gán các giá trị của biến động mô hình :model_name
+    // console.log("***", inputVars, modelParams.model_name);
+    if (inputVars.length) {
+      for (let oneVar of inputVars) {
+        let varName = oneVar.replace(/:/g, "var-");
+        if (varName === "var-model_name" && modelParams.model_name) {
+          $(`#${varName}`).val(modelParams.model_name);
+        }
+        if (varName === "var-table_name" && modelParams.table_name) {
+          $(`#${varName}`).val(modelParams.table_name);
+        }
+      }
+    }
+
+    HOME_PARAMS.tableConfig.headerFields = {
+      name: {
+        data_type: "STRING",
+        editable: 1, // cho phép soạn thảo ở cột này
+      },
+      type: {
+        data_type: "STRING",
+      },
+      size: {
+        data_type: "INTEGER",
+      },
+      date: {
+        data_type: "STRING",
+      },
+      time: {
+        data_type: "INTEGER",
+      },
+      path: {
+        data_type: "STRING",
+      },
+      file_id: {
+        data_type: "STRING",
+      },
+    };
+
+    // ------- END PARAMS INPUT --------------//
+
+    // sau đó thay thế theo mảng để đẩy lên
+
+    $(".btn-send-api").text(
+      `${api.method} ${api.base_directory || ""}${apiPath}`
+    );
+
+    $(".input-params").text(`Tham số ${api.method}:`);
+
+    if (api.method === "GET") {
+      $("#params").attr("placeholder", "ví dụ: page=1&limit=100");
+
+      $(".btn-send-api").click(function () {
+        let params = $("#params").val();
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      });
+    }
+
+    if (api.method === "POST") {
+      $("#params").attr("placeholder", `ví dụ: {"user":"xyz","status":1}`);
+
+      $(".btn-send-api").click(function () {
+        let params;
+        try {
+          // console.log("INPUT",$("#params").val());
+          params = JSON.parse($("#params").val());
+        } catch {}
+        params = params || {};
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      });
+    }
+
+    $(".btn-current-page").hide();
+    $(".btn-current-limit").hide();
+
+    $(".btn-read-prev").hide();
+    $(".btn-read-next").hide();
+
+    $(".btn-read-prev").click(function () {
+      if (api.method === "GET") {
+        let params = $("#params").val();
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      }
+
+      if (api.method === "POST") {
+        let params;
+        try {
+          params = JSON.parse($("#params").val());
+        } catch {}
+        params = params || {};
+
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      }
+    });
+    $(".btn-read-next").click(function () {
+      if (api.method === "GET") {
+        let params = $("#params").val();
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      }
+
+      if (api.method === "POST") {
+        let params;
+        try {
+          params = JSON.parse($("#params").val());
+        } catch {}
+        params = params || {};
+        let { headerLink, fullApiPath } = getFullApiPath(apiPath, inputVars);
+      }
+    });
+
+    // sự kiện upload file đọc ra hiển thị lên màn hình
+    $(".file-upload").on("change", function (evt) {
+      if (!evt.target || !evt.target.files || !evt.target.files.length) return;
+      // lấy đúng 1 file đưa lên thôi
+      let fileUpload = evt.target.files[0];
+      HOME_PARAMS.sheetDatas.splice(0, HOME_PARAMS.sheetDatas.length);
+      let idx = 0;
+      for (let file of evt.target.files) {
+        let jsonData = {
+          name: file.name,
+          time: file.lastModified,
+          date: file.lastModifiedDate,
+          size: file.size,
+          type: file.type,
+          file_id: md5(`${idx++}${Date.now()}${file.name}`), // trường nhận diện duy nhất của file brow lên nhé
+          file,
+        };
+        HOME_PARAMS.sheetDatas.push(jsonData);
+      }
+
+      // trả về dữ liệu hiển thị trong bảng trước khi import nhé
+      // console.log(HOME_PARAMS.sheetDatas);
+      // định nghĩa các nút lệnh riêng của chức năng excel này
+      let cmdButtons = `
+            <button type="button" class="btn btn-sm btn-rounded btn-info btn-read-one" onclick="doShowModelTable(this,'SAVE');">
+              <i class="fa fa-download icon"></i> Save
+            </button>
+            <button type="button" class="btn btn-sm btn-rounded btn-warning btn-read-one" onclick="doShowModelTable(this,'REMOVE');">
+              <i class="fa fa-trash icon"></i> Remove
+            </button>`;
+      // hiển thị kết quả dữ liệu trong bảng -- theo cấu trúc import
+      showResults(
+        HOME_PARAMS.sheetDatas,
+        HOME_PARAMS.tableConfig.headerFields,
+        cmdButtons
+      );
+    });
+
+    // sự kiện IMPORT dữ liệu trong table lên máy chủ
+    $(".btn-table-import").on("click", () => {
+      // const { headers, datas } = readDataFromTable("dynamic-table-model-detail");
+      if (
+        !HOME_PARAMS.sheetDatas ||
+        !Array.isArray(HOME_PARAMS.sheetDatas) ||
+        !HOME_PARAMS.sheetDatas.length
+      ) {
+        showToast(
+          "warning",
+          `Không có file để truyền. Vui lòng chọn lại file`,
+          "toast-top-right",
+          5000,
+          true
+        );
+        return;
+      }
+
+      // sửa soạn lệnh upload file
+      let is_private = $("#check-is-private").find(":selected").val();
+      let idx = 0;
+      let curSize = 0;
+      HOME_PARAMS.currentProgress = 0;
+      HOME_PARAMS.totalProgress =
+        HOME_PARAMS.sheetDatas
+          .map((x) => x.size)
+          .reduce((total, num) => total + num) || 0;
+      showToast(
+        "info",
+        `Bắt đầu truyền chunk ${
+          HOME_PARAMS.sheetDatas.length
+        } files với tổng dung lượng là ${
+          HOME_PARAMS.totalProgress
+        } bytes tương đương ${(HOME_PARAMS.totalProgress / 1024 / 1024).toFixed(
+          2
+        )} Mb`,
+        "toast-top-right",
+        5000,
+        true
+      );
+      showHideLoading(
+        true,
+        HOME_PARAMS.totalProgress,
+        HOME_PARAMS.currentProgress
+      );
+      let sendAllFileSequence = new Promise(async (rs) => {
+        // chỉ cho upload lần lượt từng file 1, xong file này mới upload file khác nhé
+        let result = {
+          count_success: 0,
+          count_fail: 0,
+          rejects: [],
+        };
+
+        let file = HOME_PARAMS.sheetDatas[idx].file;
+        while (idx < HOME_PARAMS.sheetDatas.length && file) {
+          let okAll = await callAjaxPOSTFormDataChunk(
+            `/files/post-chunk`,
+            file,
+            idx,
+            curSize,
+            {
+              is_private,
+            }
+          ).catch((err) => {
+            // console.log(`LỖI Một file này #${idx}:`, err);
+            // vẫn cho đi tiếp nhé
+            result.count_fail++;
+            result.rejects.push({
+              ...(err.responseJSON || {}),
+              filename: file.name,
+            });
+            showToast(
+              "error",
+              `File: ${file.name} máy chủ không chấp nhận vì: ${
+                (err.responseJSON || {}).message || "Lỗi không xác định"
+              }`,
+              "toast-top-right",
+              10000,
+              true
+            );
+          });
+          curSize += file.size; // con trỏ đã xong tiếp file tiếp theo
+          if (okAll) {
+            // console.log("KQ ", okAll);
+            result.count_success++;
+            showToast(
+              "success",
+              `${result.count_success}. Truyền thành công file: ${
+                file.name
+              } ${""}`,
+              "toast-top-right",
+              10000,
+              true
+            );
+          }
+          file = HOME_PARAMS.sheetDatas[++idx]
+            ? HOME_PARAMS.sheetDatas[idx].file
+            : null;
+        }
+        rs({
+          ...result,
+          curSize,
+        });
+      });
+
+      sendAllFileSequence.then((result) => {
+        // console.log('result: ', result);
+        showHideLoading(false);
+        showToast(
+          `${
+            result.count_fail
+              ? !result.count_success
+                ? "error"
+                : "warning"
+              : "success"
+          }`,
+          `Đã truyền xong ${
+            HOME_PARAMS.sheetDatas.length
+          } files,<br> - THÀNH CÔNG:${
+            result.count_success
+          } files,<br> - THẤT BẠI: ${
+            result.count_fail
+          } files.<br> - Tổng dung lượng là ${
+            HOME_PARAMS.totalProgress
+          } bytes tương đương ${(
+            HOME_PARAMS.totalProgress /
+            1024 /
+            1024
+          ).toFixed(2)} Mb`,
+          "toast-top-center",
+          20000,
+          true
+        );
+      });
+    });
+
+    // sự kiện xuất dữ liệu ra file excel lưu trên máy client toàn bộ
+    $(".btn-table-export").on("click", () => {
+      const { headers, datas } = readDataFromTable(
+        "dynamic-table-model-detail"
+      );
+      // có 2 tùy chọn
+      // console.log("Dữ liệu đọc được ở Table là:", headers, datas);
+
+      // console.log("Dữ liệu lưu trong bộ nhớ trước khi hiển thị lên bảng là:",HOME_PARAMS.tableConfig, HOME_PARAMS.sheetDatas);
+    });
+  }
+
+  // thêm các ô nhập liệu để hoàn thành đường dẫn check api
+  function addVarInput(inputVars) {
+    let htmlVars = ``;
+    for (let oneVar of inputVars) {
+      let id = oneVar.replace(/:/g, "var-");
+      htmlVars += `
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text input-var">${oneVar}:</span>
+              </div>
+                <input type="text" class="form-control" id="${id}" type="text" class="form-control" name="${id}"
+                    placeholder="Tham số bắt buộc (*)">
+            </div>
+            `;
+    }
+    $("#dynamic-vars").html(htmlVars);
+  }
+
+  // chuyển đường dẫn kiểu /:param/:param2 thành giá trị nhập vào ở ô có tên là #${"var-..."}
+  function getFullApiPath(apiPath, inputVars) {
+    // đọc lấy model_name/table_name cấu trúc để tổ chức HEADER đầy đủ trước,
+    // lấy luôn mô hình giả lập để validate dữ liệu nhập liệu của trên trang luôn
+    let headerLink = `/models/get-detail-model/:model_name?page=1&limit=1000&wheres={table_name::table_name}&sorts=order_1:1`;
+    let fullApiPath = apiPath;
+
+    if (inputVars.length) {
+      let keyValues = {};
+      for (let oneVar of inputVars) {
+        keyValues[oneVar] = $(`#${oneVar.replace(/:/g, "var-")}`).val();
+        if (
+          keyValues[oneVar] === undefined ||
+          keyValues[oneVar] === null ||
+          keyValues[oneVar] === ""
+        ) {
+          $("#dynamic-table-model-detail").html(
+            `<span class="text-danger">Yêu cầu nhập tham số bắt buộc (*) đầy đủ trước khi gửi</span>`
+          );
+          return;
+        }
+      }
+      // thay thế đường dẫn thực
+      for (let key in keyValues) {
+        fullApiPath = fullApiPath.replace(key, keyValues[key]);
+        headerLink = headerLink.replace(key, keyValues[key]);
+      }
+    }
+    return {
+      headerLink,
+      fullApiPath,
+    };
+  }
+
+  function arrayObject2HtmlTable(rows, HEADER = {}, cmdButtons) {
+    if (!rows || !Array.isArray(rows)) {
+      return `<table cellspacing="0" id="table-datatables" class="table table-bordered table-responsive-xl table-striped"></table>`;
+    }
+    let html =
+      '<table cellspacing="0" id="table-datatables" class="table table-bordered table-responsive-xl table-striped">';
+
+    // đọc trước cấu trúc csdl header của bảng để đảm bảo liệt kê hết cột theo yêu cầu để insert dữ liệu???...
+    let header = {
+      COMMANDS: 1,
+      ...HEADER,
+    }; // bổ sung thêm một cột tập lệnh, mà khi thực thi sẽ bỏ qua trường này
+
+    for (let row of rows) {
+      let r = {};
+      for (let key in row) {
+        if (key !== "_id") r[key] = header[key] || 1;
+      }
+      header = { ...header, ...r };
+    }
+    html += "<thead><tr>";
+    for (let key in header) {
+      html += "<th>" + key + "</th>";
+    }
+    html += "</tr></thead>";
+    html += "<tbody>";
+    let rowId = 0;
+    for (let row of rows) {
+      html += "<tr>";
+      let i = 0;
+      for (let key in header) {
+        // console.log("**>", key, header[key]);
+        let isEdit =
+          header[key] && typeof header[key] === "object" && header[key].editable
+            ? true
+            : false;
+        i++;
+        html +=
+          (i === 1
+            ? '<td class="text-nowrap"><span class="co-name">'
+            : `<td class="pt-3-half${
+                isEdit ? " bg-warning" : ""
+              }" contenteditable="${isEdit}">`) +
+          (i === 1
+            ? (cmdButtons ? `${rowId + 1}.${cmdButtons}` : ``) ||
+              `<button type="button" class="btn btn-sm btn-rounded btn-primary btn-read-one" onclick="doShowModelTable(this,'C',${rowId});">
+                  <span class="glyphicon glyphicon-plus"></span> C
+                </button>
+                <button type="button" class="btn btn-sm btn-rounded btn-success btn-read-one" onclick="doShowModelTable(this,'U',${rowId});">
+                  <span class="glyphicon glyphicon-ok"></span> U
+                </button>
+                <button type="button" class="btn btn-sm btn-rounded btn-danger btn-read-one" onclick="doShowModelTable(this,'D',${rowId});">
+                  <span class="glyphicon glyphicon-trash"></span> D
+                </button>
+                `
+            : "") +
+          (row[key] === undefined ||
+          row[key] === null ||
+          typeof row[key] === "object"
+            ? ""
+            : row[key]) +
+          (i === 1 ? "</span></td>" : "</td>");
+      }
+      html += "</tr>";
+      rowId++; //dòng thứ n+1 tương ứng với dữ liệu trong mảng HOME_PARAMS.sheetDatas thứ i để lấy mã số khi ở chế độ mobile
+    }
+    html += "</tbody>";
+    html += "</table>";
+
+    if (rowId) {
+      $(".btn-table-export").show();
+      $(".btn-table-import").show();
+    } else {
+      $(".btn-table-export").hide();
+      $(".btn-table-import").hide();
+    }
+
+    return html;
+  }
+
+  // gọi hàm này để hiển thị lỗi hoặc trạng thái insert Update, delete
+  function showError(err, showId) {
+    $(`#${showId ? showId : `dynamic-table-model-detail`}`).html(
+      `<span class="text-danger">${
+        err && err.responseJSON && err.responseJSON.message
+          ? err.responseJSON.message
+          : err
+          ? err
+          : "Lỗi không xác định"
+      }</span>`
+    );
+    $(".btn-table-export").hide();
+  }
+
+  // hiển thị kết quả ra dưới bảng
+  function showResults(result, HEADER, cmdButtons) {
+    // console.log(result);
+
+    if (result && result.page && result.limit && result.data) {
+      HOME_PARAMS.sheetDatas = result.data;
+
+      $("#dynamic-table-model-detail").html(
+        arrayObject2HtmlTable(HOME_PARAMS.sheetDatas, HEADER, cmdButtons)
+      );
+
+      if (HOME_PARAMS.sheetDatas.length) {
+        $("#table-datatables").DataTable({
+          scrollX: "100%",
+          scrollY: "250px",
+          drawCallback: function (settings) {
+            $("#table-datatables").reflowTable("update");
+          },
+          ...HOME_PARAMS.DATA_TABLE_PAGING,
+        });
+      }
+
+      // gán số trang hiện tại đang xem là trang lấy được
+      currentPage = result.page;
+
+      $(".btn-current-page").text(result.page);
+      $(".btn-current-limit").text(result.limit);
+
+      $(".btn-current-page").show();
+      $(".btn-current-limit").show();
+
+      if (result.page > 1) {
+        $(".btn-read-prev").show();
+      } else {
+        $(".btn-read-prev").hide();
+      }
+      if (result.next_page > result.page) {
+        $(".btn-read-next").show();
+      } else {
+        $(".btn-read-next").hide();
+      }
+
+      // chỉ cho phép hiển thị ở chế độ desktop để edit cell dễ dàng
+      $("#table-datatables")
+        // .addClass('reflow-table-customized-style')
+        .reflowTable({
+          autoWidth: false,
+        })
+        .mobileMode(false);
+    } else if (result && Array.isArray(result)) {
+      HOME_PARAMS.sheetDatas = result;
+
+      $("#dynamic-table-model-detail").html(
+        arrayObject2HtmlTable(HOME_PARAMS.sheetDatas, HEADER, cmdButtons)
+      );
+
+      if (HOME_PARAMS.sheetDatas.length) {
+        $("#table-datatables").DataTable({
+          scrollX: "100%",
+          scrollY: "250px",
+          drawCallback: function (settings) {
+            $("#table-datatables").reflowTable("update");
+          },
+          ...HOME_PARAMS.DATA_TABLE_PAGING,
+        });
+      }
+
+      $(".btn-current-page").text(1);
+      $(".btn-current-limit").text(HOME_PARAMS.sheetDatas.length);
+      $(".btn-current-page").show();
+      $(".btn-current-limit").show();
+
+      // chỉ cho phép hiển thị ở chế độ desktop để edit cell dễ dàng
+      $("#table-datatables")
+        // .addClass('reflow-table-customized-style')
+        .reflowTable({
+          autoWidth: false,
+        })
+        .mobileMode(false);
+    } else if (result && typeof result === "object") {
+      // chuyển đổi các giá trị trong kết quả ra text nếu là đối tượng để hiển thị lên web
+      //đây là kiểu object, nên lấy các key làm header, các value là giá trị và hiển thị kiểu mobile
+      let jsonData = {};
+      for (let key in result) {
+        jsonData[key] =
+          result[key] && typeof result[key] === "object"
+            ? JSON.stringify(result[key])
+            : result[key];
+      }
+      HOME_PARAMS.sheetDatas = [jsonData];
+      $("#dynamic-table-model-detail").html(
+        arrayObject2HtmlTable(HOME_PARAMS.sheetDatas, HEADER, cmdButtons)
+      );
+
+      $(".btn-current-page").text(1);
+      $(".btn-current-limit").text(HOME_PARAMS.sheetDatas.length);
+      $(".btn-current-page").show();
+      $(".btn-current-limit").show();
+
+      // Desktop Mode Only
+      $("#table-datatables")
+        // .addClass('reflow-table-customized-style')
+        .reflowTable({
+          autoWidth: false,
+        })
+        .mobileMode(false);
+    }
+  }
+
+  // hàm lấy cấu trúc của một bảng bằng lệnh ajax get theo link tạo sẵn phiên trước
+  function getHEADERTableConfig(headerLink) {
+    return new Promise((rs, rj) => {
+      let url = `${
+        API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+      }/media${headerLink}`;
+      // console.log("URL", url);
+      // $("body").addClass("loading");
+      $.ajax({
+        type: "GET",
+        headers: { Authorization: `Bearer ${HOME_PARAMS.token}` },
+        url,
+        dataType: "json", // what you expect the server to return
+        success: (result) => {
+          // $("body").removeClass("loading");
+          let headerFields = {};
+          let uniqueList = []; // chứa các liệt kê mệnh đề where ["username","table_name,field_name"] ==> wheres=["username"] or wheres=["table_name,field_name"]
+          let autoIncrementList = [];
+
+          if (result && result.data && Array.isArray(result.data)) {
+            // console.log("All_HEADER", result.data); // in xem dữ liệu sinh ra như nào???
+            for (let row of result.data) {
+              if (
+                row["field_name"] &&
+                row["orm_data_type"] &&
+                row["field_name"].replace(/\s/g, "") &&
+                row["orm_data_type"].replace(/\s/g, "")
+              ) {
+                headerFields[row["field_name"].replace(/\s/g, "")] = {
+                  description:
+                    row["description"] && row["description"].replace(/^\s/g, "")
+                      ? row["description"].replace(/^\s/g, "")
+                      : undefined, // đưa vào toolTip trên header cho biết ý nghĩa của trường này là gì
+                  data_type: row["orm_data_type"].replace(/\s/g, ""), // kiểu dữ liệu đưa toolTip và validate khi nhập liệu trước khi lưu
+                  default_value:
+                    row["orm_default_value"] &&
+                    row["orm_default_value"].replace(/^\s/g, "")
+                      ? row["orm_default_value"].replace(/^\s/g, "")
+                      : undefined, // giá trị mặt định gán vào
+                  length:
+                    row["orm_length"] && row["orm_length"]
+                      ? parseInt(row["orm_length"])
+                      : undefined, // độ dài trường nhập liệu tối đa
+                }; // thiết lập một tên trường nhận được và kiểu dữ liệu của nó
+
+                // kiểm tra lấy ra các nhóm unique được thiết kế - xóa bỏ tất cả các ký tự trống nếu có trong trường này
+                if (parseInt(row["orm_is_unique"]) === 1) {
+                  uniqueList.push(row["field_name"].replace(/\s/g, ""));
+                }
+                if (
+                  row["orm_unique_multi"] &&
+                  row["orm_unique_multi"].replace(/\s/g, "")
+                ) {
+                  uniqueList.push(row["orm_unique_multi"].replace(/\s/g, ""));
+                }
+                // lấy các trường dữ liệu tự sinh để không phải nhập liệu - liệt kê để trống
+                if (parseInt(row["orm_auto_increment"])) {
+                  autoIncrementList.push(row["field_name"].replace(/\s/g, ""));
+                }
+              }
+            }
+            // console.log("uniqueList", uniqueList); // in xem dữ liệu sinh ra như nào???
+          }
+
+          // chuyển đổi toàn bộ các giá trị của header sang = 1 để lọc theo trường fields
+          let fields = {};
+          Object.keys(headerFields).forEach((v) => (fields[v] = 1));
+          $("#sample-data").html(
+            `"fields": ${JSON.stringify(fields, null, 1)}`
+          );
+
+          rs({
+            headerFields,
+            uniqueList,
+            autoIncrementList,
+          });
+        },
+        error: (err) => {
+          showApiError(err);
+          $("body").removeClass("loading");
+          rj(err);
+        },
+      });
+    });
+  }
+
+  // gọi ajax lấy dữ liệu theo phương thức get
+  function callAjaxGETApi(apiPath, params, nextPage, HEADER) {
+    $(".btn-table-import").hide();
+    $(".btn-table-export").hide();
+
+    let newParams = params;
+    if (nextPage) {
+      // nếu có tham số, thì split với dấu & để lấy ra các nhóm biến,
+      // tìm biến có page= thì bỏ đi và thay bằng page=nextPage rồi join lại ra param gửi đi
+      let oldParams = (params ? params.split("&") : []).filter(
+        (x) => x.indexOf("page=") !== 0
+      );
+      oldParams.splice(0, 0, `page=${nextPage}`);
+      newParams = oldParams.join("&");
+    }
+
+    let url = `${
+      API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+    }/media${apiPath}${newParams ? "?" : ""}${newParams}`;
+    // console.log("URL", url);
+    // $("body").addClass("loading");
+
+    $.ajax({
+      type: "GET",
+      headers: { Authorization: `Bearer ${HOME_PARAMS.token}` },
+      url,
+      dataType: "json", // what you expect the server to return
+
+      success: (result) => {
+        showResults(result, HEADER);
+        // $("body").removeClass("loading");
+      },
+      error: (err) => {
+        showApiError(err);
+        // $("body").removeClass("loading");
+      },
+    });
+  }
+
+  /**
+   * upload load kiểu chunk
+   * linkPost: đường dẫn truyền file /post-chunk
+   * file: blob chứa đối tượng file
+   * idx: số thứ tự file trong danh sách
+   * curSize cỡ byte đã gửi thành công trước đó
+   * options: {name, is_private} các tham số tùy chọn như tên file sửa lại, is_private:1 khi lưu file cá nhân
+   * chunk_size là kích cỡ chunk mỗi lần gửi 1 gói tin (cỡ 1M) - hoặc nhỏ hơn - 10k - tầng suất gọi máy chủ tăng lên
+   */
+  function callAjaxPOSTFormDataChunk(
+    linkPost,
+    file,
+    idx,
+    curSize,
+    options,
+    chunk_size = 1024 * 1024
+  ) {
+    return new Promise((rs, rj) => {
+      let url = `${
+        API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+      }/media${linkPost}`;
+      
+      if (!file){
+        rj("No file to push")
+        return;
+      }
+      // console.log("file:...>", file);
+      // const chunk_size = 1024 * 1024; // 1mb
+      const fileId = md5(`${idx}${Date.now()}${file.name}`);
+      let chunkIndex = 0;
+      // bắt đầu gửi từng đoạn của file lên máy chủ
+      _uploadChunk(file, 0, chunk_size);
+
+      function _uploadChunk(file, offset, range) {
+        let formData = new FormData();
+        formData.append(`fileId`, fileId);
+        formData.append(`chunkIndex`, ++chunkIndex);
+        formData.append(`chunkSize`, chunk_size);
+        formData.append(`totalSize`, file.size);
+        // đổi tên file mới
+        formData.append(`fileName`, (options ? options.name : "") || file.name);
+        // thay đổi trạng thái cá nhân nếu cố tình chọn riêng thì mới truyền lên
+        if (options && options.is_private === "1") {
+          formData.append(`is_private`, 1);
+        }
+        formData.append(
+          `attr_file_${idx}`,
+          JSON.stringify({ ...file, file: undefined })
+        );
+
+        if (offset >= file.size) {
+          formData.append("eof", "true"); // nếu kết thúc thì gửi tín hiệu kết thúc file để đóng và ghi ra file
+          callAjaxPOSTFormData(linkPost, formData)
+            .then((ok) => {
+              HOME_PARAMS.currentProgress = curSize + ok.totalSize;
+              showHideLoading(
+                true,
+                HOME_PARAMS.totalProgress,
+                HOME_PARAMS.currentProgress
+              );
+              // console.log(`***>FINISH ${idx}`, ok, HOME_PARAMS.currentProgress, HOME_PARAMS.totalProgress);
+              rs(ok);
+            })
+            .catch((err) => {
+              // console.log(`***>END ERROR ${idx}:`, err);
+              rj(err);
+            });
+          return;
+        }
+        // nếu chưa hết thì gửi từng chunk lên
+        var chunk = file.slice(offset, offset + range);
+        // console.log("chunk #", chunkIndex);
+        formData.append(`file_${idx}`, chunk, `${file.name}`);
+        callAjaxPOSTFormData(linkPost, formData)
+          .then((ok) => {
+            HOME_PARAMS.currentProgress = curSize + ok.totalSize;
+            // console.log(`${idx}-#${chunkIndex}:`, ok, HOME_PARAMS.currentProgress, HOME_PARAMS.totalProgress);
+            showHideLoading(
+              true,
+              HOME_PARAMS.totalProgress,
+              HOME_PARAMS.currentProgress
+            );
+            _uploadChunk(file, offset + range, chunk_size);
+          })
+          .catch((err) => {
+            // console.log(`Lỗi gửi theo chunk ${idx}-#${chunkIndex}:`, err);
+            rj(err);
+          });
+      }
+    });
+  }
+
+  // post kiểu form-data
+  function callAjaxPOSTFormData(linkPost, formData) {
+    return new Promise((rs, rj) => {
+      let url = `${
+        API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+      }/media${linkPost}`;
+      // console.log("URL", url);
+      $.ajax({
+        type: "POST",
+        headers: { Authorization: `Bearer ${HOME_PARAMS.token}` },
+        url,
+        dataType: "json", // what you expect the server to return
+        // kieu truyen form
+        enctype: "multipart/form-data",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: (result) => {
+          rs(result);
+        },
+        error: (err) => {
+          rj(err);
+        },
+      });
+    });
+  }
+
+  // post lên dòng
+  function callAjaxPostRowCRUD(linkPost, jsonData) {
+    let apiPathFull = linkPost;
+    apiPathFull = apiPathFull.replace(
+      ":model_name",
+      $(`#${"var-model_name"}`).val()
+    );
+    apiPathFull = apiPathFull.replace(
+      ":table_name",
+      $(`#${"var-table_name"}`).val()
+    );
+    return new Promise((rs, rj) => {
+      let url = `${
+        API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+      }/media${apiPathFull}`;
+      // console.log("URL", url);
+      // $("body").addClass("loading");
+      $.ajax({
+        type: "POST",
+        headers: { Authorization: `Bearer ${HOME_PARAMS.token}` },
+        url,
+        dataType: "json", // what you expect the server to return
+        contentType: "application/json", // what you are sending - để bỏ qua chuỗi json có nhiều hơn một dấu ? liên tiếp
+        data: JSON.stringify(
+          jsonData,
+          (key, value) => {
+            // lượt bỏ ký tự trống phía trước - do td.text() trả về
+            if (typeof value === "string") return value.replace(/^\s/g, "");
+            return value;
+          },
+          2
+        ),
+        success: (result) => {
+          // $("body").removeClass("loading");
+          rs(result);
+        },
+        error: (err) => {
+          showApiError(err);
+          // $("body").removeClass("loading");
+          rj(err);
+        },
+      });
+    });
+  }
+
+  // gọi hàm lấy dữ liệu theo phương thức post
+  function callAjaxPOSTApi(apiPath, params, nextPage, HEADER) {
+    $(".btn-table-import").hide();
+    $(".btn-table-export").hide();
+
+    let newParams = params;
+    if (nextPage) {
+      newParams = {
+        ...params,
+        page: nextPage,
+      };
+    }
+    // console.log("NEXT PAGE", newParams);
+
+    let url = `${
+      API_PARAMS.getKey("SERVER_DOMAIN", true) || API_PARAMS.SERVER_DOMAIN
+    }/media${apiPath}`;
+    // console.log("URL", url);
+    // $("body").addClass("loading");
+
+    $.ajax({
+      type: "POST",
+      headers: { Authorization: `Bearer ${HOME_PARAMS.token}` },
+      url,
+      dataType: "json", // what you expect the server to return
+      contentType: "application/json", // what you are sending - để bỏ qua chuỗi json có nhiều hơn một dấu ? liên tiếp
+      data: JSON.stringify(newParams),
+      success: (result) => {
+        showResults(result, HEADER);
+        // $("body").removeClass("loading");
+      },
+      error: (err) => {
+        showApiError(err);
+        // $("body").removeClass("loading");
+      },
+    });
+  }
+
+  // đọc <div id=tableId> toàn bộ dữ liệu con thẻ <tr> sau nó trả về mảng datas và lấy dòng đầu tiên làm headers
+  // { headers, datas }
+  function readDataFromTable(tableId) {
+    const $tableID = $(`#${tableId}`);
+    // tìm kiếm các dòng không ẩn trong table
+    const $rows = $tableID.find("tr:not(:hidden)");
+
+    // A few jQuery helpers for exporting only
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    const headers = [];
+    const datas = [];
+
+    // Get the headers (add special header logic here)
+    // lấy những cell không trống - làm khóa key
+    $($rows.shift())
+      .find("th:not(:empty)")
+      .each(function () {
+        // chuyển đổi khóa key đó thành chữ thường để đưa ra mảng json đúng
+        // yêu cầu khóa key ở cột đó phải khác nhau, nếu đặt trùng nhau sẽ lấy giá trị bị sai
+        headers.push($(this).text().toLowerCase());
+      });
+
+    // Turn all existing rows into a loopable array
+    let rowId = 0;
+    $rows.each(function () {
+      // với mỗi dòng, tìm kiếm tất cả các cột, (theo thứ tự)
+      const $td = $(this).find("td");
+      const jsonData = {};
+      // Use the headers from earlier to name our hash keys
+      headers.forEach((header, i) => {
+        // bỏ qua cột thứ nhất làm lệnh command
+        if (i) jsonData[header] = $td.eq(i).text();
+      });
+      // bỏ qua dòng đầu tiên làm header rồi
+      if (rowId++ > 0) {
+        // console.log("***>", rowId);
+        datas.push(jsonData);
+      }
+    });
+
+    return {
+      headers,
+      datas,
+    };
+  }
+
+  // thực hiện hiển thị các lệnh liên quan đến bảng của mô hình như CRUD theo nhiều phương thức
+  function doShowModelTable(thisObj, CRUD_COMAND, idxData) {
+    const $tableID = $("#dynamic-table-model-detail");
+    const $rows = $tableID.find("tr:not(:hidden)");
+    // A few jQuery helpers for exporting only
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    // lấy dòng đầu tiên
+    const headers = [];
+    // Get the headers (add special header logic here)
+    // lấy dòng đầu tiên làm khóa key - dòng headers
+    $($rows.shift())
+      .find("th:not(:empty)")
+      .each(function () {
+        // chuyển đổi khóa key đó thành chữ thường để đưa ra mảng json đúng
+        // yêu cầu khóa key ở cột đó phải khác nhau, nếu đặt trùng nhau sẽ lấy giá trị bị sai
+        headers.push($(this).text().toLowerCase());
+      });
+
+    // lấy chính dòng dữ liệu đang bấm nút trên đó
+    const $row = $(thisObj).parents("tr");
+    $row.each(function () {
+      // với mỗi dòng, tìm kiếm tất cả các cột, (theo thứ tự)
+      const $td = $(this).find("td");
+      let jsonData = {};
+      // Use the headers from earlier to name our hash keys
+      headers.forEach((header, i) => {
+        // duyệt tuần tự các cột hiện có theo thứ tự
+        // và lấy nội dung text lưu trữ bên trong table để gán cho json một cột của dòng
+        if (i) jsonData[header] = $td.eq(i).text(); // bỏ qua cột số 1
+      });
+
+      // so sánh dữ liệu soạn thảo và dữ liệu gốc trong chuỗi
+      let jsonOrg = HOME_PARAMS.sheetDatas[idxData];
+
+      // copy nội dung của dòng hiện tại sửa lại nhé
+      let $clone = $row.clone(true);
+      let idxFound = HOME_PARAMS.sheetDatas.findIndex(
+        (x) => x.file_id === jsonData.file_id
+      );
+
+      let is_private = $("#check-is-private").find(":selected").val();
+      // console.log("check-is-private:", is_private);
+      // nếu 2 jsonData, jsonOrg này có thay đổi dữ liệu mà lệnh update thì có hiệu lực
+      switch (CRUD_COMAND) {
+        case "C":
+          $clone.each(function () {
+            // với dòng tìm thấy duyệt tất cả các cột
+            let $tdClone = $(this).find("td");
+            // sử dụng header gốc để duyệt và đặt điều kiện chèn vào các nội dung khác
+            headers.forEach((header, i) => {
+              // thiết lập màu cho cell
+              $tdClone.eq(i).addClass("cell-insert-new");
+
+              if (header === "commands" || i === 0) {
+                $tdClone.eq(i)
+                  .html(`<button type="button" class="btn btn-sm btn-rounded btn-info btn-read-one" onclick="doShowModelTable(this,'SAVE');">
+                  <span class="glyphicon glyphicon-floppy-saved"></span>Save
+                </button>
+                <button type="button" class="btn btn-sm btn-rounded btn-warning btn-read-one" onclick="doShowModelTable(this,'REMOVE');">
+                  <span class="glyphicon glyphicon-minus"></span>Remove
+                </button>
+                `); // bỏ qua cột số 1
+              }
+            });
+          });
+
+          // chèn phía trước
+          $clone.insertAfter($(this).closest("tr"));
+
+          break;
+        case "R":
+          // Sinh ra mệnh đề where theo unique cột dữ liệu đã có
+
+          break;
+        case "U":
+          // Update dữ liệu này
+
+          break;
+        case "D":
+          break;
+        case "SAVE":
+          if (idxFound >= 0) {
+            let fileData = HOME_PARAMS.sheetDatas[idxFound];
+            HOME_PARAMS.totalProgress = fileData.file.size;
+            HOME_PARAMS.currentProgress = 0;
+            showHideLoading(
+              true,
+              HOME_PARAMS.totalProgress,
+              HOME_PARAMS.currentProgress
+            );
+            // gửi file này lên máy chủ và theo dõi tiến trình
+            callAjaxPOSTFormDataChunk(
+              `/files/post-chunk`,
+              fileData.file,
+              0,
+              0,
+              {
+                name: jsonData.name,
+                is_private,
+              }
+            )
+              .then((ok) => {
+                showToast(
+                  "success",
+                  `Đã truyền file: ${fileData.file.name} lên máy chủ thành công!`,
+                  "toast-top-right",
+                  5000
+                );
+
+                $clone.each(function () {
+                  // với dòng tìm thấy duyệt tất cả các cột
+                  let $tdClone = $(this).find("td");
+                  // sử dụng header gốc để duyệt và đặt điều kiện chèn vào các nội dung khác
+                  headers.forEach((header, i) => {
+                    // thiết lập màu cho cell
+                    $tdClone.eq(i).addClass("bg-primary");
+                    if (header === "commands" || i === 0) {
+                      $tdClone.eq(i).html(`
+                <button type="button" class="btn btn-sm btn-rounded btn-warning btn-read-one" onclick="doShowModelTable(this,'REMOVE');">
+                 Remove
+                </button>
+                `); // bỏ qua cột số 1
+                    } else {
+                      // đặt thuộc tính không cho soạn thảo
+                      $tdClone.eq(i).attr("contenteditable", "false");
+                    }
+
+                    if (header === "file") {
+                      $tdClone.eq(i).text("success");
+                    }
+                  });
+                });
+
+                HOME_PARAMS.sheetDatas.splice(idxFound, 1);
+                $clone.insertAfter($(this).closest("tr"));
+                $row.detach(); // xóa dòng cũ đi vì đã import thành công
+
+                showHideLoading(false);
+              })
+              .catch((err) => {
+                showToast(
+                  "error",
+                  `File: ${fileData.file.name} máy chủ không chấp nhận vì: ${
+                    (err.responseJSON || {}).message || "Lỗi không xác định"
+                  }`,
+                  "toast-top-right",
+                  10000
+                );
+
+                $clone.each(function () {
+                  // với dòng tìm thấy duyệt tất cả các cột
+                  let $tdClone = $(this).find("td");
+                  // sử dụng header gốc để duyệt và đặt điều kiện chèn vào các nội dung khác
+                  headers.forEach((header, i) => {
+                    // thiết lập màu cho cell
+                    $tdClone.eq(i).addClass("bg-danger");
+                    if (header === "commands" || i === 0) {
+                      $tdClone.eq(i).html(`
+                <button type="button" class="btn btn-sm btn-rounded btn-warning btn-read-one" onclick="doShowModelTable(this,'REMOVE');">
+                 Remove
+                </button>
+                `); // bỏ qua cột số 1
+                    } else {
+                      // đặt thuộc tính không cho soạn thảo
+                      $tdClone.eq(i).attr("contenteditable", "false");
+                    }
+                    if (header === "file") {
+                      $tdClone.eq(i).text("failed");
+                    }
+                  });
+                });
+
+                HOME_PARAMS.sheetDatas.splice(idxFound, 1);
+                $clone.insertAfter($(this).closest("tr"));
+                $row.detach(); // xóa dòng cũ đi vì đã import thành công
+
+                showHideLoading(false);
+              });
+          }
+
+          break;
+        case "REMOVE":
+          if (idxFound >= 0) {
+            HOME_PARAMS.sheetDatas.splice(idxFound, 1);
+          }
+          $row.detach();
+          break;
+
+        default:
+          break;
+      }
+    });
+  }
+</script>

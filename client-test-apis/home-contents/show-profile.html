@@ -1,0 +1,248 @@
+<script src="./js/dynamic-form/dynamic-form.js"></script>
+
+<style>
+  .row {
+    display: flex;
+  }
+
+  .row > div {
+    flex: 1;
+    border: 1px none #d3d3d3;
+    border-style: none none dashed none;
+  }
+</style>
+
+<div
+  class="modal fade"
+  id="popup-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body"></div>
+      <!-- <div class="modal-footer"></div> -->
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    // mở cửa sổ thì nó đọc luôn file này
+    let items = [
+      {
+        type: "info",
+        icon: "fa-user",
+        key: "username",
+        value: HOME_PARAMS.userInfo.username,
+      },
+      {
+        type: "info",
+        icon: "fa-user",
+        key: "user_type",
+        value: HOME_PARAMS.userInfo.user_type,
+      },
+      {
+        type: "info",
+        icon: "fa-user",
+        key: "fullname",
+        value: HOME_PARAMS.userInfo.fullname,
+      },
+      {
+        type: "info",
+        icon: "fa-user",
+        key: "device",
+        value: HOME_PARAMS.userInfo.reg_device_id,
+      },
+    ];
+
+    let dynamicForm = {
+      header: {
+        title: `THÔNG TIN TÀI KHOẢN`,
+        color: "text-info",
+        buttons: [{ icon: "fa-close", cmd: "CLOSE" }],
+      },
+      items,
+    };
+
+    const formDatas = new JSCngDynamicForm();
+
+    // tạo tiêu đề và các nút lệnh trên header
+    let htmlHeader = formDatas.createHeader(dynamicForm.header);
+    $(".modal-header").html(htmlHeader);
+
+    // tạo các ô nhập liệu
+    let htmlForm = formDatas.createFormInput(dynamicForm.items);
+    $(".modal-body").html(htmlForm);
+
+    // tạo các nút lệnh ở phía dưới
+    let htmlFooter = formDatas.createFooter(dynamicForm.footer);
+    $(".modal-footer").html(htmlFooter);
+
+    $("#popup-modal").modal("toggle");
+    $("#popup-modal").modal("show");
+
+    for (let el of dynamicForm.items) {
+      let $Input = $(`#${el.key}`);
+      $Input.keyup(
+        formDatas.debounce(function (event) {
+          let value = event.target.value;
+          let invalid = false;
+          if (el.validator) {
+            if (el.validator.required && !$Input.val()) invalid = true;
+            if (
+              el.validator.min &&
+              (!$Input.val() || $Input.val().length < el.validator.min)
+            )
+              invalid = true;
+            if (
+              el.validator.max &&
+              (!$Input.val() || $Input.val().length > el.validator.max)
+            )
+              invalid = true;
+            if (el.validator.pattern && $Input.val()) {
+              let reg = new RegExp(el.validator.pattern);
+              if (!reg.test($Input.val())) invalid = true;
+            }
+          }
+
+          if (!invalid && el.key && el.value !== undefined) {
+            $Input.addClass("is-valid");
+            $Input.removeClass("is-invalid");
+          } else {
+            $Input.removeClass("is-valid");
+            $Input.addClass("is-invalid");
+          }
+        }, 500)
+      );
+    }
+
+    $(".btn-cancel").click((e) => {
+      $("#popup-modal").modal("hide");
+    });
+
+    $(".btn-send-api").click((e) => {
+      let jsonData = formDatas.getFormData(dynamicForm.items);
+      if (!jsonData) {
+        showToast(
+          "error",
+          "Vui lòng kiểm tra lại các trường nhập liệu trước khi gửi",
+          "toast-top-center",
+          3000,
+          true
+        );
+        return;
+      }
+
+      let $this = $(e.target);
+      let cmd = $this.attr("command-do"); // lệnh làm gì
+      let cNext = $this.attr("command-next"); // nếu thành công thì làm gì tiếp theo
+      let cUrl = $this.attr("command-url"); // đường dẫn tương đối với máy chủ api hoặc tuyệt đối gửi lên máy chủ
+      let cToken = $this.attr("command-token"); // có đính kèm token hay không?
+
+      let ajaxSend;
+      if (cmd === "POST") {
+        ajaxSend =
+          cUrl.indexOf("http") >= 0
+            ? callAjaxPOSTApiAny(null, jsonData, cUrl, !(cToken === "true"))
+            : callAjaxPOSTApiAny(cUrl, jsonData, null, !(cToken === "true"));
+      }
+
+      if (cmd === "GET") {
+        let paramS = Object.keys(jsonData)
+          .map(function (k) {
+            return (
+              encodeURIComponent(k) + "=" + encodeURIComponent(jsonData[k])
+            );
+          })
+          .join("&");
+        ajaxSend =
+          cUrl.indexOf("http") >= 0
+            ? callAjaxGETApiAny(null, paramS, cUrl, !(cToken === "true"))
+            : callAjaxGETApiAny(cUrl, paramS, null, !(cToken === "true"));
+      }
+
+      // làm bất cứ thứ gì ta muốn ở đây
+      // yêu cầu thực hiện kiểu promise để tận dụng phiên kiểm tra kết quả ở phía sau
+      // không phải sửa chữa thêm
+      if (cmd == "DO-ANY") {
+        if (
+          !REG_PARAMS.NUMBER_REG.test(jsonData.username) &&
+          !REG_PARAMS.EMAIL_REG.test(jsonData.username)
+        ) {
+          // đây là user kiểu LDAP nên tự bổ sung @mobifone để xác minh
+          jsonData.username += "@mobifone.vn";
+          showToast(
+            "warning",
+            `Bạn đang đăng nhập tài khoản LDAP của Mobifone ${username}`
+          );
+        }
+
+        ajaxSend = HOME_PARAMS.client
+          .loginByUser(
+            jsonData.username,
+            null,
+            jsonData.password,
+            jsonData.expired || 1
+          )
+          .then((tokenData) => {
+            if (tokenData.userInfo) {
+              API_PARAMS.saveKey("token", tokenData.token, true);
+              API_PARAMS.saveKey(
+                "userInfo",
+                JSON.stringify(tokenData.userInfo),
+                true
+              );
+              return {
+                message: `Login thành công với username=${jsonData.username}`,
+              };
+            }
+            throw "Đăng nhập không thành công, vui lòng kiểm tra lại username hoặc password";
+          });
+      }
+
+      if (ajaxSend) {
+        fakeLoading(20000, 100);
+        showToast("info", "Đang xác minh thông tin tài khoản");
+
+        $("#popup-modal").modal("hide");
+
+        ajaxSend
+          .then((result) => {
+            showHideLoading(false);
+
+            showToast(
+              "success",
+              result.message || `Thực thi thành công!`,
+              null,
+              3000
+            );
+
+            setTimeout(() => {
+              // xét phương thức tiếp theo để xử lý form này
+              // CLOSE, RESET, next-page.html
+              if (cNext === "CLOSE") {
+                // di chuyển sang trang trước
+                //
+                window.history.back();
+              } else if (cNext === "RESET") {
+                // reset trang làm mới lại
+                //
+                window.location.reload();
+              } else if (!cNext) {
+                //
+                // chuyển tiếp sang trang khai trong này
+                window.location.href = cNext;
+              }
+            }, 2000);
+          })
+          .catch((err) => {
+            showHideLoading(false);
+            showApiError(err);
+          });
+      }
+    });
+  });
+</script>

@@ -1,0 +1,250 @@
+<script src="./js/dynamic-form/dynamic-form.js"></script>
+
+<div class="container">
+  <form style="max-width: 500px; margin: auto">
+    <div class="modal-header"></div>
+    <div class="dynamic-form"></div>
+    <div class="modal-footer"></div>
+  </form>
+</div>
+
+<div class="overlay">
+  <div class="progress centered">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    let items = [
+      {
+        type: "text",
+        // name: "Phone",
+        icon: "fa-phone",
+        hint: "Nhập số điện thoại dạng 090xxx...(*)",
+        validator: {
+          required: true,
+          pattern: "^[0]{1}[123456789]{1}[0-9]{8}$",
+        },
+        key: "phone",
+        value: "",
+      },
+      {
+        type: "text",
+        // name: "Email",
+        icon: "fa-envelope",
+        hint: "Hãy nhập Email của bạn hợp lệ",
+        validator: {
+          // required: true,
+          pattern: "(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)",
+        },
+        key: "email",
+        value: "",
+      },
+      {
+        type: "text",
+        // name: "Fullname",
+        icon: "fa-user",
+        hint: "Nhập họ và tên đầy đủ (*)",
+        validator: {
+          required: true,
+          pattern:
+            "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$",
+        },
+        key: "fullname",
+        value: "",
+      },
+      {
+        type: "text",
+        // name: "Nickname",
+        icon: "fa-user-secret",
+        hint: "Nhập tên thường gọi - nickname (*)",
+        validator: {
+          required: true,
+          pattern:
+            "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$",
+        },
+        key: "nickname",
+        value: "",
+      },
+      {
+        type: "text",
+        // name: "Address",
+        icon: "fa-address-card",
+        hint: "Địa chỉ của bạn - address (*)",
+        validator: {
+          required: true,
+          pattern:
+            "^[0-9\\/\\(\\)a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s\\W|_]+$",
+        },
+        key: "address",
+        value: "",
+      },
+    ];
+    let dynamicForm = {
+      header: {
+        title: "Đăng ký user mới",
+      },
+      items,
+      footer: [
+        {
+          class: "btn-secondary",
+          name: "Bỏ qua",
+          icon: "fa-close",
+          cmd: "CLOSE",
+        },
+        {
+          class: "btn-primary",
+          name: "Đăng ký",
+          icon: "fa-send",
+          cmd: "POST",
+          next: "CLOSE",
+          url: `${API_PARAMS.getKey("SERVER_SOCKET", true) || API_PARAMS.SERVER_SOCKET
+            }${API_PARAMS.REGISTER}`,
+          token: true,
+        },
+      ],
+    };
+
+    const formDatas = new JSCngDynamicForm();
+
+    // tạo tiêu đề và các nút lệnh trên header
+    let htmlHeader = formDatas.createHeader(dynamicForm.header);
+    $(".modal-header").html(htmlHeader);
+
+    // tạo các ô nhập liệu
+    let htmlForm = formDatas.createFormInput(dynamicForm.items);
+    $(".dynamic-form").html(htmlForm);
+
+    // tạo các nút lệnh ở phía dưới
+    let htmlFooter = formDatas.createFooter(dynamicForm.footer);
+    $(".modal-footer").html(htmlFooter);
+
+    for (let el of dynamicForm.items) {
+      let $Input = $(`#${el.key}`);
+      $Input.keyup(
+        formDatas.debounce(function (event) {
+          let value = event.target.value;
+          let invalid = false;
+          if (el.validator) {
+            if (el.validator.required && !$Input.val()) invalid = true;
+            if (
+              el.validator.min &&
+              (!$Input.val() || $Input.val().length < el.validator.min)
+            )
+              invalid = true;
+            if (
+              el.validator.max &&
+              (!$Input.val() || $Input.val().length > el.validator.max)
+            )
+              invalid = true;
+            if (el.validator.pattern && $Input.val()) {
+              let reg = new RegExp(el.validator.pattern);
+              if (!reg.test($Input.val())) invalid = true;
+            }
+          }
+
+          if (!invalid && el.key && el.value !== undefined) {
+            $Input.addClass("is-valid");
+            $Input.removeClass("is-invalid");
+          } else {
+            $Input.removeClass("is-valid");
+            $Input.addClass("is-invalid");
+          }
+        }, 500)
+      );
+    }
+
+    $(".btn-cancel").click((e) => {
+      window.history.back();
+    });
+
+    $(".btn-send-api").click((e) => {
+      let jsonData = formDatas.getFormData(dynamicForm.items);
+      if (!jsonData) {
+        showToast(
+          "error",
+          "Vui lòng kiểm tra lại các trường nhập liệu trước khi gửi",
+          "toast-top-center",
+          2000,
+          true
+        );
+        return;
+      }
+
+      let $this = $(e.target);
+      let cmd = $this.attr("command-do"); // lệnh làm gì
+      let cNext = $this.attr("command-next"); // nếu thành công thì làm gì tiếp theo
+      let cUrl = $this.attr("command-url"); // đường dẫn tương đối với máy chủ api hoặc tuyệt đối gửi lên máy chủ
+      let cToken = $this.attr("command-token"); // có đính kèm token hay không?
+
+      let ajaxSend;
+      if (cmd === "POST") {
+        ajaxSend =
+          cUrl.indexOf("http") >= 0
+            ? callAjaxPOSTApiAny(null, jsonData, cUrl, !(cToken === "true"))
+            : callAjaxPOSTApiAny(cUrl, jsonData, null, !(cToken === "true"));
+      }
+
+      if (cmd === "GET") {
+        let paramS = Object.keys(jsonData)
+          .map(function (k) {
+            return (
+              encodeURIComponent(k) + "=" + encodeURIComponent(jsonData[k])
+            );
+          })
+          .join("&");
+        ajaxSend =
+          cUrl.indexOf("http") >= 0
+            ? callAjaxGETApiAny(null, paramS, cUrl, !(cToken === "true"))
+            : callAjaxGETApiAny(cUrl, paramS, null, !(cToken === "true"));
+      }
+
+      if (ajaxSend) {
+
+        // kiểm tra yêu cầu phải có jsonData.phone || jsonData.email
+        if (!jsonData.phone && !jsonData.email) {
+          showToast(
+            "warning",
+            `Vui lòng nhập số điện thoại mạng Mobifone, hoặc Email của Mobifone hoặc Email bất kỳ để xác minh tài khoản.<br>Trường hợp bạn quên mật khẩu thì có thể sử dụng tài khoản này để khôi phục mật khẩu đã quên một cách thuận lợi.<br>Vui lòng kiểm tra thiết bị nhận thông tin phản hồi đã sẵn sàng để xác minh việc đăng ký của bạn là hợp lệ`,
+            "toast-top-right",
+            3000,
+            true
+          );
+          return;
+        }
+
+        ajaxSend
+          .then((result) => {
+            showToast(
+              "success",
+              result.message +
+              `<br><br>Vui lòng kiểm tra trên thiết bị nhận ${phone || email
+              } XÁC NHẬN phiên đăng ký này để hoàn thành việc đăng ký nhé`,
+              "toast-top-right",
+              5000,
+              true
+            );
+            // xét phương thức tiếp theo để xử lý form này
+            // CLOSE, RESET, next-page.html
+            if (cNext === "CLOSE") {
+              // di chuyển sang trang trước
+              //
+              window.history.back();
+            } else if (cNext === "RESET") {
+              // reset trang làm mới lại
+              //
+              window.location.reload();
+            } else if (!cNext) {
+              //
+              // chuyển tiếp sang trang khai trong này
+              window.location.href = cNext;
+            }
+          })
+          .catch((err) => {
+            showApiError(err, true);
+          });
+      }
+    });
+  });
+</script>
