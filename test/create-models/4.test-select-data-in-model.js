@@ -3,7 +3,7 @@ const { mainEntry } = require("./config/params");
 const objModels = require(`../..${mainEntry}/models`);
 
 // lấy một mô hình đầu tiên trong mảng mô hình đã tạo để select dữ liệu thử - cho tổng quát
-const uModel = objModels[Object.keys(objModels)[3]];
+const uModel = objModels[Object.keys(objModels)[1]];
 
 console.log("SELECT tableName + databaseName --->", uModel.getName(), uModel.getDbName());
 // let jsonWheres = { order_1: { $in: [ "3", "4A", "5"] } }
