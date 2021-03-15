@@ -1,1 +1,1 @@
-module.exports = require("./db-connection-any")("sqlite3", "media-files-granted-users");
+module.exports = require("./db-connection-any")("sqlite3", "lucky-draws");

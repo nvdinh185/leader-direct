@@ -1,6 +1,6 @@
 // Đây là thủ tục tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
 // Dữ liệu gốc từ file excel ./db/excel/media.xlsx
-// Được tạo và lúc 2021-03-13 09:23:59
+// Được tạo và lúc 2021-03-15 09:56:11
 
 
 "use strict";
@@ -27,12 +27,12 @@
 const apiRoutes = [
     // Đây là file tự động sinh ra từ file excel ./db/excel/media.xlsx
     // Tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
-    // Tạo ra vào lúc 2021-03-13 09:23:59
+    // Tạo ra vào lúc 2021-03-15 09:56:11
  
 
     {
-         path: "/user-rights",
-         route: require("./routers/router-user-rights"),
+         path: "/test",
+         route: require("./routers/router-test"),
      },
  
     // ,... các đường dẫn api khác cho chức năng api khác nữa thêm bằng tay vào đây

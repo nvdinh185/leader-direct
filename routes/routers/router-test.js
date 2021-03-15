@@ -1,13 +1,13 @@
 // Đây là thủ tục tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
 // Dữ liệu gốc từ file excel ./db/excel/media.xlsx
-// Được tạo và lúc 2021-03-13 09:23:59
+// Được tạo và lúc 2021-03-15 09:56:11
 
 "use strict";
 
 // ĐÂY LÀ ĐƯỜNG DẪN API như nào  thì khai như thế
 // (xem đường dẫn khai ở tham số path trong file ./routes/api-api-2.0-socket-token.js gọi đến router này)
 //và khai đúng như vậy
-const API = "/user-rights";
+const API = "/test";
 
 
 // bộ xử lý dữ liệu postHandler = post + getToken để trả về req.token, req.json_data, json.form_data
@@ -48,17 +48,17 @@ const verifyGrantedChain = [
 
 
 // bộ xử lý máy chủ trả kết quả xử lý hander
-const { userRightsHandler } = require("../../handlers/logs-1.0");
+const { testHandler } = require("../../handlers/logs-1.0");
 // thực hiện viết các handler để xử lý dữ liệu, trả kết quả về cho các function của api
 
 // gán req.finalJson = json để tự động trả kết quả, hoặc lỗi thì gán req.error = json
 const funcPaths = {
 
-    // Các lệnh GET của /user-rights này:
+    // Các lệnh GET của /test này:
 
     GET: {
         /**
-         * (1) GET /media/user-rights/test-get
+         * (1) GET /lucky/test/test-get
          * 
          * Các hàm API của hệ thống
          * Trả về các chức năng cần phân quyền (has_granted), để thực hiện gán quyền cho nhóm quyền hoặc user
@@ -73,18 +73,18 @@ const funcPaths = {
             
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
-            userRightsHandler.testGet
+            testHandler.testGet
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
         ],
 
     },
 
-    // Các lệnh POST của /user-rights này:
+    // Các lệnh POST của /test này:
 
     POST: {
         /**
-         * (2) POST /media/user-rights/test-post
+         * (2) POST /lucky/test/test-post
          * 
          * Lấy danh sách nhóm quyền
          * Trả về danh sách nhóm quyền
@@ -100,7 +100,7 @@ const funcPaths = {
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
-            userRightsHandler.testPost
+            testHandler.testPost
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
         ],

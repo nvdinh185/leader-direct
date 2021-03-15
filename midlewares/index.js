@@ -5,6 +5,7 @@ module.exports = {
     dynamicModels:require("./dynamic-models"),
     grantedUsers:require("./granted-users"),
     logs:require("./logs"),
+    luckyDraws:require("./lucky-draws"),
     mediafiles:require("./media_files"),
     verifyToken:require("./verify-token"),
 
