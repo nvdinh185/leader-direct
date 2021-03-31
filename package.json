@@ -13,6 +13,7 @@
     "client-socket-nodejs": "^2.0.7",
     "cng-auto-server": "^1.0.10",
     "cng-node-js-utils": "^2.0.17",
+    "mongodb": "^3.6.5",
     "node-js-orm": "^4.0.9",
     "sqlite3": "^5.0.2"
   }
