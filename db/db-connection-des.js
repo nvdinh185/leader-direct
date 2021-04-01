@@ -4,4 +4,4 @@
  */
 
 // khai báo file cấu hình trước khi dùng
-module.exports = require("./db-connection-any")("mongodb", "lucky-draws");
+module.exports = require("./db-connection-any")("sqlite3", "innovations");
