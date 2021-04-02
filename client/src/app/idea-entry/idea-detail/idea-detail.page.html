@@ -1,0 +1,210 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Chi tiết ý tưởng</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- Hiển thị avatar -->
+  <ion-item lines="none" class="idea-created">
+    <ion-avatar slot="start">
+      <img src="{{ideaInfo?.idea?.avatar}}">
+    </ion-avatar>
+    <ion-label>
+      <strong>
+        {{ideaInfo?.idea?.username}}
+      </strong>
+      <br>
+      <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>
+    </ion-label>
+    <ion-button (click)="onClickMore($event)" slot="end" shape="round" fill="clear" size="small">
+      <ion-icon slot="icon-only" name="more"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <!-- Hiển thị thông tin chi tiết của ý tưởng -->
+  <ion-list>
+    <ion-item>
+      <strong slot="start" *ngIf="!isMobile">
+        Chủ đề:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        <strong slot="start" *ngIf="isMobile">
+          Chủ đề:<br>
+        </strong>
+        <strong>#{{ideaInfo?.idea?.id}}</strong> {{ideaInfo?.idea?.title}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start" *ngIf="!isMobile">
+        Nội dung:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        <strong slot="start" *ngIf="isMobile">
+          Nội dung:<br>
+        </strong>
+        <div [innerHTML]="ideaInfo?.idea?.description | linkUrl | newline"></div>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start" *ngIf="!isMobile">
+        Lĩnh vực:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        <strong slot="start" *ngIf="isMobile">
+          Lĩnh vực:<br>
+        </strong>
+        {{ideaInfo?.idea?.category_name}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start" *ngIf="!isMobile">
+        Giai đoạn:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        <strong slot="start" *ngIf="isMobile">
+          Giai đoạn:<br>
+        </strong>
+        {{ideaInfo?.idea?.status_name}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+
+  <ion-item lines="none">
+
+    <!-- Hiện nút cho phép like ý tưởng -->
+    <ion-button slot="start" color="{{ideaInfo?.isUserVoted?'secondary':'light'}}" (click)="likeIdea(ideaInfo?.idea)"
+      shape="round" size="small">
+      <ion-icon slot="start" name="thumbs-up"></ion-icon>
+      {{ideaInfo?.idea?.voted_count}} <span *ngIf="!isMobile">&nbsp;like(s)</span>
+    </ion-button>
+
+    <!-- Hiện nút để kích vào bình luận -->
+    <ion-button slot="start" color="{{ideaInfo?.isUserCommented?'success':'light'}}" (click)="focusCommentIdea()"
+      shape="round" size="small">
+      <ion-icon slot="start" name="chatbubbles"></ion-icon>
+      {{ideaInfo?.comments?.length}} <span *ngIf="!isMobile">&nbsp;comment(s)</span>
+    </ion-button>
+
+    <!-- ý tưởng của mình thì hiện nút màu medium, của người khác thì hiện nút màu tertiary -->
+    <ion-button slot="start" color="{{ideaInfo?.idea.user_id === this.userInfo.id?'medium':'tertiary'}}"
+      (click)="markIdea(ideaInfo?.idea)" shape="round" size="small">
+      <ion-icon slot="start" name="switch"></ion-icon>
+      {{ideaInfo?.idea?.total_point}} <span *ngIf="!isMobile">&nbsp;điểm</span>
+    </ion-button>
+
+    <!-- Hiện số file đính kèm -->
+    <ion-label *ngIf="ideaInfo?.idea?.attach_id_list?.length>0" class="ion-text-wrap">
+      <ion-icon slot="start" name="attach"></ion-icon>
+      {{ideaInfo.idea.attach_id_list.length}}<span *ngIf="!isMobile">&nbsp;File(s) đính kèm</span>
+    </ion-label>
+
+  </ion-item>
+
+  <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->
+  <div [style.padding-left]="'20px'">
+    <img tappable *ngFor="let image of ideaInfo?.idea?.images;" src="{{image.src}}" (click)="onClickViewItem(image.id)"
+      class="image-comment-size">
+  </div>
+  <ion-item [style.padding-left]="'20px'" *ngIf="ideaInfo?.idea?.attachs?.length>0" lines="none">
+    <ion-label class="ion-text-wrap">
+      <span *ngFor="let file of ideaInfo?.idea?.attachs;">
+        <ion-button color="primary" (click)="onClickViewItem(file.id)" fill="outline" shape="round"
+          style="text-transform:none">
+          {{file.file_name}}
+          <ion-icon slot="end" name="eye"></ion-icon>
+        </ion-button>
+      </span>
+    </ion-label>
+  </ion-item>
+
+
+  <!-- Nhập nội dung comment để góp ý ở ô này -->
+  <ion-card class="input-comment">
+    <!-- Hiện thị form để comment -->
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img src="{{userInfo?.avatar}}">
+      </ion-avatar>
+      <ion-textarea #textComment autosize type="text" placeholder="Đóng góp ý kiến ... " [(ngModel)]="message">
+      </ion-textarea>
+      <ion-button color="medium" fill="clear" shape="round">
+        <input class="file-over" type="file" multiple (change)="uploadFilesEvent($event)" accept="image/gif, image/jpeg, image/png
+                  , application/pdf
+                  , .txt, .md
+                  , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+                  , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <ion-icon slot="icon-only" name="attach"></ion-icon>
+      </ion-button>
+      <ion-button color="{{(message || uploadingFiles.length>0?'secondary':'light')}}" (click)="onClickSend()"
+        fill="clear" shape="round">
+        <ion-icon slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <!-- Hiển thị những file, hình ảnh kèm theo trong commment -->
+    <ion-item *ngIf="uploadingFiles?.length>0" lines="none">
+      <ion-label class="ion-text-wrap">
+        <span *ngFor="let file of uploadingFiles; let idx=index;">
+          <ion-button *ngIf="!file.isImage" color="secondary" (click)="onClickRemoveFile(idx)" fill="outline"
+            shape="round" style="text-transform:none">
+            {{file.name}}
+            <ion-icon slot="end" name="close"></ion-icon>
+          </ion-button>
+          <div *ngIf="file.isImage" class="image-upload-size">
+            <img src="{{file.image}}">
+            <div class='close-button' tappable>
+              <ion-icon slot="icon-only" name="close" color="medium" (click)="onClickRemoveFile(idx)"></ion-icon>
+            </div>
+          </div>
+        </span>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->
+  <ion-list class="comment-list">
+    <div *ngFor="let comment of ideaInfo?.comments" [style.padding-left]="'0px'">
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="{{comment.avatar}}">
+        </ion-avatar>
+        <ion-label class="ion-text-wrap comment-backgound">
+          <strong slot="start">
+            {{comment.username}}
+          </strong>
+          <br>
+          <ion-label class="ion-text-wrap">
+            <div [innerHTML]="comment.content| linkUrl | newline"></div>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+      <ion-note [style.padding-left]="'80px'"> {{comment.created_time | timeAgo}} </ion-note>
+      <br>
+      <div [style.padding-left]="'60px'">
+        <img tappable *ngFor="let image of comment.images;" src="{{image.src}}" (click)="onClickViewItem(image.id)"
+          class="image-comment-size">
+      </div>
+      <ion-item [style.padding-left]="'60px'" *ngIf="comment.attachs?.length>0" lines="none">
+        <ion-label class="ion-text-wrap">
+          <span *ngFor="let file of comment.attachs">
+            <ion-button color="dark" (click)="onClickViewItem(file.id)" fill="outline" shape="round"
+              style="text-transform:none">
+              {{file.file_name}}
+              <ion-icon slot="end" name="eye"></ion-icon>
+            </ion-button>
+          </span>
+        </ion-label>
+      </ion-item>
+    </div>
+  </ion-list>
+
+</ion-content>

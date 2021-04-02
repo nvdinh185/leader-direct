@@ -1,0 +1,34 @@
+<ion-card *ngIf="commandCardForm" class="main-ion-card welcome-card">
+  <!-- Nếu có image thì ưu tiên lấy image làm nền, còn ko thì lấy màu background -->
+  <div *ngIf="!commandCardForm.image" class="welcome-card-image-height"
+    [style.background-color]="commandCardForm.background" style="opacity: 0.4;"></div>
+  <div *ngIf="commandCardForm.image" class="welcome-card-image-height"
+    [style.background-image]="'url('+commandCardForm.image+')'" style="opacity: 0.9;"></div>
+
+  <ion-card-header class="card-title">
+    <ion-card-title>#{{commandCardForm.id}} - {{commandCardForm.title}}</ion-card-title>
+    <ion-card-subtitle>{{commandCardForm.created_time | timeAgo}}</ion-card-subtitle>
+    {{commandCardForm.description.substring(0,100)}}
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button color="{{(commandCardForm.isUserVoted?'secondary':'light')}}" (click)="onClickLike(commandCardForm)" shape="round" size="small">
+            {{commandCardForm.voted_count}}<ion-icon slot="end" name="thumbs-up"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button color="{{(commandCardForm.isUserCommented?'success':'light')}}" (click)="onClickComment(commandCardForm)" shape="round" size="small">
+            {{commandCardForm.commented_count}}<ion-icon slot="end" name="chatbubbles"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+
+  <ion-button class="card-icon" (click)="onClickView(commandCardForm)" shape="round">
+    <ion-icon slot="start" name="arrow-forward"></ion-icon>
+  </ion-button>
+
+</ion-card>

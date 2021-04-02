@@ -1,0 +1,43 @@
+// kieu background thi hinh trung tam
+.welcome-card .welcome-card-image-height {
+    min-height: 20vh;
+    background-repeat:no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+// card the thong ke co dinh
+.main-ion-card {
+    position: relative;
+    text-align: center;
+    border-radius: 5em;
+    opacity: 0.7;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.main-ion-card  .card-title {
+    position: absolute;
+    top: 5%;
+    font-size: 1.8em;
+    width: 100%;
+    font-weight: bold;
+    color: #fff;
+    opacity: 0.9;
+}
+
+.main-ion-card .card-subtitle {
+    font-size: 1.0em;
+    position: absolute;
+    top: 18%;
+    width: 60%;
+    color: burlywood
+}
+
+.main-ion-card .card-icon {
+    font-size: 1.8em;
+    position: absolute;
+    top: 36%;
+    left: 85%;
+    width: 30%;
+    opacity: 0.8;
+}

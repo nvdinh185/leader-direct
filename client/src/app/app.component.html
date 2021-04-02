@@ -1,0 +1,35 @@
+<ion-app>
+  <ion-menu contentId="main-content" type="overlay">
+
+    <ion-header>
+      <ion-toolbar class="padding-col card-background-header background-image-header">
+        <ion-row *ngIf="userInfo">
+          <ion-col class="ion-no-padding">
+            <div class="background-image-header"
+              [style.background-image]="'url('+(userInfo?.background?userInfo.background:'assets/imgs/background.jpg')+')'">
+            </div>
+            <ion-label class="card-title-header">
+              {{userInfo?.fullname?userInfo?.fullname:userInfo?.username}}{{userInfo?.nickname?"\n("+userInfo?.nickname+")":""}}
+            </ion-label>
+            <div class="avatar-header"
+              [style.background-image]="'url('+(userInfo?.avatar?userInfo?.avatar:'assets/imgs/avatar.jpg')+')'">
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!userInfo">
+          <ion-col style="margin:auto; text-align:center">
+            <ion-chip color="primary" (click)="onClickLogin()">
+              <ion-label>Login...</ion-label>
+              <ion-icon name="log-in" color="secondary"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <tree-menu [treeData]="treeMenu"></tree-menu>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>
