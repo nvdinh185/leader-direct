@@ -1,1 +1,1 @@
-module.exports = require("./db-connection-any")("sqlite3", "lucky-draws");
+module.exports = require("./db-connection-any")("sqlite3", "innovations");

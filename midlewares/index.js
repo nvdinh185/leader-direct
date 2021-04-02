@@ -4,8 +4,8 @@ module.exports = {
     // export entry for out side 
     dynamicModels:require("./dynamic-models"),
     grantedUsers:require("./granted-users"),
+    innovations:require("./innovations"),
     logs:require("./logs"),
-    luckyDraws:require("./lucky-draws"),
     mediafiles:require("./media_files"),
     verifyToken:require("./verify-token"),
 
