@@ -16,7 +16,7 @@ const expressCfg = {
     // <p>Xin lỗi trang bạn yêu cầu không tìm thấy. Vui lòng liên hệ quản trị hệ thống</p>`
 
     // đường dẫn phụ của máy chủ
-    , baseDirectory: "/logs"
+    , baseDirectory: "/innovations"
     // đường dẫn trỏ khi truy cập không có router/function được khai báo
     , redirectUrl: "/"
 
