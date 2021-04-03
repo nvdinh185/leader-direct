@@ -9,7 +9,7 @@
 // công việc khai báo máy chủ chỉ còn có các bước sau:
 const expressCfg = {
     // cổng dịch vụ
-    port: 9229
+    port: 8081
     // trang lỗi trả về không mặt định
     
     // ,default404Page: `<h1>Máy chủ api</h1>

@@ -50,7 +50,15 @@ export class AppComponent {
       this.refresh();
     })
 
-    this.userInfo = await this.mainService.getTokenInfo();
+    // this.userInfo = await this.mainService.getTokenInfo();
+    let link2 = 'http://localhost:8081/innovations/api/get-user-info';
+    this.apiAuth.getDynamicUrl(link2, true)
+      .then(data => {
+        console.log('data2', data);
+      })
+      .catch(err => {
+        console.log('error', err);
+      })
     // console.log(this.userInfo);
     this.refresh();
 
