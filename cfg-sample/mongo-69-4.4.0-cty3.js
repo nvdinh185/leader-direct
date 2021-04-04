@@ -1,7 +1,7 @@
 module.exports = Object.freeze({
     type: "mongodb", //  "mongodb" | "oracle" | "sqlite3"
     auto_increment_support: false,
-    databaseName: "lucky-draws",
+    databaseName: "innovations",
     serverCfg: {
         hosts: [{ host: "localhost", port: 27017 }],
         username: "dinh",

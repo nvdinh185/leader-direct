@@ -29,7 +29,7 @@ module.exports = {
 
   // mongodb3553: {}, //require("../../cfg/mongo-3553-4.4.0-cty3"),
 
-  // mongodb69: require("../../cfg/mongo-69-4.4.0-cty3"),
+  mongodb69: require("../../cfg/mongo-69-4.4.0-cty3"),
 
   // danh sách các file excel chứa csdl chính thức cần import
   excel: require("./excel"),
