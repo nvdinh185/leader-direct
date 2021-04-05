@@ -1,6 +1,6 @@
 // Đây là thủ tục tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
 // Dữ liệu gốc từ file excel ./db/excel/sqlite-inovation-manager-v2.xlsx
-// Được tạo và lúc 2021-04-02 09:56:34
+// Được tạo và lúc 2021-04-05 15:06:29
 
 
 "use strict";
@@ -27,14 +27,10 @@
 const apiRoutes = [
     // Đây là file tự động sinh ra từ file excel ./db/excel/sqlite-inovation-manager-v2.xlsx
     // Tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
-    // Tạo ra vào lúc 2021-04-02 09:56:34
+    // Tạo ra vào lúc 2021-04-05 15:06:29
  
 
     {
-         path: "/auth",
-         route: require("./routers/router-auth"),
-     },
-     {
          path: "/api",
          route: require("./routers/router-api"),
      },

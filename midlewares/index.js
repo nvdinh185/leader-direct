@@ -6,7 +6,6 @@ module.exports = {
     grantedUsers:require("./granted-users"),
     innovations:require("./innovations"),
     logs:require("./logs"),
-    mediafiles:require("./media_files"),
     verifyToken:require("./verify-token"),
 
 }
