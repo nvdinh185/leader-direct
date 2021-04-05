@@ -30,7 +30,7 @@ class ApiHandler {
      * SAMPLE INPUTS:  
      */
     getUserInfo(req, res, next) {
-
+        console.log(req.user);
         // thực hiện lấy các dữ liệu đầu theo phương thức GET, 
         // Có thể sử dụng theo mô hình phân trang để lấy giới hạn trang 
         // khi truy vấn một bảng với số lượng bảng ghi nhiều gây chậm trả kết quả, và xử lý tràn bộ nhớ server và client
@@ -1023,7 +1023,7 @@ class ApiHandler {
      */
     createUser(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1032,9 +1032,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1151,7 +1151,7 @@ class ApiHandler {
      */
     editUser(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1160,9 +1160,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1279,7 +1279,7 @@ class ApiHandler {
      */
     createIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1288,9 +1288,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1407,7 +1407,7 @@ class ApiHandler {
      */
     editIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1416,9 +1416,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1535,7 +1535,7 @@ class ApiHandler {
      */
     deleteIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1544,9 +1544,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1663,7 +1663,7 @@ class ApiHandler {
      */
     likeIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1672,9 +1672,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1791,7 +1791,7 @@ class ApiHandler {
      */
     commentIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1800,9 +1800,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1919,7 +1919,7 @@ class ApiHandler {
      */
     markIdea(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1928,9 +1928,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";

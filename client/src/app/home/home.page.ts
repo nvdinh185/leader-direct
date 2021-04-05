@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MainService } from 'src/app/services/main.service';
 
 @Component({
   selector: 'app-home',
@@ -29,23 +27,8 @@ export class HomePage implements OnInit {
       ]
     }
   }
-  userInfo: any;
-  constructor(
-    private router: Router
-    , private mainService: MainService
-  ) { }
+  constructor() { }
 
-  // Đợi 1s để xác nhận đăng nhập (nếu có)
-  // để lấy userInfo
-  ngOnInit() {
-    setTimeout(() => {
-      this.userInfo = this.mainService.getUserInfo();
-    }, 1000)
-  }
-
-  // gọi đến trang login
-  onClickLogin() {
-    this.router.navigate(['/login']);
-  }
+  ngOnInit() { }
 
 }

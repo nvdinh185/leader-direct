@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
-import { MainService } from 'src/app/services/main.service';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { IonTextarea, NavController } from '@ionic/angular';
@@ -26,7 +25,6 @@ export class IdeaDetailPage implements OnInit {
     private route: ActivatedRoute
     , private apiCommons: CommonsService
     , private apiAuth: AuthService
-    , private mainService: MainService
     , private iab: InAppBrowser
     , private navCtrl: NavController
   ) { this.init() }
@@ -41,7 +39,10 @@ export class IdeaDetailPage implements OnInit {
 
   init() {
     this.isMobile = this.apiCommons.isMobile();
-    this.userInfo = this.mainService.getUserInfo();
+    this.userInfo = {
+      id: 1,
+      role: 99
+    };
   }
 
   // lấy ý tưởng theo id
@@ -304,7 +305,7 @@ export class IdeaDetailPage implements OnInit {
     try {
       questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true);
       userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id=' + idea.id, true);
-    } catch{ }
+    } catch { }
 
     // Lấy lại điểm đã chấm trước đó
     let arrayTestDemo = [];
@@ -361,7 +362,7 @@ export class IdeaDetailPage implements OnInit {
     let parameters;
     try {
       parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true);
-    } catch{ }
+    } catch { }
 
     let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
 

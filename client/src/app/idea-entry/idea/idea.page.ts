@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CommonsService, PopoverCardComponent } from 'ngxi4-dynamic-service';
-import { MainService } from '../../services/main.service';
 import { Router } from '@angular/router';
 
 // các tùy chọn sắp xếp ý tưởng
@@ -60,7 +59,6 @@ export class IdeaPage implements OnInit {
     private router: Router
     , private apiAuth: AuthService
     , private apiCommons: CommonsService
-    , private mainService: MainService
   ) { this.init() }
 
   ngOnInit() {
@@ -68,8 +66,7 @@ export class IdeaPage implements OnInit {
   }
 
   async init() {
-    // lấy thông tin user đang login có chưa?
-    this.userInfo = this.mainService.getUserInfo();
+    this.userInfo = { id: 1 };
 
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true);
