@@ -1,7 +1,0 @@
-{
-  "name": "client",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular"
-}

@@ -2,7 +2,7 @@ module.exports = {
 
     APP_NAME: "API-SERVER",
     socketLink: {
-        url: "https://c3.mobifone.vn",
+        url: "http://localhost:9234",
         path: "/socket",
         timeout: 10000,
         // đường dẫn xác thực user qua post {token,username,device_id,device_name}

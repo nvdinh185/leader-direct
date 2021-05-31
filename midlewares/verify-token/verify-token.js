@@ -30,13 +30,13 @@ module.exports = {
         })
     },
     verifyToken: async (req, res, next) => {
-        console.log("token: ", req.token);
 
         if (!req.token) {
             req.error = "No token for verify";
             next();
             return;
         }
+
         if (IS_PROXY) {
 
             verifySocketToken.verify(req.token, req.clientDevice)

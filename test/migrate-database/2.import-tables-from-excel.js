@@ -1,7 +1,7 @@
 // file excel chứa cấu trúc mô hình cơ sở dữ liệu tại sheet có tên là tables
-const { excelFile, db } = require("./config");
+const { excelFile, sheetConfigName,db } = require("./config");
 
-const SHEET_NAME = "tables";
+const SHEET_NAME = sheetConfigName;
 
 // import components of orm model
 const { excell2Database } = require("node-js-orm");

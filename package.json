@@ -3,19 +3,32 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "client-socket-nodejs": "^2.0.7",
+    "cng-auto-server": "^1.0.14",
+    "cng-node-js-utils": "^2.0.18",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mime-types": "^2.1.29",
+    "mongodb": "^3.6.5",
+    "node-js-orm": "^4.0.9",
+    "nodemon": "^2.0.7",
+    "path": "^0.12.7",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {},
   "scripts": {
-    "test": "nodemon server-logs-1.0"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nvdinh185:Dinhnv09thxd@github.com/nvdinh185/auto-server.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "client-socket-nodejs": "^2.0.7",
-    "cng-auto-server": "^1.0.10",
-    "cng-node-js-utils": "^2.0.17",
-    "mongodb": "^3.6.5",
-    "node-js-orm": "^4.0.9",
-    "nodemon": "^2.0.7",
-    "sqlite3": "^5.0.2"
-  }
+  "bugs": {
+    "url": "https://github.com/nvdinh185/auto-server/issues"
+  },
+  "homepage": "https://github.com/nvdinh185/auto-server#readme"
 }

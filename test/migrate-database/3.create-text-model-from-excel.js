@@ -6,12 +6,12 @@
  * Mô hình sẽ tự tạo vào json-model
  */
 // file excel chứa cấu trúc mô hình cơ sở dữ liệu tại sheet có tên là tables
-const { excelFile } = require("./config/params");
+const { excelFile, sheetConfigName } = require("./config/params");
 
 // import components of orm model
 const { excell2Database, json2Model } = require("node-js-orm");
 
-excell2Database.excel2Array(excelFile,"tables")
+excell2Database.excel2Array(excelFile, sheetConfigName)
     .then(arrayTables => {
         let jsonTextModel = json2Model.array2JsonTexts(arrayTables);
         console.log(`//Create model from file: ${excelFile}\nmodule.exports = `, jsonTextModel);

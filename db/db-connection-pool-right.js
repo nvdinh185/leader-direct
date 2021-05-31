@@ -1,1 +1,1 @@
-module.exports = require("./db-connection-any")("mongodb", "innovations");
+module.exports = require("./db-connection-any")("sqlite3", "media-files-granted-users");

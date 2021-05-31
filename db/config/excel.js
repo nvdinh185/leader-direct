@@ -1,5 +1,5 @@
 // danh sách các file excel chứa csdl chính thức cần import
 module.exports = {
-  dbMainResource: `./db/excel/sqlite-inovation-manager-v2.xlsx`,
-  dbGrantedUsers: `./db/excel/sqlite-inovation-manager-v2.xlsx`
+  dbMainResource: `./db/excel/function-granted-users-media.xlsx`,
+  dbGrantedUsers: `./db/excel/function-granted-users-media.xlsx`
 };

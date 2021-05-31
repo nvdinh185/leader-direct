@@ -402,13 +402,13 @@ class ModelsHandler {
             return;
         }
 
-        console.log("INCAIGI");
+        // console.log("INCAIGI");
 
         listModels
             .importModelStructure(model_name, datas, where_keys)
             .then(async (data) => {
 
-                console.log("Data import thế nào?", data);
+                // console.log("Data import thế nào?", data);
 
                 // khi import cấu trúc thành công, thì load lại mô hình để truy vấn về sau
                 // trong thủ tục load mô hình sẽ tự import vào bảng table_models để phân quyền sử dụng

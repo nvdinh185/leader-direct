@@ -7,11 +7,11 @@
 
 // khai cấu hình test thử, nếu chèn bị lỗi ở bảng nào?
 const DEBUG = {
-  // isDebug: true,
-  // table_test: "sites_infras",
-  // // cac bang loi: sites_infras (56)
+  isDebug: true,
+  table_test: "server_keys",
+  // cac bang loi: sites_infras (56)
   // loại trừ các bảng không cần migrate, vì nó tạo ngay trong file excel
-  // exclude_tables: ["tables", "category", "damages_category"]
+  exclude_tables: ["social_users"]
 };
 
 const { db, db_src } = require("./config");
@@ -60,19 +60,25 @@ dbSource
       let desModel = new DynamicModel(dbDestination, tableName, modelText);
 
       // đọc toàn bộ dữ liệu nguồn, import vào dữ liệu đích là xong
-      let arrSdata = await srcModel.getAllData();
-
-      desModel
-        .importArray2Database(arrSdata)
-        .then((data) => {
-          console.log(`Import des data for table ${tableName}`, data);
-        })
-        .catch((err) => {
-          console.log(`Import des data for table ${tableName} ERROR:`, err);
+      let arrSdata = await srcModel.getAllData()
+        .catch(err => {
+          console.log("Lỗi truy vấn bảng gốc", err);
         });
+
+      let importOK = await desModel
+        .importArray2Database(arrSdata)
+        .catch((err) => {
+          console.log(`ERROR: Import des data for table ${tableName} ERROR:`, err);
+        });
+
+      console.log(`Import des data for table ${tableName}`, importOK);
     }
+
+    // import xong thì thoát ra
+
+    process.exit(0);
   })
   .catch((err) => {
-    console.log(`Lỗi đọc: ${DEBUG.table_test}`, err);
+    console.log(`Lỗi toàn cục`, err);
     process.exit(0);
   });

@@ -1233,7 +1233,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (55) GET /lucky-draw/user-rights/get-online-tokens
+   * (16) GET /lucky-draw/user-rights/get-online-tokens
    * 
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
@@ -1244,6 +1244,39 @@ class UserRightsHandler {
    */
   getOnlineTokens(req, res, next) {
     return require("../../midlewares/verify-token").getOnlineTokens(req, res, next);
+  }
+
+  /**
+     * (18) GET /tttm-apis/user-rights/get-function-api/:id
+     * 
+     * Lấy chi tiết hàm Api theo Id
+     * Trả về hàm API để xem tính năng là gì, hoặc để tạo form nhập liệu động
+     * 
+     * - Yêu cầu CÓ TOKEN
+     * 
+     * SAMPLE INPUTS:  
+     */
+  getFunctionApiId(req, res, next) {
+
+    let { id } = req.params;
+
+    if (!id) {
+      req.error = "Không có dữ liệu theo yêu cầu";
+      next();
+      return;
+    }
+
+    function_apis.getFirstRecord({ id })
+      .then(data => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
   }
 
 }
