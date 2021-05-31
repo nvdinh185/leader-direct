@@ -18,9 +18,9 @@ module.exports = {
   routeName: `logs-1.0`,
 
   // port cho máy chủ
-  port: 9229,
+  port: 9232,
   // base cho máy chủ
-  baseDirectory: "/logs",
+  baseDirectory: "/leader-direct",
 
   // tên mô hình được khai báo cố định ở đây
   MODEL_NAME: "logs",
