@@ -1,5 +1,5 @@
 {
-  "name": "auto-server",
+  "name": "leader-direct",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,17 +18,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://nvdinh185:Dinhnv09thxd@github.com/nvdinh185/auto-server.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/nvdinh185/auto-server/issues"
-  },
-  "homepage": "https://github.com/nvdinh185/auto-server#readme"
+    "test": "nodemon server-logs-1.0"
+  }
 }

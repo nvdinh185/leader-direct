@@ -75,9 +75,9 @@ const funcPaths = {
         '/get-meeting': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/get-meeting', 'functionCode'),
+            // expHandlers.setRequestParameter('/get-meeting', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
             apiHandler.getMeeting
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại

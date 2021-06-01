@@ -12,7 +12,8 @@
 
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl 
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
-// const { your_model, your_model_1 } = require("../../midleware/your-model/models");
+const { leaderDirectModels } = require("../../midlewares/leader-direct1/models");
+// const luckyDrawModels = require("../../midlewares/lucky-draw/models");
 
 class ApiHandler {
 
@@ -31,7 +32,9 @@ class ApiHandler {
      */
     getMeeting(req, res, next) {
 
-        
+        console.log(leaderDirectModels);
+        // console.log(luckyDrawModels);
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -40,9 +43,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -97,23 +100,23 @@ class ApiHandler {
 
         // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
         // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // your_model.getAllData(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        //   )
+        // leaderDirectModels.meetings.getAllData(
+        //     //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        //     //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+        //     //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+        //     //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
+        // )
 
-        //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+        //     //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
         //     .then(data => {
-        //       // console.log('Data: ', data);
-        //       req.finalJson = data;
-        //       next();
+        //         console.log('Data: ', data);
+        //         req.finalJson = data;
+        //         next();
         //     })
         //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
+        //         console.log('Lỗi: ', err);
+        //         req.error = err;
+        //         next();
         //     });
 
         //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
@@ -159,7 +162,7 @@ class ApiHandler {
      */
     createMeeting(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -168,9 +171,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -287,7 +290,7 @@ class ApiHandler {
      */
     updateMeeting(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -296,9 +299,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -415,7 +418,7 @@ class ApiHandler {
      */
     getDirect(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -424,9 +427,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -543,7 +546,7 @@ class ApiHandler {
      */
     getDirectByCat(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -552,9 +555,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -671,7 +674,7 @@ class ApiHandler {
      */
     createDirect(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -680,9 +683,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -799,7 +802,7 @@ class ApiHandler {
      */
     updateDirect(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -808,9 +811,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -927,7 +930,7 @@ class ApiHandler {
      */
     getDirectOrg(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -936,9 +939,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1055,7 +1058,7 @@ class ApiHandler {
      */
     getDirectByOrg(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1064,9 +1067,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1183,7 +1186,7 @@ class ApiHandler {
      */
     getDirectOrgAll(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1192,9 +1195,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1311,7 +1314,7 @@ class ApiHandler {
      */
     createDirectOrg(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1320,9 +1323,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1439,7 +1442,7 @@ class ApiHandler {
      */
     updateDirectOrg(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1448,9 +1451,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1567,7 +1570,7 @@ class ApiHandler {
      */
     getDirectExe(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1576,9 +1579,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1695,7 +1698,7 @@ class ApiHandler {
      */
     createDirectExe(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1704,9 +1707,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1823,7 +1826,7 @@ class ApiHandler {
      */
     updateDirectExe(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1832,9 +1835,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -1951,7 +1954,7 @@ class ApiHandler {
      */
     getCategory(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -1960,9 +1963,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2079,7 +2082,7 @@ class ApiHandler {
      */
     createCategory(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2088,9 +2091,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2207,7 +2210,7 @@ class ApiHandler {
      */
     updateCategory(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2216,9 +2219,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2335,7 +2338,7 @@ class ApiHandler {
      */
     getStatuses(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2344,9 +2347,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2463,7 +2466,7 @@ class ApiHandler {
      */
     getStatusByCatId(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2472,9 +2475,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2591,7 +2594,7 @@ class ApiHandler {
      */
     createStatus(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2600,9 +2603,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2719,7 +2722,7 @@ class ApiHandler {
      */
     updateStatus(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2728,9 +2731,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2847,7 +2850,7 @@ class ApiHandler {
      */
     getUsers(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2856,9 +2859,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -2975,7 +2978,7 @@ class ApiHandler {
      */
     createUser(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -2984,9 +2987,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3103,7 +3106,7 @@ class ApiHandler {
      */
     updateUser(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3112,9 +3115,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3231,7 +3234,7 @@ class ApiHandler {
      */
     getMenus(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3240,9 +3243,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3359,7 +3362,7 @@ class ApiHandler {
      */
     createMenu(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3368,9 +3371,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3487,7 +3490,7 @@ class ApiHandler {
      */
     updateMenu(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3496,9 +3499,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3615,7 +3618,7 @@ class ApiHandler {
      */
     getOrganizations(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3624,9 +3627,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3743,7 +3746,7 @@ class ApiHandler {
      */
     createOrganization(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3752,9 +3755,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
@@ -3871,7 +3874,7 @@ class ApiHandler {
      */
     updateOrganization(req, res, next) {
 
-        
+
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
         //   next();
@@ -3880,9 +3883,9 @@ class ApiHandler {
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-    
+
         // let { your_param } = req.json_data;
-    
+
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
         //   req.error = "Không có dữ liệu theo yêu cầu";
