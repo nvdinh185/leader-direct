@@ -5,16 +5,16 @@
 // Mô hình giao tiếp csdl mẫu qua một bảng.
 // Trường hợp, sử dụng các phương thức runSql, hoặc runFunc trực tiếp qua this.db
 // hoặc sử dụng các lệnh nguyên gốc db của các DAO như SqliteDAO, OracleDAO thì sử dụng this.db.getDbInstance()
-const TABLE_NAME = "organizations";
-const { organizations } = require("./json-text-models");
+const TABLE_NAME = "meetings";
+const { meetings } = require("./json-text-models");
 const { DynamicModel } = require("node-js-orm");
 
 // Định nghĩa khai báo một mô hình với csdl bằng mở rộng lớp mô hình từ thư viện và gọi lại thư viện
-class Organizations extends DynamicModel {
+class Meetings extends DynamicModel {
     
     constructor(db) {
         // thực hiện khởi tạo mô hình lớp trên
-        super(db, TABLE_NAME, organizations);
+        super(db, TABLE_NAME, meetings);
     }
     
     /*
@@ -75,4 +75,4 @@ class Organizations extends DynamicModel {
 
 }
 
-module.exports = Organizations;
+module.exports = Meetings;

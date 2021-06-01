@@ -12,8 +12,7 @@
 
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl 
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
-const { leaderDirectModels } = require("../../midlewares/leader-direct1/models");
-// const luckyDrawModels = require("../../midlewares/lucky-draw/models");
+const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
 class ApiHandler {
 
@@ -31,9 +30,6 @@ class ApiHandler {
      * SAMPLE INPUTS:  
      */
     getMeeting(req, res, next) {
-
-        console.log(leaderDirectModels);
-        // console.log(luckyDrawModels);
 
         // if (!req.json_data) {
         //   req.error = "Dữ liệu post req.json_data không hợp lệ";
@@ -100,24 +96,24 @@ class ApiHandler {
 
         // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
         // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // leaderDirectModels.meetings.getAllData(
-        //     //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        // )
+        leaderDirectModels.meetings.getFirstRecord(
+            // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+            // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+            // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+            // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
+        )
 
-        //     //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-        //     .then(data => {
-        //         console.log('Data: ', data);
-        //         req.finalJson = data;
-        //         next();
-        //     })
-        //     .catch(err => {
-        //         console.log('Lỗi: ', err);
-        //         req.error = err;
-        //         next();
-        //     });
+            // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+            .then(data => {
+                console.log('Data: ', data);
+                req.finalJson = data;
+                next();
+            })
+            .catch(err => {
+                console.log('Lỗi: ', err);
+                req.error = err;
+                next();
+            });
 
         //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
         //     .then(async data => {
@@ -144,8 +140,8 @@ class ApiHandler {
         //     });
 
         // mặt định chuyển tiếp sang hàm cuối cùng để trả kết quả
-        req.finalJson = { test: "Đây là dữ liệu test của HÀM: getMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
-        next();
+        // req.finalJson = { test: "Đây là dữ liệu test của HÀM: getMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
+        // next();
 
     }
 
