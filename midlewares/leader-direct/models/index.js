@@ -17,6 +17,7 @@ module.exports = {
     users: new (require("./users"))(db),
     organizations: new (require("./organizations"))(db),
     menus: new (require("./menus"))(db),
+    programs: new (require("./programs"))(db),
 
     // khai báo các mô hình dữ liệu khác nếu cần 
     // ...

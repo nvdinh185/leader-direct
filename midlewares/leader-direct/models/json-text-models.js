@@ -119,6 +119,7 @@ module.exports = {
             isUnique: 1,
             autoIncrement: 1
         },
+        uuid: { type: 'STRING', length: 50 },
         category:
         {
             type: 'STRING',
@@ -213,5 +214,24 @@ module.exports = {
         description: { type: 'STRING', length: 255 },
         url: { type: 'STRING', length: 255 },
         icon: { type: 'STRING', length: 255 }
+    },
+    programs:
+    {
+        id:
+        {
+            type: 'INTEGER',
+            notNull: 1,
+            primaryKey: 1,
+            autoIncrement: 1,
+            length: 255
+        },
+        organization_id: { type: 'INTEGER', length: 255 },
+        name: { type: 'STRING', length: 255 },
+        description: { type: 'STRING', length: 255 },
+        created_time: { type: 'TIMESTAMP', length: 255 },
+        updated_time: { type: 'TIMESTAMP', length: 255 },
+        from_time: { type: 'DATETIME', length: 255 },
+        to_time: { type: 'DATETIME', length: 255 },
+        status: { type: 'INTEGER', length: 255 }
     }
 }
