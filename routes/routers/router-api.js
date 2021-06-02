@@ -97,9 +97,9 @@ const funcPaths = {
         '/create-meeting': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/create-meeting', 'functionCode'),
+            // expHandlers.setRequestParameter('/create-meeting', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
             apiHandler.createMeeting
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
@@ -119,9 +119,9 @@ const funcPaths = {
         '/update-meeting': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/update-meeting', 'functionCode'),
+            // expHandlers.setRequestParameter('/update-meeting', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
             apiHandler.updateMeeting
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
@@ -141,9 +141,9 @@ const funcPaths = {
         '/get-direct': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/get-direct', 'functionCode'),
+            // expHandlers.setRequestParameter('/get-direct', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
             apiHandler.getDirect
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
@@ -185,11 +185,13 @@ const funcPaths = {
         '/create-direct': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/create-direct', 'functionCode'),
+            // expHandlers.setRequestParameter('/create-direct', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
-            postHandler.jsonProcess,
-            apiHandler.createDirect
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.formProcess,
+            // apiHandler.createAttachments
+            // apiHandler.createDirect
+            apiHandler.test
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
         ],

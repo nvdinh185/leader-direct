@@ -1,1 +1,1 @@
-module.exports = require("./db-connection-any")("mongodb", "media-files-granted-users");
+module.exports = require("./db-connection-any")("mongodb", "leader-direct-granted-users");

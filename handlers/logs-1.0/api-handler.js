@@ -18,6 +18,73 @@ class ApiHandler {
 
     constructor() { }
 
+    test(req, res, next) {
+
+        let formData = { uuid: '111', code: '222', name2: 'upload_files', test: '333' };
+
+        console.log(formData);
+
+        leaderDirectModels.categories
+            .insertOneRecord(formData)
+            .then(data => {
+                console.log("Data: ", data);
+                req.finalJson = data;
+                next();
+            })
+            .catch((err) => {
+                console.log("Err: ", err);
+                req.error = err;
+                next();
+            });
+    }
+
+    createAttachments(req, res, next) {
+        const generateUUID = () => { // Public Domain/MIT
+            var d = new Date().getTime();//Timestamp
+            var d2 = Math.random() * 1000;
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16;//random number between 0 and 16
+                if (d > 0) {//Use timestamp until depleted
+                    r = (d + r) % 16 | 0;
+                    d = Math.floor(d / 16);
+                } else {//Use microseconds since page-load if supported
+                    r = (d2 + r) % 16 | 0;
+                    d2 = Math.floor(d2 / 16);
+                }
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+
+        if (!req.form_data) {
+            req.error = "Dữ liệu post req.form_data không hợp lệ";
+            next();
+            return;
+        }
+
+        let formData = { url: 'upload_files/202106/02/32684_favicon.ico', uuid: '111' };
+        //let formData = req.form_data.params;
+        // formData.created_time = new Date().getTime();
+        // formData.file_name = req.form_data.files.data.file_name;
+        // formData.file_path = req.form_data.files.data.path_name;
+        // formData.file_type = req.form_data.files.data.file_type;
+        //formData.url = req.form_data.files.data.url;
+        //formData.uuid = '111';//generateUUID();
+        console.log(formData);
+
+        leaderDirectModels.attachments
+            .insertOneRecord(formData)
+            .then(data => {
+                console.log("Data: ", data);
+                req.finalJson = data;
+                next();
+            })
+            .catch((err) => {
+                console.log("Err: ", err);
+                req.error = err;
+                next();
+            });
+    }
+
 
     /**
      * (101) POST /leader-direct/api/get-meeting
@@ -96,21 +163,158 @@ class ApiHandler {
 
         // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
         // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        leaderDirectModels.meetings.getFirstRecord(
-            // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-            // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-            // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-            // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        )
+        leaderDirectModels.meetings.getAllData()
 
             // trả kết quả truy vấn cho api trực tiếp bằng cách sau
             .then(data => {
-                console.log('Data: ', data);
+                // console.log('Data: ', data);
                 req.finalJson = data;
                 next();
             })
             .catch(err => {
-                console.log('Lỗi: ', err);
+                // console.log('Lỗi: ', err);
+                req.error = err;
+                next();
+            });
+
+    }
+
+
+    /**
+     * (102) POST /leader-direct/api/create-meeting
+     * 
+     * 
+     * 
+     * 
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     * 
+     * SAMPLE INPUTS:  
+     */
+    createMeeting(req, res, next) {
+
+
+        if (!req.json_data) {
+            req.error = "Dữ liệu post req.json_data không hợp lệ";
+            next();
+            return;
+        }
+
+        let jsonData = req.json_data;
+
+        leaderDirectModels.meetings.insertOneRecord(
+            jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+        )
+            // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+            .then(data => {
+                // console.log('Data: ', data);
+                req.finalJson = data;
+                next();
+            })
+            .catch(err => {
+                // console.log('Lỗi: ', err);
+                req.error = err;
+                next();
+            });
+
+    }
+
+
+    /**
+     * (103) POST /leader-direct/api/update-meeting
+     * 
+     * 
+     * 
+     * 
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     * 
+     * SAMPLE INPUTS:  
+     */
+    updateMeeting(req, res, next) {
+
+
+        if (!req.json_data) {
+            req.error = "Dữ liệu post req.json_data không hợp lệ";
+            next();
+            return;
+        }
+
+        let jsonData = req.json_data;
+        // console.log(jsonData);
+
+        // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
+        // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
+
+        // let { your_param } = req.json_data;
+
+        // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
+        // if (!your_param) {
+        //   req.error = "Không có dữ liệu theo yêu cầu";
+        //   next();
+        //   return;
+        // }
+
+        // yêu cầu ràng buộc user phải được login trước đó để lấy thông tin username
+        // if (!req.user || !req.user.username) {
+        //   req.error = "Bạn phải thực hiện login trước khi thực hiện chức năng này";
+        //   next();
+        //   return;
+        // }
+
+
+        // // Sử dụng các mẫu của mô hình để truy vấn (select), chèn mới (insert), cập nhập (update), xóa (delete) như sau:
+        // 
+        // // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
+        // your_model.getFirstRecord(
+        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+        //   ) 
+
+        // // lấy các bảng ghi trong bảng theo phân trang trả về {page, data:[<mảng dữ liệu của bảng đọc được>], limit, length, next} ... xem hướng dẫn của mô hình
+        // your_model.getPage(
+        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc  
+        //     // , { page, limit }                         // truy vấn trang số page, và giới hạn hiển thị limit bảng ghi 
+        //    ) 
+
+        // // trả về số lượng bảng ghi hợp lệ theo mệnh đề where
+        // your_model.getCount(
+        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        //    ) 
+
+        // // update 1 bảng ghi vào csdl
+        leaderDirectModels.meetings.updateOneRecord(
+            jsonData,  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+            { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        )
+
+            // // xóa một bảng ghi
+            // your_model.deleteOneRecord(
+            //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+            //    ) 
+            // // chèn một bảng ghi vào csdl
+            // your_model.insertOneRecord(
+            //    jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+            //    ) 
+
+            // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
+            // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
+            // your_model.getAllData(
+            //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+            //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+            //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+            //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
+            //   )
+
+            //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+            .then(data => {
+                // console.log('Data: ', data);
+                req.finalJson = data;
+                next();
+            })
+            .catch(err => {
+                // console.log('Lỗi: ', err);
                 req.error = err;
                 next();
             });
@@ -140,264 +344,8 @@ class ApiHandler {
         //     });
 
         // mặt định chuyển tiếp sang hàm cuối cùng để trả kết quả
-        // req.finalJson = { test: "Đây là dữ liệu test của HÀM: getMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
+        // req.finalJson = { test: "Đây là dữ liệu test của HÀM: updateMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
         // next();
-
-    }
-
-
-    /**
-     * (102) POST /leader-direct/api/create-meeting
-     * 
-     * 
-     * 
-     * 
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     * 
-     * SAMPLE INPUTS:  
-     */
-    createMeeting(req, res, next) {
-
-
-        // if (!req.json_data) {
-        //   req.error = "Dữ liệu post req.json_data không hợp lệ";
-        //   next();
-        //   return;
-        // }
-
-        // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
-        // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-
-        // let { your_param } = req.json_data;
-
-        // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
-        // if (!your_param) {
-        //   req.error = "Không có dữ liệu theo yêu cầu";
-        //   next();
-        //   return;
-        // }
-
-        // yêu cầu ràng buộc user phải được login trước đó để lấy thông tin username
-        // if (!req.user || !req.user.username) {
-        //   req.error = "Bạn phải thực hiện login trước khi thực hiện chức năng này";
-        //   next();
-        //   return;
-        // }
-
-
-        // // Sử dụng các mẫu của mô hình để truy vấn (select), chèn mới (insert), cập nhập (update), xóa (delete) như sau:
-        // 
-        // // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-        // your_model.getFirstRecord(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //   ) 
-
-        // // lấy các bảng ghi trong bảng theo phân trang trả về {page, data:[<mảng dữ liệu của bảng đọc được>], limit, length, next} ... xem hướng dẫn của mô hình
-        // your_model.getPage(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc  
-        //     // , { page, limit }                         // truy vấn trang số page, và giới hạn hiển thị limit bảng ghi 
-        //    ) 
-
-        // // trả về số lượng bảng ghi hợp lệ theo mệnh đề where
-        // your_model.getCount(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-
-        // // update 1 bảng ghi vào csdl
-        // your_model.updateOneRecord(
-        //    jsonData ,  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-
-        // // xóa một bảng ghi
-        // your_model.deleteOneRecord(
-        //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-        // // chèn một bảng ghi vào csdl
-        // your_model.insertOneRecord(
-        //    jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        //    ) 
-
-        // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
-        // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // your_model.getAllData(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        //   )
-
-        //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-        //     .then(data => {
-        //       // console.log('Data: ', data);
-        //       req.finalJson = data;
-        //       next();
-        //     })
-        //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
-        //     });
-
-        //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
-        //     .then(async data => {
-        //       let message = "Đã truy vấn dữ liệu thành công";
-        //       if (!data || !data.id){ // trong đó data.id là tên trường của bảng dữ liệu chắc chắn có để biết bảng ghi tồn tại
-        //          // dữ liệu không tìm thấy khi kiểm tra 1 bảng ghi ... nếu kiểm tra nhiều bảng ghi thì phải xử lý kiểu mảng và lấy đối tượng đầu tiên
-        //         await your_model.insertOneRecord({...jsonData})
-        //               .catch(err=> { throw err });
-        //         message = "Đã chèn mới dữ liệu thành công";
-        //       }else{
-        //          // dữ liệu có tìm thấy theo id, thực hiện update theo id
-        //          await your_model.updateOneRecord({...jsonData}, {id})
-        //               .catch(err=> { throw err });
-        //         message = "Đã cập nhập lại dữ liệu thành công";
-        //       }
-        //       // console.log('Data: ', data);
-        //       req.finalJson = {status:"OK",message};
-        //       next();
-        //     })
-        //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
-        //     });
-
-        // mặt định chuyển tiếp sang hàm cuối cùng để trả kết quả
-        req.finalJson = { test: "Đây là dữ liệu test của HÀM: createMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
-        next();
-
-    }
-
-
-    /**
-     * (103) POST /leader-direct/api/update-meeting
-     * 
-     * 
-     * 
-     * 
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     * 
-     * SAMPLE INPUTS:  
-     */
-    updateMeeting(req, res, next) {
-
-
-        // if (!req.json_data) {
-        //   req.error = "Dữ liệu post req.json_data không hợp lệ";
-        //   next();
-        //   return;
-        // }
-
-        // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
-        // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-
-        // let { your_param } = req.json_data;
-
-        // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
-        // if (!your_param) {
-        //   req.error = "Không có dữ liệu theo yêu cầu";
-        //   next();
-        //   return;
-        // }
-
-        // yêu cầu ràng buộc user phải được login trước đó để lấy thông tin username
-        // if (!req.user || !req.user.username) {
-        //   req.error = "Bạn phải thực hiện login trước khi thực hiện chức năng này";
-        //   next();
-        //   return;
-        // }
-
-
-        // // Sử dụng các mẫu của mô hình để truy vấn (select), chèn mới (insert), cập nhập (update), xóa (delete) như sau:
-        // 
-        // // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-        // your_model.getFirstRecord(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //   ) 
-
-        // // lấy các bảng ghi trong bảng theo phân trang trả về {page, data:[<mảng dữ liệu của bảng đọc được>], limit, length, next} ... xem hướng dẫn của mô hình
-        // your_model.getPage(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc  
-        //     // , { page, limit }                         // truy vấn trang số page, và giới hạn hiển thị limit bảng ghi 
-        //    ) 
-
-        // // trả về số lượng bảng ghi hợp lệ theo mệnh đề where
-        // your_model.getCount(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-
-        // // update 1 bảng ghi vào csdl
-        // your_model.updateOneRecord(
-        //    jsonData ,  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-
-        // // xóa một bảng ghi
-        // your_model.deleteOneRecord(
-        //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //    ) 
-        // // chèn một bảng ghi vào csdl
-        // your_model.insertOneRecord(
-        //    jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        //    ) 
-
-        // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
-        // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // your_model.getAllData(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        //   )
-
-        //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-        //     .then(data => {
-        //       // console.log('Data: ', data);
-        //       req.finalJson = data;
-        //       next();
-        //     })
-        //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
-        //     });
-
-        //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
-        //     .then(async data => {
-        //       let message = "Đã truy vấn dữ liệu thành công";
-        //       if (!data || !data.id){ // trong đó data.id là tên trường của bảng dữ liệu chắc chắn có để biết bảng ghi tồn tại
-        //          // dữ liệu không tìm thấy khi kiểm tra 1 bảng ghi ... nếu kiểm tra nhiều bảng ghi thì phải xử lý kiểu mảng và lấy đối tượng đầu tiên
-        //         await your_model.insertOneRecord({...jsonData})
-        //               .catch(err=> { throw err });
-        //         message = "Đã chèn mới dữ liệu thành công";
-        //       }else{
-        //          // dữ liệu có tìm thấy theo id, thực hiện update theo id
-        //          await your_model.updateOneRecord({...jsonData}, {id})
-        //               .catch(err=> { throw err });
-        //         message = "Đã cập nhập lại dữ liệu thành công";
-        //       }
-        //       // console.log('Data: ', data);
-        //       req.finalJson = {status:"OK",message};
-        //       next();
-        //     })
-        //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
-        //     });
-
-        // mặt định chuyển tiếp sang hàm cuối cùng để trả kết quả
-        req.finalJson = { test: "Đây là dữ liệu test của HÀM: updateMeeting từ lớp: ./handlers/logs-1.0/api-handler.js" }
-        next();
 
     }
 
@@ -480,24 +428,24 @@ class ApiHandler {
 
         // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
         // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // your_model.getAllData(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        //   )
+        leaderDirectModels.directs.getAllData(
+            //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+            //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+            //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+            //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
+        )
 
-        //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-        //     .then(data => {
-        //       // console.log('Data: ', data);
-        //       req.finalJson = data;
-        //       next();
-        //     })
-        //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
-        //     });
+            //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+            .then(data => {
+                // console.log('Data: ', data);
+                req.finalJson = data;
+                next();
+            })
+            .catch(err => {
+                // console.log('Lỗi: ', err);
+                req.error = err;
+                next();
+            });
 
         //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
         //     .then(async data => {
@@ -524,8 +472,8 @@ class ApiHandler {
         //     });
 
         // mặt định chuyển tiếp sang hàm cuối cùng để trả kết quả
-        req.finalJson = { test: "Đây là dữ liệu test của HÀM: getDirect từ lớp: ./handlers/logs-1.0/api-handler.js" }
-        next();
+        // req.finalJson = { test: "Đây là dữ liệu test của HÀM: getDirect từ lớp: ./handlers/logs-1.0/api-handler.js" }
+        // next();
 
     }
 
@@ -671,16 +619,17 @@ class ApiHandler {
     createDirect(req, res, next) {
 
 
-        // if (!req.json_data) {
-        //   req.error = "Dữ liệu post req.json_data không hợp lệ";
-        //   next();
-        //   return;
+        // if (!req.form_data) {
+        //     req.error = "Dữ liệu post req.form_data không hợp lệ";
+        //     next();
+        //     return;
         // }
 
         // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
         // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
 
-        // let { your_param } = req.json_data;
+        // let formData = req.form_data;
+        console.log(123);
 
         // yêu cầu ràng buộc các dữ liệu đầu vào phải có đầy đủ
         // if (!your_param) {
@@ -730,29 +679,29 @@ class ApiHandler {
         //     {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
         //    ) 
         // // chèn một bảng ghi vào csdl
-        // your_model.insertOneRecord(
-        //    jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        //    ) 
+        // leaderDirectModels.directs.insertOneRecord(
+        //     jsonData  // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+        // )
 
-        // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
-        // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
-        // your_model.getAllData(
-        //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-        //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
-        //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
-        //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
-        //   )
+        //     // // lấy toàn bộ bảng ghi trong bảng trả về mảng [] theo điều kiện where và giới hạn limit, cùng index của bảng ghi tại offset số nếu có
+        //     // // ví dụ: select field_1, field_2 from your_model where key = 'value' order by field_1 asc, field_2 desc limit 5 offset 0
+        //     // your_model.getAllData(
+        //     //     // {key: "value" | {$<operator>: "value" } } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        //     //     // , { field_1: 1, field_2: 1, _id: 0 }      // jsonFields = list field to select field_1, field_2 from <table>
+        //     //     // , { field_1: 1, field_2: -1 }             // jsonSort = order by field_1 asc, field_2 desc
+        //     //     // , { limit: 5, offset: 0}                   // jsonPaging = limit 5 offset 0
+        //     //   )
 
-        //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+        //     //      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
         //     .then(data => {
-        //       // console.log('Data: ', data);
-        //       req.finalJson = data;
-        //       next();
+        //         // console.log('Data: ', data);
+        //         req.finalJson = data;
+        //         next();
         //     })
         //     .catch(err => {
-        //       // console.log('Lỗi: ', err);
-        //       req.error = err;
-        //       next();
+        //         // console.log('Lỗi: ', err);
+        //         req.error = err;
+        //         next();
         //     });
 
         //     // hoặc xử lý theo kiểu kiểm tra bảng ghi tồn tại hay không trước khi chèn hoặc update như sau
