@@ -14,6 +14,7 @@ module.exports = {
     function_apis: new (require("./function_apis"))(db),
     function_groups: new (require("./function_groups"))(db),
     function_granted: new (require("./function_granted"))(db),
+    menu_apis: new (require("./menu_apis"))(db),
 
     // khai báo các mô hình dữ liệu khác nếu cần 
     // ...

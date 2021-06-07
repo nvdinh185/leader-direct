@@ -1247,6 +1247,22 @@ class UserRightsHandler {
   }
 
   /**
+   * (51) GET /lucky-draw/user-rights/get-function-group
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  getFunctionGroup(req, res, next) {
+    console.log(123);
+    req.finalJson = [];
+    next();
+  }
+
+  /**
      * (18) GET /tttm-apis/user-rights/get-function-api/:id
      * 
      * Lấy chi tiết hàm Api theo Id

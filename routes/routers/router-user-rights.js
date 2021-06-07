@@ -70,7 +70,7 @@ const funcPaths = {
         '/get-functions': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getFunctions
@@ -91,7 +91,7 @@ const funcPaths = {
         '/get-granted-groups': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getGrantedGroups
@@ -175,7 +175,7 @@ const funcPaths = {
         '/get-api-routers': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getApiRouters
@@ -196,10 +196,31 @@ const funcPaths = {
         '/get-online-tokens': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-            expHandlers.setRequestParameter('/get-online-tokens', 'functionCode'),
+            // expHandlers.setRequestParameter('/get-online-tokens', 'functionCode'),
             // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-            ...verifyGrantedChain,
+            // ...verifyGrantedChain,
             userRightsHandler.getOnlineTokens
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (51) GET /leader-direct/user-rights/get-function-group
+         * 
+         * Lấy danh sách token đang online
+         * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/get-function-group': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/get-function-group', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,
+            userRightsHandler.getFunctionGroup
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
         ],
