@@ -10,6 +10,7 @@ const {
   function_apis,
   function_groups,
   function_granted,
+  menu_apis
 } = require("../../midlewares/granted-users/models");
 
 class UserRightsHandler {
@@ -1247,7 +1248,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (51) GET /lucky-draw/user-rights/get-function-group
+   * (51) GET /leader-direct/user-rights/get-function-group
    * 
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
@@ -1257,9 +1258,225 @@ class UserRightsHandler {
    * SAMPLE INPUTS:  
    */
   getFunctionGroup(req, res, next) {
-    console.log(123);
-    req.finalJson = [];
-    next();
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let { id } = req.json_data;
+
+    function_groups.getFirstRecord(
+      { id },
+      {}
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err;
+        next();
+      })
+
+  }
+
+  /**
+   * (52) POST /leader-direct/user-rights/create-function-group
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  createFunctionGroup(req, res, next) {
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    // console.log(jsonData);
+    function_groups.insertOneRecord(
+      jsonData
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
+  }
+
+  /**
+   * (53) POST /leader-direct/user-rights/update-function-group
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  updateFunctionGroup(req, res, next) {
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    // console.log(jsonData);
+    function_groups.updateOneRecord(
+      jsonData,
+      { id: jsonData.id }
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
+  }
+
+  /**
+   * (54) POST /leader-direct/user-rights/get-menu-api
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  getMenuApi(req, res, next) {
+
+    menu_apis.getAllData()
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
+  }
+
+  /**
+   * (55) POST /leader-direct/user-rights/create-menu-api
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  createMenuApi(req, res, next) {
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+
+    menu_apis.insertOneRecord(
+      jsonData
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
+  }
+
+  /**
+   * (56) POST /leader-direct/user-rights/update-menu-api
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  updateMenuApi(req, res, next) {
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+
+    menu_apis.updateOneRecord(
+      jsonData,
+      { id: jsonData.id }
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
+  }
+
+  /**
+   * (57) POST /leader-direct/user-rights/get-function-granted
+   * 
+   * Lấy danh sách token đang online
+   * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
+   * 
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS:  
+   */
+  getFunctionGranted(req, res, next) {
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post json không hợp lệ";
+      next();
+      return;
+    }
+
+    let { username } = req.json_data;
+
+    function_granted.getFirstRecord(
+      { username },
+      {}
+    )
+      .then(data => {
+        req.finalJson = data;
+        next();
+      })
+      .catch(err => {
+        req.finalJson = err
+        next();
+      })
+
   }
 
   /**
