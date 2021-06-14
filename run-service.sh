@@ -1,7 +1,7 @@
 #! /bin/bash
 WORK_DIR=$PWD
 LOG_FILE=$WORK_DIR/logs/socket
-CLASSPATH=$WORK_DIR/server.js
+CLASSPATH=$WORK_DIR/server-leader-direct-1.0.js
 pid_file=$WORK_DIR/service.pid
 TIMESTAMP=`date '+%Y%m%d_%H%M'`
 

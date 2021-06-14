@@ -13,9 +13,9 @@ module.exports = {
   // ngõ vào chính để khai báo các handlers
   handlersMain: `/handlers`,
   // ngõ vào để khai báo các handlers
-  handlersEntry: `/logs-1.0`,
+  handlersEntry: `/server-leader-direct-1.0`,
   // cấu hình tên của route phía sau api-route-${}
-  routeName: `logs-1.0`,
+  routeName: `server-leader-direct-1.0`,
 
   // port cho máy chủ
   port: 9232,
@@ -23,10 +23,9 @@ module.exports = {
   baseDirectory: "/leader-direct",
 
   // tên mô hình được khai báo cố định ở đây
-  MODEL_NAME: "logs",
+  MODEL_NAME: "leader-direct",
   // tên kết nối csdl lưu các bảng dữ liệu của dự án
   db_connection: "db-main-resource", // === khai ở ./midlewares/dynamic-models/config/index.js xuất bảng một biến có dạng === dbAdminUsers
   // file dữ liệu mẫu cần import vào csdl chính
-  excelData: require("../../../db").excelFileData
-
+  excelData: require("../../../db").excelFileData,
 };
