@@ -25,7 +25,7 @@ class ApiHandler {
      * @param {*} next 
      * @returns 
      */
-    createAttachments(req, res, next) {
+    async createAttachments(req, res, next) {
         const generateUUID = () => { // Public Domain/MIT
             var d = new Date().getTime();//Timestamp
             var d2 = Math.random() * 1000;
@@ -56,19 +56,16 @@ class ApiHandler {
             req.ids.push(jsonData.uuid);
             arData.push(jsonData);
         }
-
-        leaderDirectModels.attachments
-            .insertOneRecord(arData[0])
-            // .importRows(arData)
-            .then(data => {
-                console.log("Data: ", data);
-                next();
-            })
-            .catch((err) => {
-                console.log("Err: ", err);
-                req.error = err;
-                next();
-            });
+        // console.log(arData);
+        try {
+            for (const data of arData) {
+                await leaderDirectModels.attachments.insertOneRecord(data);
+            }
+            next();
+        } catch (err) {
+            req.error = err;
+            next();
+        }
     }
 
 
@@ -113,9 +110,15 @@ class ApiHandler {
      */
     createMeeting(req, res, next) {
 
-
         let jsonData = req.form_data.params;
-        jsonData.attachments = '[ ' + req.ids[0] + ' ]';
+        jsonData.attachments = '[ ';
+        req.ids.every((id, idx) => {
+            jsonData.attachments += id;
+            if (idx === req.ids.length - 1) return false
+            jsonData.attachments += ", ";
+            return true;
+        });
+        jsonData.attachments += ' ]';
         jsonData.created_time = new Date().getTime();
 
         leaderDirectModels.meetings.insertOneRecord(
@@ -269,7 +272,14 @@ class ApiHandler {
         // let formData = req.form_data;
         // console.log(req.form_data.params);
         let jsonData = req.form_data.params;
-        jsonData.attachments = '[ ' + req.ids[0] + ' ]';
+        jsonData.attachments = '[ ';
+        req.ids.every((id, idx) => {
+            jsonData.attachments += id;
+            if (idx === req.ids.length - 1) return false
+            jsonData.attachments += ", ";
+            return true;
+        });
+        jsonData.attachments += ' ]';
         jsonData.created_time = new Date().getTime();
 
         leaderDirectModels.directs.insertOneRecord(
