@@ -1,6 +1,6 @@
 // Đây là thủ tục tạo tự động từ ./test/create-api-functions/x-create-api-routers-handlers.js by cuong.dq
 // Dữ liệu gốc từ file excel ./db/excel/api-function-granted-users-cdld.xlsx
-// Được tạo và lúc 2021-05-31 15:44:25
+// Được tạo và lúc 2021-06-08 14:02:33
 
 "use strict";
 
@@ -70,7 +70,7 @@ const funcPaths = {
         '/get-functions': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getFunctions
@@ -91,7 +91,7 @@ const funcPaths = {
         '/get-granted-groups': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getGrantedGroups
@@ -175,7 +175,7 @@ const funcPaths = {
         '/get-api-routers': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
             // 
-            
+
             // Chuỗi hàm yêu cầu CÓ TOKEN
             ...verifyTokenChain,
             userRightsHandler.getApiRouters
@@ -425,6 +425,160 @@ const funcPaths = {
             ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
             postHandler.jsonProcess,
             userRightsHandler.importFunctionApis
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (51) POST /leader-direct/user-rights/get-function-group
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/get-function-group': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/get-function-group', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.getFunctionGroup
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (52) POST /leader-direct/user-rights/create-function-group
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/create-function-group': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/create-function-group', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.createFunctionGroup
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (53) POST /leader-direct/user-rights/update-function-group
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/update-function-group': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/update-function-group', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.updateFunctionGroup
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (54) POST /leader-direct/user-rights/get-menu-api
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/get-menu-api': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/get-menu-api', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.getMenuApi
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (55) POST /leader-direct/user-rights/create-menu-api
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/create-menu-api': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/create-menu-api', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.createMenuApi
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (56) POST /leader-direct/user-rights/update-menu-api
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/update-menu-api': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/update-menu-api', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.updateMenuApi
+            // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+            // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+        ],
+
+        /**
+         * (57) POST /leader-direct/user-rights/get-function-granted
+         * 
+         * 
+         * 
+         * 
+         * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+         * 
+         * SAMPLE INPUTS:  
+         */
+        '/get-function-granted': [
+            // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+            // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+            // expHandlers.setRequestParameter('/get-function-granted', 'functionCode'),
+            // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+            // ...verifyGrantedChain,// Hàm xử lý POST json data trả về req.json_data
+            postHandler.jsonProcess,
+            userRightsHandler.getFunctionGranted
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
         ],

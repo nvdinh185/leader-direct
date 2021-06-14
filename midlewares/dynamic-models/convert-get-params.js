@@ -1,6 +1,4 @@
-// const convertWhereGet2Model = require("./convert-where-get-2-model");
-
-const {  convertWheres } = require ("node-js-orm");
+const convertWhereGet2Model = require("./convert-where-get-2-model");
 
 /**
  * Chuyển đổi các tham số query trên link sang mệnh các mệnh đề như post
@@ -10,8 +8,7 @@ const {  convertWheres } = require ("node-js-orm");
  */
 module.exports = (wheres, fields, sorts) => {
 
-    // chuyển đổi mệnh đề wheres=giả lập object bằng thư viện node-js-orm ver 4.0.2 trở lên
-    let jsonWhere = convertWheres.convertGetParam2JsonWhere(wheres);
+    let jsonWhere = convertWhereGet2Model(wheres);
     // console.log("wheres:", wheres);
     // console.log("jsonWhere:", jsonWhere);
 
