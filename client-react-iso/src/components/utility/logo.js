@@ -14,9 +14,13 @@ export default ({ collapsed }) => {
           </h3>
         </div>
       ) : (
-        <h3>
-          <Link to="/dashboard">{siteConfig.siteName}</Link>
-        </h3>
+        // <h3>
+        //   <Link to="/dashboard">{siteConfig.siteName}</Link>
+        // </h3>
+        <img
+          style={{ zIndex: "2", width: "65%", marginTop: "-0.25rem" }}
+          src={`${process.env.PUBLIC_URL}/assets/logo/logo-vang.png`}
+        ></img>
       )}
     </div>
   );
