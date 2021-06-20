@@ -58,7 +58,7 @@ const CreateOrUpdateBoard = (props) => {
           border="none"
           padding={"0"}
           alt="Close Icon"
-          onClick={() => props.history.push(`/dashboard/scrum-board`)}
+          onClick={() => props.history.push(`/app/scrum-board`)}
         />
       </TopBar>
       <FormWrapper>

@@ -33,9 +33,9 @@ export default function SignIn() {
       dispatch(login());
     }
     dispatch(clearMenu());
-    history.push("/dashboard");
+    history.push("/app");
   }
-  let { from } = location.state || { from: { pathname: "/dashboard" } };
+  let { from } = location.state || { from: { pathname: "/app" } };
 
   if (redirectToReferrer) {
     return <Redirect to={from} />;
@@ -45,7 +45,7 @@ export default function SignIn() {
       <div className="isoLoginContentWrapper">
         <div className="isoLoginContent">
           <div className="isoLogoWrapper">
-            <Link to="/dashboard">
+            <Link to="/app">
               <IntlMessages id="page.signInTitle" />
             </Link>
           </div>

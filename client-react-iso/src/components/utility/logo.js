@@ -8,7 +8,7 @@ export default ({ collapsed }) => {
       {collapsed ? (
         <div>
           <h3>
-            <Link to="/dashboard">
+            <Link to="/app">
               <i className={siteConfig.siteIcon} />
             </Link>
           </h3>

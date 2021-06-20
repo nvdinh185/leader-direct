@@ -14,7 +14,7 @@ function BoardLists({ boards, deleteBoardWatcher, editBoard, history, match, boa
 
   const handleEdit = (board) => {
     editBoard(board);
-    history.push(`/dashboard/scrum-board/${board.id}`);
+    history.push(`/app/scrum-board/${board.id}`);
   };
 
   return (
