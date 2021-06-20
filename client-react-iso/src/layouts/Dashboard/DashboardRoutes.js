@@ -14,7 +14,7 @@ const routes = [
     exact: false,
   },
   {
-    path: "blank_page",
+    path: "blank-page",
     component: lazy(() => import("@containers/BlankPage")),
   },
 ];

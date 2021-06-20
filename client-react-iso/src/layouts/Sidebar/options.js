@@ -49,7 +49,7 @@ const options = [
   },
 
   {
-    key: "blank_page",
+    key: "blank-page",
     label: "sidebar.blankPage",
     leftIcon: "ion-document",
   },

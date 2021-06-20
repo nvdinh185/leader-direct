@@ -50,6 +50,7 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 package-lock.json
+yarn.lock
 db/database/*.db
 cfg/
 build/

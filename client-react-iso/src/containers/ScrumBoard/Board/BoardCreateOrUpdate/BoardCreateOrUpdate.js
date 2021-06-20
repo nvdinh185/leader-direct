@@ -39,7 +39,7 @@ const CreateOrUpdateBoard = (props) => {
       values.id = uuidV4();
     }
     props.createOrUpdateBoardWatcher(values);
-    props.history.push(`/dashboard/scrum-board/project/${values.id}`);
+    props.history.push(`/app/scrum-board/project/${values.id}`);
   };
 
   return (

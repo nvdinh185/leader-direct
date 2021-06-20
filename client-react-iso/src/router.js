@@ -65,14 +65,14 @@ export default function Routes() {
   return (
     <ErrorBoundary>
       <Suspense fallback={<Loader />}>
-        <Router>
+        <Router basename="/leader-direct">
           <Switch>
             {publicRoutes.map((route, index) => (
               <Route key={index} path={route.path} exact={route.exact}>
                 <route.component />
               </Route>
             ))}
-            <PrivateRoute path="/dashboard">
+            <PrivateRoute path="/app">
               <Dashboard />
             </PrivateRoute>
           </Switch>

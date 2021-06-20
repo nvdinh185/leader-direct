@@ -25,7 +25,7 @@ export default function BoardListCard({ item, onDelete, onEdit }) {
     <tbody>
       <tr>
         <td>
-          <Link to={`/dashboard/scrum-board/project/${item.id}`}>
+          <Link to={`/app/scrum-board/project/${item.id}`}>
             <ProjectInfo>
               <Avatar src={AvatarIcon} alt={item.name} />
               <InfoWrapper>
