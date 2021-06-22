@@ -57,6 +57,9 @@ const funcPaths = {
     // Các lệnh GET của /api này:
 
     GET: {
+        '/get-file/:fileName': [
+            apiHandler.getFile
+        ],
     },
 
     // Các lệnh POST của /api này:

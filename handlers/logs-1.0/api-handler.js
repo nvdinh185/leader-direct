@@ -14,6 +14,9 @@
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
+const fs = require('fs');
+const path = require('path');
+
 class ApiHandler {
 
     constructor() { }
@@ -1216,7 +1219,6 @@ class ApiHandler {
      */
     updateOrganization(req, res, next) {
 
-
         if (!req.json_data) {
             req.error = "Dữ liệu post req.json_data không hợp lệ";
             next();
@@ -1243,6 +1245,18 @@ class ApiHandler {
                 next();
             });
 
+    }
+
+    getFile(req, res) {
+        // console.log(req.params);
+        let fileName = req.params.fileName;
+        // const data = fs.readFileSync(fileName, { encoding: 'base64' });
+        // res.send(data);
+
+        // console.log(data);
+
+        const data = fs.readFileSync(fileName);
+        res.send(data);
     }
 
 
