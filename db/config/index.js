@@ -25,9 +25,9 @@ module.exports = {
   PATH_SEP: path.sep,
 
   // tham số kết nối csdl riêng của dự án
-  oracle12c: {}, //require("../../cfg/oracle-12c-cdkh"),
+  // oracle12c: {}, //require("../../cfg/oracle-12c-cdkh"),
 
-  mongodb3553: {}, //require("../../cfg/mongo-3553-4.4.0-cty3"),
+  mongodb3553: require("../../cfg/mongo-3553-4.4.0-cty3"),
 
   mongodb69: require("../../cfg/mongo-69-4.4.0-cty3"),
 

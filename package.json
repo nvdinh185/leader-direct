@@ -18,6 +18,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "nodemon server-logs-1.0"
+    "test": "nodemon server-leader-direct-1.0"
   }
 }
