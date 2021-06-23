@@ -28,8 +28,10 @@ export default function SignIn() {
   function handleLogin(e, token = false) {
     e.preventDefault();
     if (token) {
+      console.log(123);
       dispatch(login(token));
     } else {
+      console.log(456);
       dispatch(login());
     }
     dispatch(clearMenu());
