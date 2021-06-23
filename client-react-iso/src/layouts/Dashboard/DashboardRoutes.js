@@ -4,7 +4,7 @@ import Loader from "@components/utility/loader";
 
 const routes = [
   {
-    path: "",
+    path: "dashboard",
     component: lazy(() => import("@containers/Widgets/Widgets")),
     exact: true,
   },
@@ -19,7 +19,7 @@ const routes = [
   },
 ];
 
-export default function AppRouter() {
+export default function AppRouter(props) {
   const { url } = useRouteMatch();
   return (
     <Suspense fallback={<Loader />}>

@@ -328,11 +328,6 @@ const options = [
         withoutDashboard: true,
       },
       {
-        key: "signup",
-        label: "sidebar.signUp",
-        withoutDashboard: true,
-      },
-      {
         key: "forgotpassword",
         label: "sidebar.forgotPw",
         withoutDashboard: true,

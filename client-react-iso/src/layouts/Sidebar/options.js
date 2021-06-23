@@ -1,5 +1,10 @@
 const options = [
   {
+    key: "dashboard",
+    label: "sidebar.dashboard",
+    leftIcon: "ion-android-checkbox-outline",
+  },
+  {
     key: "scrum-board",
     label: "sidebar.scrumboard",
     leftIcon: "ion-android-checkbox-outline",
@@ -24,11 +29,7 @@ const options = [
         label: "sidebar.signIn",
         withoutDashboard: true,
       },
-      {
-        key: "signup",
-        label: "sidebar.signUp",
-        withoutDashboard: true,
-      },
+
       {
         key: "forgotpassword",
         label: "sidebar.forgotPw",

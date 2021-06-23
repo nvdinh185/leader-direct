@@ -1,13 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { logOut } from "@redux/auth/actions";
 import Popover from "@components/uielements/popover";
 import IntlMessages from "@components/utility/intlMessages";
 import userpic from "@assets/images/user1.png";
-import authAction from "@redux/auth/actions";
 import TopbarDropdownWrapper from "./TopbarDropdown.styles";
-
-const { logout } = authAction;
 
 export default function TopbarUser() {
   const [visible, setVisibility] = React.useState(false);
@@ -30,7 +28,7 @@ export default function TopbarUser() {
       <a className="isoDropdownLink" href="# ">
         <IntlMessages id="topbar.help" />
       </a>
-      <div className="isoDropdownLink" onClick={() => dispatch(logout())}>
+      <div className="isoDropdownLink" onClick={() => dispatch(logOut())}>
         <IntlMessages id="topbar.logout" />
       </div>
     </TopbarDropdownWrapper>

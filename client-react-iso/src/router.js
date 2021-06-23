@@ -15,6 +15,10 @@ const publicRoutes = [
     component: lazy(() => import("@layouts/Pages/SignIn/SignIn")),
   },
   {
+    path: PUBLIC_ROUTE.SIGN_IN,
+    component: lazy(() => import("@layouts/Pages/SignIn/SignIn")),
+  },
+  {
     path: PUBLIC_ROUTE.PAGE_404,
     component: lazy(() => import("@layouts/Pages/404/404")),
   },
@@ -22,23 +26,8 @@ const publicRoutes = [
     path: PUBLIC_ROUTE.PAGE_500,
     component: lazy(() => import("@layouts/Pages/500/500")),
   },
-  {
-    path: PUBLIC_ROUTE.SIGN_IN,
-    component: lazy(() => import("@layouts/Pages/SignIn/SignIn")),
-  },
-  {
-    path: PUBLIC_ROUTE.SIGN_UP,
-    component: lazy(() => import("@layouts/Pages/SignUp/SignUp")),
-  },
-  {
-    path: PUBLIC_ROUTE.FORGET_PASSWORD,
-    component: lazy(() => import("@layouts/Pages/ForgotPassword/ForgotPassword")),
-  },
-  {
-    path: PUBLIC_ROUTE.RESET_PASSWORD,
-    component: lazy(() => import("@layouts/Pages/ResetPassword/ResetPassword")),
-  },
 ];
+
 function PrivateRoute({ children, ...rest }) {
   const isLoggedIn = useSelector((state) => state.Auth.idToken);
 
@@ -75,6 +64,7 @@ export default function Routes() {
             <PrivateRoute path="/app">
               <Dashboard />
             </PrivateRoute>
+            <Redirect to="/signin"></Redirect>
           </Switch>
         </Router>
       </Suspense>

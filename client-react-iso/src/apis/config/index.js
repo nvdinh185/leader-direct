@@ -1,13 +1,50 @@
 import axios from "axios";
 
-export const baseURL = process.env.REACT_APP_BASE_URL;
+// export const baseURL = process.env.REACT_APP_BASE_URL;
 export const baseURL = "http://10.16.150.69:9232/leader-direct/api";
 
+// export const baseUserRightUrl = process.env.REACT_APP_BASE_USER_RIGHT_URL;
+export const baseUserRightURL = "http://10.16.150.69:9232/leader-direct/user-rights";
+
+export const authServerUrl = "https://c3.mobifone.vn/socket/admin-users";
+
 const requestTimeOut = process.env.AXIOS_REQUEST_TIME_OUT;
+
+export const callAPIAuth = (method, url, data, token, params) => {
+  return axios({
+    baseURL: authServerUrl,
+    timeout: requestTimeOut,
+    headers: {
+      "content-type": "application/json",
+      // 'Ocp-Apim-Subscription-Key': '149de49b198446478de94394aced5677',
+      Authorization: token,
+    },
+    method,
+    url,
+    data,
+    params,
+  });
+};
 
 export const callAPI = (method, url, data, token, params) => {
   return axios({
     baseURL: baseURL,
+    timeout: requestTimeOut,
+    headers: {
+      "content-type": "application/json",
+      // 'Ocp-Apim-Subscription-Key': '149de49b198446478de94394aced5677',
+      Authorization: token,
+    },
+    method,
+    url,
+    data,
+    params,
+  });
+};
+
+export const callUserRightAPI = (method, url, data, token, params) => {
+  return axios({
+    baseURL: baseUserRightURL,
     timeout: requestTimeOut,
     headers: {
       "content-type": "application/json",

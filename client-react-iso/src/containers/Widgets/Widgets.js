@@ -1,10 +1,8 @@
 import React from "react";
-import clone from "clone";
 import { Row, Col } from "antd";
 import LayoutWrapper from "@components/utility/layoutWrapper";
 import basicStyle from "@assets/styles/constants";
 import IsoWidgetsWrapper from "./WidgetsWrapper";
-import IsoWidgetBox from "./WidgetBox";
 import CardWidget from "./Card/CardWidget";
 import ProgressWidget from "./Progress/ProgressWidget";
 import SingleProgressWidget from "./Progress/ProgressSingle";
@@ -15,7 +13,6 @@ import VCardWidget from "./vCard/vCardWidget";
 import SocialWidget from "./SocialWidget/SocialWidget";
 import SocialProfile from "./SocialWidget/SocialProfileIcon";
 import userpic from "@assets/images/user1.png";
-import { isServer } from "@lib/helpers/isServer";
 import IntlMessages from "@components/utility/intlMessages";
 
 const SIGNLE_PROGRESS_WIDGET = [
@@ -187,13 +184,6 @@ const SOCIAL_PROFILE = [
 ];
 export default function () {
   const { rowStyle, colStyle } = basicStyle;
-
-  const chartEvents = [
-    {
-      eventName: "select",
-      callback(Chart) {},
-    },
-  ];
 
   return (
     <LayoutWrapper>

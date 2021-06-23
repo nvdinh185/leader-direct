@@ -1,40 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Input from "@components/uielements/input";
 import Checkbox from "@components/uielements/checkbox";
 import Button from "@components/uielements/button";
 import IntlMessages from "@components/utility/intlMessages";
-import authAction from "@redux/auth/actions";
+import { login } from "@redux/auth/actions";
 import appAction from "@redux/app/actions";
 import SignInStyleWrapper from "./SignIn.styles";
 
-const { login } = authAction;
 const { clearMenu } = appAction;
 
 export default function SignIn() {
   let history = useHistory();
   let location = useLocation();
+  const [loginForm, setLoginForm] = useState({});
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.Auth.idToken);
+  const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
-  const [redirectToReferrer, setRedirectToReferrer] = React.useState(false);
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoggedIn) {
       setRedirectToReferrer(true);
     }
   }, [isLoggedIn]);
 
-  function handleLogin(e, token = false) {
-    e.preventDefault();
-    if (token) {
-      dispatch(login(token));
-    } else {
-      dispatch(login());
+  function handleChangeForm(e) {
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
+    let code = e.keyCode ? e.keyCode : e.which;
+    if (code === 13) {
+      handleLogin();
     }
-    dispatch(clearMenu());
-    history.push("/app");
   }
+
+  function handleLogin(e) {
+    dispatch(login(loginForm.username, loginForm.password));
+    dispatch(clearMenu());
+    history.push("/app/dashboard");
+  }
+
   let { from } = location.state || { from: { pathname: "/app" } };
 
   if (redirectToReferrer) {
@@ -52,11 +56,18 @@ export default function SignIn() {
           <div className="isoSignInForm">
             <form>
               <div className="isoInputWrapper">
-                <Input size="large" placeholder="Username" autoComplete="true" />
+                <Input name="username" size="large" placeholder="Tài khoản" autoComplete="true" onKeyUp={handleChangeForm} />
               </div>
 
               <div className="isoInputWrapper">
-                <Input size="large" type="password" placeholder="Password" autoComplete="false" />
+                <Input
+                  name="password"
+                  size="large"
+                  type="password"
+                  placeholder="Mật Khẩu"
+                  autoComplete="false"
+                  onKeyUp={handleChangeForm}
+                />
               </div>
 
               <div className="isoInputWrapper isoLeftRightComponent">
@@ -67,20 +78,7 @@ export default function SignIn() {
                   <IntlMessages id="page.signInButton" />
                 </Button>
               </div>
-
-              <p className="isoHelperText">
-                <IntlMessages id="page.signInPreview" />
-              </p>
             </form>
-
-            <div className="isoCenterComponent isoHelperWrapper">
-              <Link to="/forgotpassword" className="isoForgotPass">
-                <IntlMessages id="page.signInForgotPass" />
-              </Link>
-              <Link to="/signup">
-                <IntlMessages id="page.signInCreateAccount" />
-              </Link>
-            </div>
           </div>
         </div>
       </div>
