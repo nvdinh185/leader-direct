@@ -6,7 +6,7 @@ export const baseURL = "http://10.16.150.69:9232/leader-direct/api";
 // export const baseUserRightUrl = process.env.REACT_APP_BASE_USER_RIGHT_URL;
 export const baseUserRightURL = "http://10.16.150.69:9232/leader-direct/user-rights";
 
-export const authServerUrl = "https://c3.mobifone.vn/socket/admin-users";
+export const authServerUrl = "https://c3.mobifone.vn/socket/api";
 
 const requestTimeOut = process.env.AXIOS_REQUEST_TIME_OUT;
 

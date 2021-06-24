@@ -5,6 +5,7 @@ export const checkAuthorization = () => {
   const token = localStorage.getItem("idToken");
   const userInfo = JSON.parse(localStorage.getItem("userInfoLeader"));
   return (dispatch) => {
+    // TODO: add logic to check token info
     if (token) {
       dispatch(authSuccess({ token, userInfo }));
       return;
