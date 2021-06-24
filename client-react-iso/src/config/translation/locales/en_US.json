@@ -1,5 +1,9 @@
 {
   "sidebar.dashboard": "Dashboard",
+  "sidebar.adminGroup": "Menu Admin",
+  "sidebar.adminMenu": "Quản lý Menu",
+  "sidebar.adminUser": "Quản lý User",
+  "sidebar.adminUserGroup": "Quản lý User Group",
   "page.signInTitle": "MOBIFONE 3",
   "page.forgetPassTitle": "Isomorphic",
   "page.forgetPassSubTitle": "Forgot Password?",

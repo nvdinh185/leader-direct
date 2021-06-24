@@ -5,6 +5,25 @@ const options = [
     leftIcon: "ion-android-checkbox-outline",
   },
   {
+    key: "admin",
+    label: "sidebar.adminGroup",
+    leftIcon: "ion-person",
+    children: [
+      {
+        key: "admin-menu",
+        label: "sidebar.adminMenu",
+      },
+      {
+        key: "admin-user",
+        label: "sidebar.adminUser",
+      },
+      {
+        key: "admin-group-user",
+        label: "sidebar.adminUserGroup",
+      },
+    ],
+  },
+  {
     key: "scrum-board",
     label: "sidebar.scrumboard",
     leftIcon: "ion-android-checkbox-outline",

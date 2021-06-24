@@ -9,6 +9,21 @@ const routes = [
     exact: true,
   },
   {
+    path: "admin-menu",
+    component: lazy(() => import("@containers/Admin/AdminMenu/AdminMenu")),
+    exact: true,
+  },
+  {
+    path: "admin-user",
+    component: lazy(() => import("@containers/Admin/AdminUser/AdminUser")),
+    exact: true,
+  },
+  {
+    path: "admin-group-user",
+    component: lazy(() => import("@containers/Admin/AdminGroup/AdminGroup")),
+    exact: true,
+  },
+  {
     path: "scrum-board",
     component: lazy(() => import("@containers/ScrumBoard")),
     exact: false,

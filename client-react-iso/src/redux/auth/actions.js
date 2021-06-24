@@ -1,5 +1,5 @@
 import * as actionTypes from "@redux/auth/types";
-import { logInSocket } from "@apis/user/auth";
+import { logInSocket } from "@apis/auth";
 
 export const checkAuthorization = () => {
   const token = localStorage.getItem("idToken");

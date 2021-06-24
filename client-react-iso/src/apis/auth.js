@@ -1,4 +1,4 @@
-import { authServerUrl, callUserRightAPI } from "../config/index";
+import { authServerUrl, callUserRightAPI } from "./config/index";
 
 // --------------------------------------------------------------------------------
 // AUTH SECTION
