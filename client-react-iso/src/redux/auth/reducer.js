@@ -1,16 +1,55 @@
-import actions from './actions';
+import * as actionTypes from "@redux/auth/types";
 
-const initState = { idToken: null };
+const initialState = {
+  // data: null,
+  data: JSON.parse(localStorage.getItem("userInfoLeader")) || null,
+  error: null,
+  loading: false,
+};
 
-export default function authReducer(state = initState, action) {
+const authStart = (state) => {
+  return { ...state, error: null, loading: true };
+};
+
+const authSuccess = (state, action) => {
+  return {
+    ...state,
+    idToken: action.payload.token,
+    data: action.payload.userInfo,
+    error: null,
+    loading: false,
+  };
+};
+
+const authFail = (state, action) => {
+  return { ...state, error: action.payload, loading: false };
+};
+
+const logOut = (state, action) => {
+  localStorage.removeItem("userInfoLeader");
+  localStorage.removeItem("idToken");
+  return {
+    ...state,
+    idToken: null,
+    data: null,
+    error: null,
+    loading: false,
+  };
+};
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actions.LOGIN_SUCCESS:
-      return {
-        idToken: action.token,
-      };
-    case actions.LOGOUT:
-      return initState;
+    case actionTypes.AUTH_START:
+      return authStart(state, action);
+    case actionTypes.AUTH_SUCCESS:
+      return authSuccess(state, action);
+    case actionTypes.AUTH_FAIL:
+      return authFail(state, action);
+    case actionTypes.LOG_OUT:
+      return logOut(state, action);
     default:
       return state;
   }
-}
+};
+
+export default reducer;

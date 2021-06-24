@@ -33,9 +33,11 @@ export default function Dashboard() {
   const appHeight = useSelector((state) => state.App.height);
   const { width, height } = useWindowSize();
 
+  // TODO: Call dispatch to get init data here (menu, user menu, filter data)
   React.useEffect(() => {
     dispatch(toggleAll(width, height));
   }, [width, height, dispatch]);
+
   return (
     <DashboardContainer>
       <DashboardGlobalStyles />

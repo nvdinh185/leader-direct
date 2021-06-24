@@ -1,4 +1,5 @@
 const txt = `
+Dashboard
 Email
 Ecommerce
 Shop
