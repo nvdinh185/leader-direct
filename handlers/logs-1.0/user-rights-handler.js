@@ -215,6 +215,7 @@ class UserRightsHandler {
           username: 1,
           function_groups: 1,
           function_apis: 1,
+          menu_apis_granted: 1,
           description: 1,
           updated_time: 1,
           updated_user: 1,
@@ -248,10 +249,10 @@ class UserRightsHandler {
    */
   getGrantedUser(req, res, next) {
 
-    let { username, page, limit } = req.paramS;
+    let username = req.user.username;
 
-    page = page || 1;
-    limit = limit || 100;
+    let page = 1;
+    let limit = 100;
 
     // ràng buộc kiểm tra dữ liệu yêu cầu
     if (!username) {

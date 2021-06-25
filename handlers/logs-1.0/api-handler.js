@@ -13,8 +13,11 @@
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
+const fs = require('fs');
+const path = require('path');
+
 class ApiHandler {
-  constructor() {}
+  constructor() { }
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
