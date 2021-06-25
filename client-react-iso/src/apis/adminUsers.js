@@ -1,4 +1,4 @@
-import { callUserRightAPI, baseUserRightURL } from "../config/index";
+import { callUserRightAPI, baseUserRightURL } from "./config/index";
 
 // ---------------------------------------------------------------------------------
 // -------------------------------- GET DATA SECTION -------------------------------
@@ -6,7 +6,12 @@ import { callUserRightAPI, baseUserRightURL } from "../config/index";
 
 // USER SECTION
 export const getGrantedUserList = (token) => {
+  console.log(token);
   return callUserRightAPI("get", baseUserRightURL + "/get-granted-users", null, token);
+};
+
+export const getGrantedUserInfo = (token) => {
+  return callUserRightAPI("post", baseUserRightURL + "/get-granted-user", null, token);
 };
 
 export const getGrantedGroups = (token) => {
@@ -14,8 +19,8 @@ export const getGrantedGroups = (token) => {
 };
 
 // MENU SECTION
-export const getMenuApi = (token) => {
-  return callUserRightAPI("post", baseUserRightURL + "/get-menu-api", null, token);
+export const getMenuApiAll = (token) => {
+  return callUserRightAPI("post", baseUserRightURL + "/get-menu-api", null, token); // this func get all menus
 };
 
 // ---------------------------------------------------------------------------------
