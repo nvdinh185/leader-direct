@@ -248,10 +248,10 @@ class UserRightsHandler {
    */
   getGrantedUser(req, res, next) {
 
-    let { username, page, limit } = req.paramS;
+    let username = req.user.username;
 
-    page = page || 1;
-    limit = limit || 100;
+    let page = 1;
+    let limit = 100;
 
     // ràng buộc kiểm tra dữ liệu yêu cầu
     if (!username) {
