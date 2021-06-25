@@ -34,7 +34,6 @@ export default function SignIn() {
   }
 
   function handleLogin(e) {
-    console.log(login(loginForm.username, loginForm.password));
     dispatch(login(loginForm.username, loginForm.password));
     dispatch(clearMenu());
     history.push("/app/dashboard");
