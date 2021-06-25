@@ -1,5 +1,6 @@
 import React from "react";
-import { Input, Switch, InputNumber, DatePicker } from "antd";
+import { Input, Switch, InputNumber, DatePicker, Tooltip } from "antd";
+import * as COMMON from "@constants/common";
 import * as datatypes from "@constants/datatypes";
 import moment from "moment";
 
@@ -14,10 +15,67 @@ export const reCreateOrderSttArray = (array) => {
   }
 };
 
-export const createColumnsFromObjOrConfig = (obj, config, fnCallbackSwitch, fnHandleChange) => {
-  let count = 0;
+// const createStrEditTable = (key, handleChangeCb) => {
+//   let defaultCol = {
+//     title: key,
+//     width: 15,
+//     dataIndex: key,
+//     key: key,
+//   };
+//   if (COMMON.STR_EDITABLE_COLS.includes(key)) {
+//     const innerEditable = renderEditCellBaseOnDatatype(datatypes.STRING, key, handleChangeCb);
+//     return {
+//       ...defaultCol,
+//       ...innerEditable,
+//     };
+//   }
+//   return defaultCol;
+// };
+
+// ------------------------------------------------------------------------------------------
+// ------------- CREATE COLUMNS CONFIG BASE ON OBJECT OR PRE CONFIG OBJ ---------------------
+
+/**
+ * Trả về mảng đối tượng là các header config cho table của antd
+ * @param {object} obj Đối tượng chứa các key cần để render lên 1 dòng của table
+ * @returns trả về mảng là config các cột cho antd table
+ */
+export const createColumnsFromObj = (obj, fnHandleChange) => {
   let columns = [];
-  // Case1: Tạo cột từ đối tượng config là dữ liệu lấy từ firebase về
+  for (const [key, _value] of Object.entries(obj)) {
+    let defaultCol = {
+      title: key,
+      width: 15,
+      dataIndex: key,
+      key: key,
+    };
+    if (COMMON.NO_TOOLTIP_COLS.includes(key)) {
+      columns.push(defaultCol);
+    } else {
+      columns.push({
+        ...defaultCol,
+        ellipsis: {
+          showTitle: true,
+        },
+        render: (key) => (
+          <Tooltip placement="topLeft" title={key}>
+            {key}
+          </Tooltip>
+        ),
+      });
+    }
+  }
+  return columns;
+};
+
+/**
+ * Trả về mảng đối tượng là các header config cho table của antd
+ * @param {object} config Đối tượng chứa các config cần để render lên 1 dòng của table
+ * @returns trả về mảng là config các cột cho antd table
+ */
+export const createColumnsFromConfig = (config, fnCallbackSwitch, fnHandleChange) => {
+  let columns = [];
+  // Case1: Tạo cột từ đối tượng config là dữ liệu lấy từ db
   if (config) {
     for (const [key, _value] of Object.entries(config)) {
       // Case 1.1: Nếu trường hợp trong table config trường display là false thì không hiển thị field này
@@ -47,21 +105,8 @@ export const createColumnsFromObjOrConfig = (obj, config, fnCallbackSwitch, fnHa
         ...innerEditable,
         ...innerEllipsis,
       });
-      count += 1;
     }
     columns.sort((a, b) => a.stt - b.stt);
-    return columns;
-  }
-  // Case2: Tạo cột từ đối tượng config là dữ liệu của default object (trong thư mục src/utils/default-obj.js)
-  // Case này sử dụng lần đầu khi chưa có dữ liệu trên firebase
-  for (const [key, _value] of Object.entries(obj)) {
-    columns.push({
-      title: key,
-      width: 15,
-      dataIndex: key,
-      key: count,
-    });
-    count += 1;
   }
   return columns;
 };

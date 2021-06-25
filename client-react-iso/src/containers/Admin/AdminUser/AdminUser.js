@@ -3,15 +3,15 @@ import { Row, Col, Button, Table } from "antd";
 import { Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getGrantedUserList } from "@redux/adminUsers/actions";
+import { createColumnsFromObj } from "@lib/utils/antd-table";
 import Box from "@components/utility/box";
 import PageHeader from "@components/utility/pageHeader";
 import LayoutWrapper from "@components/utility/layoutWrapper";
-import ContentHolder from "@components/utility/contentHolder";
 import IntlMessages from "@components/utility/intlMessages";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
-import { createColumnsFromObjOrConfig } from "@lib/utils/antd-table";
+import "@assets/styles/containers/EditableCell.css";
 
 export default function AdminUser() {
   const { rowStyle, colStyle, gutter } = basicStyle;
@@ -28,10 +28,14 @@ export default function AdminUser() {
 
   useEffect(() => {
     if (users?.[0] && cols.length === 0) {
-      let newCols = createColumnsFromObjOrConfig(users[0], null, null, null);
+      let newCols = createColumnsFromObj(users[0], handleChange);
       setCols(newCols);
     }
   }, [users]);
+
+  const handleChange = (e) => {
+    console.log(e);
+  };
 
   return (
     <LayoutWrapper>
@@ -72,7 +76,7 @@ export default function AdminUser() {
                         cell: EditableCell,
                       },
                     }}
-                    // sticky
+                    sticky
                   />
                 </Card>
               </Col>
