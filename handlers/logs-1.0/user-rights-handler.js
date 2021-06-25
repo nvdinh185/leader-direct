@@ -215,6 +215,7 @@ class UserRightsHandler {
           username: 1,
           function_groups: 1,
           function_apis: 1,
+          menu_apis_granted: 1,
           description: 1,
           updated_time: 1,
           updated_user: 1,
