@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Button, Table, Modal } from "antd";
-import { Card } from "antd";
+import { Row, Col, Button, Table, Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenuApiAll } from "@redux/adminUsers/actions";
 import { createColumnsFromObj } from "@lib/utils/antd-table";
@@ -34,7 +33,7 @@ export default function AdminUser() {
 
   const handleOk = () => {
     // TODO: Kiểm tra dữ liệu
-    console.log(addMenuForm);
+    // console.log(addMenuForm);
 
     // TODO: Send dữ liệu về server và thông báo kết quả
     createMenuApi(token, addMenuForm)
@@ -61,7 +60,7 @@ export default function AdminUser() {
   useEffect(() => {
     if (menus?.[0] && cols.length === 0) {
       let newCols = createColumnsFromObj(menus[0], handleChange);
-      console.log(newCols);
+      // console.log(newCols);
       setCols(newCols);
     }
   }, [menus]);
