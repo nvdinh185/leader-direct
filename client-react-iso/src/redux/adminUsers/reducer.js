@@ -9,9 +9,10 @@ let defaultUser = {
 };
 
 export default function adminUserReducer(state = defaultUser, action) {
-  // ---------------------------------------------------------------------------------
-  // 1 - MENU SECTION
   switch (action.type) {
+    // ---------------------------------------------------------------------------------
+    // 1 - MENU SECTION
+    // ---------------------------------------------------------------------------------
     case userTypes.GET_MENU_API_ALL_START:
       return {
         ...state,
@@ -23,8 +24,45 @@ export default function adminUserReducer(state = defaultUser, action) {
         menus: action.payload,
         loading: false,
       };
+
     case userTypes.GET_MENU_API_ALL_FAIL:
-      console.log(action.payload);
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    case userTypes.CREATE_MENU_API_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.CREATE_MENU_API_SUCCESS:
+      return {
+        ...state,
+        createMenu: action.payload,
+        loading: false,
+      };
+    case userTypes.CREATE_MENU_API_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case userTypes.UPDATE_MENU_API_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.UPDATE_MENU_API_SUCCESS:
+      return {
+        ...state,
+        updateMenu: action.payload,
+        loading: false,
+      };
+    case userTypes.UPDATE_MENU_API_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -45,7 +83,6 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: false,
       };
     case userTypes.GET_GRANTED_USER_LIST_FAIL:
-      console.log(action.payload);
       return {
         ...state,
         err: action.payload,
@@ -60,14 +97,12 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.GET_GROUP_USER_LIST_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         groups: action.payload,
         loading: false,
       };
     case userTypes.GET_GRANTED_USER_LIST_FAIL:
-      console.log(action.payload);
       return {
         ...state,
         err: action.payload,

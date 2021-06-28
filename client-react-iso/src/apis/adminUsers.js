@@ -32,6 +32,6 @@ export const createMenuApi = (token, data) => {
   return callUserRightAPI("post", baseUserRightURL + "/create-menu-api", data, token);
 };
 
-export const updateMenuApi = (token) => {
-  return callUserRightAPI("post", baseUserRightURL + "/update-menu-api", null, token);
+export const updateMenuApi = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/update-menu-api", data, token);
 };

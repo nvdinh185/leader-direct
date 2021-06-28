@@ -4,7 +4,7 @@ import { Row, Col, Button, Table, Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenuApiAll } from "@redux/adminUsers/actions";
 import { createColumnsFromObj } from "@lib/utils/antd-table";
-import { createMenuApi } from "@apis/adminUsers";
+import useWindowSize from "@lib/hooks/useWindowSize";
 
 import Box from "@components/utility/box";
 import PageHeader from "@components/utility/pageHeader";
@@ -21,35 +21,30 @@ export default function AdminUser() {
   const { rowStyle, colStyle, gutter } = basicStyle;
   const menus = useSelector((state) => state.adminUser.menus);
   const token = useSelector((state) => state.Auth.idToken);
-  const [cols, setCols] = useState([]);
-  const [addMenuForm, setAddMenuForm] = useState({});
   const dispatch = useDispatch();
 
+  const [cols, setCols] = useState([]);
+  const [modalMode, setModalMode] = useState("ADD");
+  const [editMenu, setEditMenu] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const size = useWindowSize();
+
+  const handCallAddModal = () => {
+    setModalMode("ADD");
+    showModal();
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    // TODO: Kiểm tra dữ liệu
-    // console.log(addMenuForm);
-
-    // TODO: Send dữ liệu về server và thông báo kết quả
-    createMenuApi(token, addMenuForm)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    setIsModalVisible(false);
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  useEffect(() => {
+    console.log(size);
+  }, [size]);
 
   useEffect(() => {
     if (token && menus && menus.length === 0) {
@@ -60,56 +55,44 @@ export default function AdminUser() {
   useEffect(() => {
     if (menus?.[0] && cols.length === 0) {
       let newCols = createColumnsFromObj(menus[0], handleChange);
-      // console.log(newCols);
       setCols(newCols);
     }
   }, [menus]);
 
-  const handleChange = (e) => {
-    console.log("Handle Change");
+  const handleChange = (row) => {
+    setModalMode("EDIT");
+    setEditMenu({ ...row });
   };
 
-  const handleAddUserOpenModal = () => {
-    // TODO: Gọi modal lên
-    showModal();
-    // Bỏ dữ liệu user form vào modal
-  };
-
-  const handleFormChange = (e) => {
-    setAddMenuForm({
-      ...addMenuForm,
-      [e.target.name]: e.target.value,
-    });
-  };
+  useEffect(() => {
+    if (editMenu) {
+      setIsModalVisible(true);
+    }
+  }, [editMenu]);
 
   return (
     <LayoutWrapper>
       <PageHeader>{<IntlMessages id="sidebar.adminMenu" />}</PageHeader>
       <MenuAddForm
+        modalMode={modalMode}
+        initialValues={modalMode === "EDIT" ? editMenu : {}}
         okText="Thêm Mới"
         cancelText="Bỏ Qua"
         title="Tạo Mới Menu"
         centered={true}
         destroyOnClose={true}
         isModalVisible={isModalVisible}
-        handleOk={handleOk}
         handleCancel={handleCancel}
-        handleFormChange={handleFormChange}
+        setIsModalVisible={setIsModalVisible}
       ></MenuAddForm>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
-          <Box
-          // title={<h2>Danh Sách Người Dùng</h2>}
-          // subtitle={<IntlMessages id="uiElements.cards.gridCardSubTitle" />}
-          >
-            {/* <ContentHolder style={{ overflow: "hidden" }}>
-              
-            </ContentHolder> */}
+          <Box>
             <Row>
               <Col md={24} sm={24} xs={24} style={{ padding: "0 8px" }}>
                 <Card
                   title={
-                    <Button type="link" style={{ background: "#87d068", color: "white" }} onClick={handleAddUserOpenModal}>
+                    <Button type="link" style={{ background: "#87d068", color: "white" }} onClick={handCallAddModal}>
                       + Thêm Mới
                     </Button>
                   }
@@ -133,6 +116,7 @@ export default function AdminUser() {
                       },
                     }}
                     sticky
+                    scroll={{ x: size.width }}
                   />
                 </Card>
               </Col>

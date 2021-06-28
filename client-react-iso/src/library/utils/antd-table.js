@@ -1,5 +1,6 @@
 import React from "react";
-import { Input, Switch, InputNumber, DatePicker, Tooltip } from "antd";
+import { Input, Switch, InputNumber, DatePicker, Tooltip, Button } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import * as COMMON from "@constants/common";
 import * as datatypes from "@constants/datatypes";
 import moment from "moment";
@@ -45,7 +46,7 @@ export const createColumnsFromObj = (obj, fnHandleChange) => {
   for (const [key, _value] of Object.entries(obj)) {
     let defaultCol = {
       title: key,
-      width: 15,
+      width: key === "id" || key === "is_active" ? 2 : 5,
       dataIndex: key,
       key: key,
     };
@@ -54,6 +55,7 @@ export const createColumnsFromObj = (obj, fnHandleChange) => {
     } else {
       columns.push({
         ...defaultCol,
+        width: 7,
         ellipsis: {
           showTitle: true,
         },
@@ -64,6 +66,19 @@ export const createColumnsFromObj = (obj, fnHandleChange) => {
         ),
       });
     }
+  }
+  if (fnHandleChange) {
+    columns.push({
+      title: "Hành Động",
+      key: "operation",
+      fixed: "right",
+      width: 3,
+      render: (text, record, idx) => (
+        <Button type="primary" shape="round" icon={<EditOutlined />} onClick={() => fnHandleChange(record)}>
+          Sửa
+        </Button>
+      ),
+    });
   }
   return columns;
 };

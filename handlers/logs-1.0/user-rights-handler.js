@@ -283,11 +283,14 @@ class UserRightsHandler {
         let groupIds = granted.function_groups
           ? JSON.parse(granted.function_groups)
           : [];
+        // console.log(groupIds);
         // lấy danh sách các nhóm chức năng
         let groups = await function_groups.getAllData(
           { id: { $in: groupIds } },
           { function_apis: 1 }
         );
+        // console.log(groups);
+
 
         let funcsGroup = [];
         for (let group of groups) {
@@ -301,7 +304,8 @@ class UserRightsHandler {
         let funcs = granted.function_apis
           ? JSON.parse(granted.function_apis)
           : [];
-
+        // console.log(funcs);
+        // console.log(funcsGroup);
         // đọc hết nhóm quyền trong function_apis để trả kết quả về
         let functions = await function_apis.getPage(
           {
@@ -326,6 +330,7 @@ class UserRightsHandler {
           {},
           { page, limit }
         );
+        functions.username = granted.username;
 
         req.finalJson = {
           ...functions,

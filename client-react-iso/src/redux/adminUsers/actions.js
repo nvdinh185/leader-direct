@@ -68,7 +68,6 @@ export const getMenuApiAllStart = () => {
 };
 
 export const getMenuApiAllSuccess = (data) => {
-  console.log(data);
   return {
     type: userTypes.GET_MENU_API_ALL_SUCCESS,
     payload: data,
@@ -78,6 +77,88 @@ export const getMenuApiAllSuccess = (data) => {
 export const getMenuApiAllFail = (error) => {
   return {
     type: userTypes.GET_MENU_API_ALL_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 3 - CREATE MENU API
+export const createMenuApi = (token, form) => {
+  return (dispatch) => {
+    dispatch(createMenuApiStart(token, form));
+    userApi
+      .createMenuApi(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(createMenuApiSuccess(data.data));
+        } else {
+          dispatch(createMenuApiFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(createMenuApiFail(err));
+      });
+  };
+};
+
+export const createMenuApiStart = () => {
+  return {
+    type: userTypes.CREATE_MENU_API_START,
+  };
+};
+
+export const createMenuApiSuccess = (data) => {
+  console.log(data);
+  return {
+    type: userTypes.CREATE_MENU_API_SUCCESS,
+    payload: data,
+  };
+};
+
+export const createMenuApiFail = (error) => {
+  return {
+    type: userTypes.CREATE_MENU_API_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 4 - UPDATE MENU API
+export const updateMenuApi = (token, form) => {
+  return (dispatch) => {
+    dispatch(updateMenuApiStart(token, form));
+    userApi
+      .updateMenuApi(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(updateMenuApiSuccess(data.data));
+        } else {
+          dispatch(updateMenuApiFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(updateMenuApiFail(err));
+      });
+  };
+};
+
+export const updateMenuApiStart = () => {
+  return {
+    type: userTypes.CREATE_MENU_API_START,
+  };
+};
+
+export const updateMenuApiSuccess = (data) => {
+  console.log(data);
+  return {
+    type: userTypes.CREATE_MENU_API_SUCCESS,
+    payload: data,
+  };
+};
+
+export const updateMenuApiFail = (error) => {
+  return {
+    type: userTypes.CREATE_MENU_API_FAIL,
     payload: error,
   };
 };

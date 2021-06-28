@@ -10,7 +10,7 @@ const App = () => (
   <Provider store={store}>
     <AppProvider>
       <>
-        {/* <GlobalStyles /> */}
+        <GlobalStyles />
         <Routes />
       </>
     </AppProvider>
