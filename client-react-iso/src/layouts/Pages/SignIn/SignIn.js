@@ -16,6 +16,7 @@ export default function SignIn() {
   let location = useLocation();
   const [loginForm, setLoginForm] = useState({});
   const dispatch = useDispatch();
+  const [errorMsg, setErrorMsg] = useState("");
   const isLoggedIn = useSelector((state) => state.Auth.idToken);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
@@ -36,6 +37,7 @@ export default function SignIn() {
   function handleLogin(e) {
     dispatch(login(loginForm.username, loginForm.password));
     dispatch(clearMenu());
+    console.log(isLoggedIn);
     history.push("/app/dashboard");
   }
 
@@ -69,14 +71,14 @@ export default function SignIn() {
                   onKeyUp={handleChangeForm}
                 />
               </div>
-
               <div className="isoInputWrapper isoLeftRightComponent">
                 <Checkbox>
                   <IntlMessages id="page.signInRememberMe" />
                 </Checkbox>
-                <Button type="primary" onClick={handleLogin}>
+                <Button block type="primary" onClick={handleLogin}>
                   <IntlMessages id="page.signInButton" />
                 </Button>
+                <p style={{ color: "red" }}>{errorMsg ? errorMsg : null}</p>
               </div>
             </form>
           </div>

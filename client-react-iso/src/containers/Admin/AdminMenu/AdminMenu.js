@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Table } from "antd";
+
+import { Row, Col, Button, Table, Modal } from "antd";
 import { Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenuApiAll } from "@redux/adminUsers/actions";
 import { createColumnsFromObj } from "@lib/utils/antd-table";
+import { createMenuApi } from "@apis/adminUsers";
+
 import Box from "@components/utility/box";
 import PageHeader from "@components/utility/pageHeader";
 import LayoutWrapper from "@components/utility/layoutWrapper";
@@ -11,6 +14,8 @@ import IntlMessages from "@components/utility/intlMessages";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
+import MenuAddForm from "./MenuAddForm";
+
 import "@assets/styles/containers/EditableCell.css";
 
 export default function AdminUser() {
@@ -18,7 +23,34 @@ export default function AdminUser() {
   const menus = useSelector((state) => state.adminUser.menus);
   const token = useSelector((state) => state.Auth.idToken);
   const [cols, setCols] = useState([]);
+  const [addMenuForm, setAddMenuForm] = useState({});
   const dispatch = useDispatch();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    // TODO: Kiểm tra dữ liệu
+    console.log(addMenuForm);
+
+    // TODO: Send dữ liệu về server và thông báo kết quả
+    createMenuApi(token, addMenuForm)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   useEffect(() => {
     if (token && menus && menus.length === 0) {
@@ -35,12 +67,36 @@ export default function AdminUser() {
   }, [menus]);
 
   const handleChange = (e) => {
-    console.log(e);
+    console.log("Handle Change");
+  };
+
+  const handleAddUserOpenModal = () => {
+    // TODO: Gọi modal lên
+    showModal();
+    // Bỏ dữ liệu user form vào modal
+  };
+
+  const handleFormChange = (e) => {
+    setAddMenuForm({
+      ...addMenuForm,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
     <LayoutWrapper>
       <PageHeader>{<IntlMessages id="sidebar.adminMenu" />}</PageHeader>
+      <MenuAddForm
+        okText="Thêm Mới"
+        cancelText="Bỏ Qua"
+        title="Tạo Mới Menu"
+        centered={true}
+        destroyOnClose={true}
+        isModalVisible={isModalVisible}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        handleFormChange={handleFormChange}
+      ></MenuAddForm>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Box
@@ -54,7 +110,7 @@ export default function AdminUser() {
               <Col md={24} sm={24} xs={24} style={{ padding: "0 8px" }}>
                 <Card
                   title={
-                    <Button type="link" style={{ background: "#87d068", color: "white" }}>
+                    <Button type="link" style={{ background: "#87d068", color: "white" }} onClick={handleAddUserOpenModal}>
                       + Thêm Mới
                     </Button>
                   }

@@ -28,8 +28,8 @@ export const getMenuApiAll = (token) => {
 // --------------------------------------------------------------------------------
 
 // MENU SECTION
-export const createMenuApi = (token) => {
-  return callUserRightAPI("get", baseUserRightURL + "/create-menu-api", null, token);
+export const createMenuApi = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/create-menu-api", data, token);
 };
 
 export const updateMenuApi = (token) => {
