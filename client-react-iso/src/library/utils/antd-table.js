@@ -92,7 +92,7 @@ export const createColumnsFromConfig = (config, fnCallbackSwitch, fnHandleChange
       const innerEditable = _value.isEdit
         ? renderEditCellBaseOnDatatype(_value.datatype, key, fnHandleChange, fnCallbackSwitch)
         : null;
-      // Case 1.4: Nếu table config field có cấu hình có thể ellipsis được
+      // Case 1.4: Nếu table config field có cấu hình có thể ellip  sis được
       const innerEllipsis = _value.isEllipsis ? returnColumnWithEllipsisCell() : null;
       columns.push({
         title: _value.headerName,

@@ -69,7 +69,7 @@ export default function AdminUser() {
                       showSizeChanger: true,
                       pageSizeOptions: ["10", "20", "30", "50", "100"],
                     }}
-                    rowKey="fid"
+                    rowKey="_id"
                     components={{
                       body: {
                         row: EditableRow,
