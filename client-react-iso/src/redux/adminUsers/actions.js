@@ -165,3 +165,43 @@ export const updateMenuApiFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------------------------
+// 5 - GET GROUPS MENU
+export const getGrantedGroups = (token) => {
+  return (dispatch) => {
+    dispatch(getGrantedGroupsStart());
+    userApi
+      .getGrantedGroups(token)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getGrantedGroupsSuccess(data.data.data));
+        } else {
+          dispatch(getGrantedGroupsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getGrantedGroupsFail(err));
+      });
+  };
+};
+
+export const getGrantedGroupsStart = () => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_START,
+  };
+};
+
+export const getGrantedGroupsSuccess = (data) => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getGrantedGroupsFail = (error) => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_FAIL,
+    payload: error,
+  };
+};

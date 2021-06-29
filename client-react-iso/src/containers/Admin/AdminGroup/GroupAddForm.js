@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const { Option } = Select;
 
-export default function UserAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
+export default function GroupAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
 
@@ -42,10 +42,6 @@ export default function UserAddForm({ modalMode, initialValues, handleCancel, is
     }
   }, [initialValues, modalMode]);
 
-  useEffect(() => {
-    console.log(initialValues);
-  }, [initialValues]);
-
   const formItemLayout = {
     labelCol: { xs: { span: 24 }, sm: { span: 5 } },
     wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
@@ -61,18 +57,18 @@ export default function UserAddForm({ modalMode, initialValues, handleCancel, is
       onCancel={handleCancel}
     >
       <Form {...formItemLayout} form={form}>
-        <Form.Item label="Username" name="username" disabled>
+        <Form.Item label="Tên Nhóm" name="name" disabled>
           <Input
             disabled={modalMode === "ADD" ? false : true}
             size="large"
-            placeholder="Tài Khoản Người Dùng"
+            placeholder="Nhập Tên Nhóm"
             prefix={<UserOutlined />}
           />
         </Form.Item>
-        <Form.Item label="Đơn Vị" name="organization" prefix={<IdcardOutlined />}>
+        <Form.Item label="Chọn API" name="function_apis" prefix={<IdcardOutlined />}>
           <Select
             showSearch
-            placeholder="Chọn Đơn Vị"
+            placeholder="Chọn API"
             optionFilterProp="children"
             filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
@@ -86,19 +82,17 @@ export default function UserAddForm({ modalMode, initialValues, handleCancel, is
         </Form.Item>
         <Form.Item label="Nhóm Quyền" name="function_groups">
           <Select
-            // defaultValue={initialValues && initialValues.function_groups?.[0] ? initialValues.function_groups[0] : null}
             showSearch
             placeholder="Chọn Nhóm Quyền"
             optionFilterProp="children"
             filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
           >
-            {props.groups && props.groups.length > 0
-              ? props.groups.map((group) => <Option value={`[${group.id}]`}>{`${group.id} - ${group.name}`}</Option>)
-              : null}
+            <Option value="1">Admin</Option>
+            <Option value="2">Người Dùng</Option>
           </Select>
         </Form.Item>
-        {/* <Form.Item label="Menu Add Thêm" name="function_groups">
+        <Form.Item label="Menu Add Thêm" name="function_groups">
           <Select
             showSearch
             placeholder="Chọn Menu Add Thêm (ngoài nhóm menu đi theo groups)"
@@ -109,7 +103,7 @@ export default function UserAddForm({ modalMode, initialValues, handleCancel, is
             <Option value="1">Admin</Option>
             <Option value="2">Người Dùng</Option>
           </Select>
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item label="Mô Tả" name="description">
           <Input.TextArea size="large" placeholder="Nhập Mô Tả Cho Người Dùng" prefix={<FileTextOutlined />} />
         </Form.Item>
