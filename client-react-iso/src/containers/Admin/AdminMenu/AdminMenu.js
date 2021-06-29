@@ -76,7 +76,7 @@ export default function AdminUser() {
       <MenuAddForm
         modalMode={modalMode}
         initialValues={modalMode === "EDIT" ? editMenu : {}}
-        okText="Thêm Mới"
+        okText={modalMode === "ADD" ? "Thêm Mới" : "Cập Nhập"}
         cancelText="Bỏ Qua"
         title="Tạo Mới Menu"
         centered={true}
@@ -90,13 +90,21 @@ export default function AdminUser() {
           <Box>
             <Row>
               <Col md={24} sm={24} xs={24} style={{ padding: "0 8px" }}>
-                <Card
-                  title={
-                    <Button type="link" style={{ background: "#87d068", color: "white" }} onClick={handCallAddModal}>
-                      + Thêm Mới
-                    </Button>
-                  }
-                >
+                <Card>
+                  <Row>
+                    <Col md={24} sm={24} xs={24}>
+                      <Button
+                        size="large"
+                        shape="round"
+                        type="link"
+                        style={{ background: "#87d068", color: "white" }}
+                        onClick={handCallAddModal}
+                      >
+                        + Thêm Mới
+                      </Button>
+                    </Col>
+                  </Row>
+                  <br />
                   <Table
                     // loading={loading}
                     columns={cols}

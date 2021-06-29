@@ -132,6 +132,9 @@ export const updateMenuApi = (token, form) => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(updateMenuApiSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getMenuApiAll(token));
         } else {
           dispatch(updateMenuApiFail(data));
         }
