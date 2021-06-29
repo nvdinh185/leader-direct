@@ -122,7 +122,7 @@ export default function AdminUser() {
                       },
                     }}
                     sticky
-                    scroll={{ x: size.width }}
+                    scroll={{ x: size.width, y: size.height * 0.5 }}
                   />
                 </Card>
               </Col>

@@ -2,7 +2,6 @@
 // Dữ liệu gốc từ file excel ./db/excel/api-functions-granted-user-admin-users-socket-2020-11-24.xlsx
 // Được tạo và lúc 2020-11-28 06:56:05
 
-
 "use strict";
 
 const {
@@ -10,26 +9,23 @@ const {
   function_apis,
   function_groups,
   function_granted,
-  menu_apis
+  menu_apis,
 } = require("../../midlewares/granted-users/models");
 
 class UserRightsHandler {
-
-  constructor() { }
-
+  constructor() {}
 
   /**
    * (1) GET /sample-api/user-rights/get-functions
-   * 
+   *
    * Lấy danh sách chức năng
    * Trả về các chức năng cần phân quyền (has_granted), để thực hiện gán quyền cho nhóm quyền hoặc user
-   * 
+   *
    * - Yêu cầu CÓ TOKEN
-   * 
+   *
    * SAMPLE INPUTS:  "method=GET&api_router=user-rights&page=1&limit=100"
    */
   getFunctions(req, res, next) {
-
     // lọc theo nhóm api (nếu có) và phương thức GET hay POST
     let { method, api_router, page, limit } = req.paramS;
 
@@ -73,22 +69,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (2) GET /sample-api/user-rights/get-granted-groups
-   * 
+   *
    * Lấy danh sách nhóm quyền
    * Trả về danh sách nhóm quyền
-   * 
+   *
    * - Yêu cầu CÓ TOKEN
-   * 
+   *
    * SAMPLE INPUTS:  "page=1&limit=100"
    */
   getGrantedGroups(req, res, next) {
-
     // lọc theo nhóm api (nếu có)
     let { page, limit } = req.paramS;
 
@@ -119,22 +112,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (3) GET /sample-api/user-rights/get-granted-group
-   * 
+   *
    * Lấy các quyền của một group
    * Trả về quyền của một nhóm ?group_id=1
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  [ "id=1&page=1&limit=100","id=2&page=1&limit=100", "id=3" ]
    */
   getGrantedGroup(req, res, next) {
-
     // trang chức năng được phân quyền trả về
     let { id, page, limit } = req.paramS;
 
@@ -187,22 +177,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (4) GET /sample-api/user-rights/get-granted-users
-   * 
+   *
    * Lấy danh sách user được phân quyền
    * Trả về danh sách user được phân quyền
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  "page=1&limit=100"
    */
   getGrantedUsers(req, res, next) {
-
     let { page, limit } = req.paramS;
 
     page = page || 1;
@@ -236,19 +223,17 @@ class UserRightsHandler {
       });
   }
 
-
   /**
    * (5) GET /sample-api/user-rights/get-granted-user
-   * 
+   *
    * Lấy quyền của một user
    * Trả về quyền của một user
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  ["username=0903500888&page=1&limit=100" , "username=cuong.dq&page=1&limit=100", "username=0123456789"]
    */
   getGrantedUser(req, res, next) {
-
     let username = req.user.username;
 
     let page = 1;
@@ -280,14 +265,9 @@ class UserRightsHandler {
         }
 
         // lấy tất cả các nhóm của user được phân
-        let groupIds = granted.function_groups
-          ? JSON.parse(granted.function_groups)
-          : [];
+        let groupIds = granted.function_groups ? JSON.parse(granted.function_groups) : [];
         // lấy danh sách các nhóm chức năng
-        let groups = await function_groups.getAllData(
-          { id: { $in: groupIds } },
-          { function_apis: 1 }
-        );
+        let groups = await function_groups.getAllData({ id: { $in: groupIds } }, { function_apis: 1 });
 
         let funcsGroup = [];
         for (let group of groups) {
@@ -298,9 +278,7 @@ class UserRightsHandler {
         }
 
         // lấy các chức năng
-        let funcs = granted.function_apis
-          ? JSON.parse(granted.function_apis)
-          : [];
+        let funcs = granted.function_apis ? JSON.parse(granted.function_apis) : [];
 
         // đọc hết nhóm quyền trong function_apis để trả kết quả về
         let functions = await function_apis.getPage(
@@ -339,22 +317,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (6) POST /sample-api/user-rights/grant-functions-2-group
-   * 
+   *
    * Gán các chức năng cho nhóm quyền
    * Phân quyền chức năng cho nhóm quyền
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  [{"id":1, "function_apis":[3,4,7,8,9,10,11,12,13,14,15,16,17,18]} , {"id":2, "function_apis":[3,4,7,8,9,10]} , {"id":3, "function_apis":[11,12,13,14,15,16,17,18]}]
    */
   grantFunctions2Group(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -377,21 +352,24 @@ class UserRightsHandler {
     }
 
     // tìm kiếm nhóm chức năng có chưa? nếu chưa có thì bổ sung nếu có rồi thì cập nhập
-    function_groups.getFirstRecord({ id }, { id: 1 })
-      .then(async data => {
-        console.log('Data: ', data);
+    function_groups
+      .getFirstRecord({ id }, { id: 1 })
+      .then(async (data) => {
+        console.log("Data: ", data);
         let jsonData = {
           function_apis: JSON.stringify(function_apis),
           updated_time: Date.now(),
-          updated_user: req.user.username
+          updated_user: req.user.username,
         };
 
         if (!data || !data.id) {
-          await function_groups.insertOneRecord({ ...jsonData, id })
-            .catch(err => { throw err });
+          await function_groups.insertOneRecord({ ...jsonData, id }).catch((err) => {
+            throw err;
+          });
         } else {
-          await function_groups.updateOneRecord(jsonData, { id })
-            .catch(err => { throw err });
+          await function_groups.updateOneRecord(jsonData, { id }).catch((err) => {
+            throw err;
+          });
         }
         req.finalJson = {
           status: "OK",
@@ -400,27 +378,24 @@ class UserRightsHandler {
         };
         next();
       })
-      .catch(err => {
-        console.log('Lỗi: ', err);
+      .catch((err) => {
+        console.log("Lỗi: ", err);
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (7) POST /sample-api/user-rights/grant-groups-2-user
-   * 
+   *
    * Gán nhóm quyền cho user
    * Phân quyền cho user theo nhóm quyền
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  [ {"username":"0903500888", "function_groups":[1]} , {"username":"0903500888", "function_groups":[2]} , {"username":"0903500888", "function_groups":[1,2]} ]
    */
   grantGroups2User(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -429,12 +404,7 @@ class UserRightsHandler {
 
     let { username, function_groups } = req.json_data;
 
-    if (
-      !req.user ||
-      !username ||
-      !function_groups ||
-      !Array.isArray(function_groups)
-    ) {
+    if (!req.user || !username || !function_groups || !Array.isArray(function_groups)) {
       req.error = "Không có dữ liệu theo yêu cầu";
       next();
       return;
@@ -444,21 +414,22 @@ class UserRightsHandler {
     function_granted
       .getFirstRecord({ username })
       .then(async (user) => {
-
         let jsonData = {
           function_groups: JSON.stringify(function_groups),
           updated_time: Date.now(),
           updated_user: req.user.username,
-        }
+        };
 
         if (!user || !user.username) {
           // user chưa được tạo trong phân quyền thì chèn vào
-          await function_granted.insertOneRecord({ ...jsonData, username })
-            .catch(err => { throw err });
+          await function_granted.insertOneRecord({ ...jsonData, username }).catch((err) => {
+            throw err;
+          });
         } else {
           // đã tồn tại một bảng ghi theo username này
-          await function_granted.updateOneRecord(jsonData, { username })
-            .catch(err => { throw err });
+          await function_granted.updateOneRecord(jsonData, { username }).catch((err) => {
+            throw err;
+          });
         }
         req.finalJson = {
           status: "OK",
@@ -471,22 +442,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (8) POST /sample-api/user-rights/grant-functions-2-user
-   * 
+   *
    * Gán các chức năng cho user
    * Phân quyền cho user theo chức năng đơn lẻ
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  [{"username":"0903500888", "function_apis": [9] }]
    */
   grantFunctions2User(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -495,12 +463,7 @@ class UserRightsHandler {
 
     let { username, function_apis } = req.json_data;
 
-    if (
-      !req.user ||
-      !username ||
-      !function_apis ||
-      !Array.isArray(function_apis)
-    ) {
+    if (!req.user || !username || !function_apis || !Array.isArray(function_apis)) {
       req.error = "Không có dữ liệu theo yêu cầu";
       next();
       return;
@@ -510,21 +473,22 @@ class UserRightsHandler {
     function_granted
       .getFirstRecord({ username })
       .then(async (user) => {
-
         let jsonData = {
           function_apis: JSON.stringify(function_apis),
           updated_time: Date.now(),
           updated_user: req.user.username,
-        }
+        };
 
         if (!user || !user.username) {
           // user chưa được tạo trong phân quyền thì chèn vào
-          await function_granted.insertOneRecord({ ...jsonData, username })
-            .catch(err => { throw err });
+          await function_granted.insertOneRecord({ ...jsonData, username }).catch((err) => {
+            throw err;
+          });
         } else {
           // đã tồn tại một bảng ghi theo username này
-          await function_granted.updateOneRecord(jsonData, { username })
-            .catch(err => { throw err });
+          await function_granted.updateOneRecord(jsonData, { username }).catch((err) => {
+            throw err;
+          });
         }
         req.finalJson = {
           status: "OK",
@@ -537,22 +501,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (9) GET /sample-api/user-rights/get-api-routers
-   * 
+   *
    * Lấy danh sách các nhóm api router
    * Trả về danh sách các nhóm chức năng API
-   * 
+   *
    * - Yêu cầu CÓ TOKEN
-   * 
+   *
    * SAMPLE INPUTS:  "page=1&limit=100"
    */
   getApiRouters(req, res, next) {
-
     // lọc trang nếu nhiều
     let { page, limit } = req.paramS;
 
@@ -576,22 +537,19 @@ class UserRightsHandler {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (10) POST /sample-api/user-rights/add-function-2-group
-   * 
+   *
    * Bổ sung 1 quyền cho group API
    * User chỉ gửi api_function và method yêu cầu add vào group id
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"id":4,"method":"GET","api_function":"/grant-functions-2-group"}
    */
   addFunction2Group(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -615,13 +573,15 @@ class UserRightsHandler {
     }
 
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-    function_groups.getFirstRecord(
-      { id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      , { id: 1, function_apis: 1, name: 1 }    // jsonFields = list field to select field_1, field_2 from <table>
-    )
-      .then(async data => {
-        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 })
-          .catch(error => { throw error });
+    function_groups
+      .getFirstRecord(
+        { id }, // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        { id: 1, function_apis: 1, name: 1 } // jsonFields = list field to select field_1, field_2 from <table>
+      )
+      .then(async (data) => {
+        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 }).catch((error) => {
+          throw error;
+        });
 
         if (!fApi || !fApi.id) {
           req.error = `Không tìm thấy chức năng nào theo method=${method} và api_function=${api_function}`;
@@ -647,40 +607,38 @@ class UserRightsHandler {
         let jsonData = {
           function_apis: JSON.stringify(fApis),
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
         // dữ liệu có tìm thấy theo id, thực hiện update theo id
-        await function_groups.updateOneRecord(jsonData, { id })
-          .catch(err => { throw err });
+        await function_groups.updateOneRecord(jsonData, { id }).catch((err) => {
+          throw err;
+        });
 
-        req.finalJson = { status: "OK", message: `Đã bổ sung quyền (${fApi.id}) ${method} ${api_function} cho nhóm quyền ${id} thành công` };
+        req.finalJson = {
+          status: "OK",
+          message: `Đã bổ sung quyền (${fApi.id}) ${method} ${api_function} cho nhóm quyền ${id} thành công`,
+        };
         next();
-
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
-
-
   }
-
 
   /**
    * (11) POST /sample-api/user-rights/remove-function-2-group
-   * 
+   *
    * Thu hồi 1 quyền cho group API
    * User chỉ gửi api_function và method yêu cầu remove khỏi group_id
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"id":4,"method":"GET","api_function":"/grant-functions-2-group"}
    */
   removeFunction2Group(req, res, next) {
-
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -704,13 +662,15 @@ class UserRightsHandler {
     }
 
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-    function_groups.getFirstRecord(
-      { id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      , { id: 1, function_apis: 1, name: 1 }    // jsonFields = list field to select field_1, field_2 from <table>
-    )
-      .then(async data => {
-        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 })
-          .catch(error => { throw error });
+    function_groups
+      .getFirstRecord(
+        { id }, // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        { id: 1, function_apis: 1, name: 1 } // jsonFields = list field to select field_1, field_2 from <table>
+      )
+      .then(async (data) => {
+        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 }).catch((error) => {
+          throw error;
+        });
 
         if (!fApi || !fApi.id) {
           req.error = `Không tìm thấy chức năng nào theo method=${method} và api_function=${api_function}`;
@@ -731,7 +691,7 @@ class UserRightsHandler {
           tApis = [];
         }
 
-        let idx = tApis.findIndex(x => x === fApi.id);
+        let idx = tApis.findIndex((x) => x === fApi.id);
 
         if (idx > -1) tApis.splice(idx, 1);
 
@@ -740,37 +700,37 @@ class UserRightsHandler {
         let jsonData = {
           function_apis: JSON.stringify(fApis),
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
         // dữ liệu có tìm thấy theo id, thực hiện update theo id
-        await function_groups.updateOneRecord(jsonData, { id })
-          .catch(err => { throw err });
+        await function_groups.updateOneRecord(jsonData, { id }).catch((err) => {
+          throw err;
+        });
 
-        req.finalJson = { status: "OK", message: `Đã thu hồi quyền (${fApi.id}) ${method} ${api_function} của nhóm quyền ${id} thành công` };
+        req.finalJson = {
+          status: "OK",
+          message: `Đã thu hồi quyền (${fApi.id}) ${method} ${api_function} của nhóm quyền ${id} thành công`,
+        };
         next();
-
       })
-      .catch(err => {
+      .catch((err) => {
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (12) POST /sample-api/user-rights/add-function-2-user
-   * 
+   *
    * Bổ sung 1 quyền API cho user
    * User chỉ gửi api_function và method yêu cầu add vào function_apis của user
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"username":"0903500888","method":"GET","api_function":"/grant-functions-2-group"}
    */
   addFunction2User(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -794,14 +754,12 @@ class UserRightsHandler {
     }
 
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-    function_granted.getFirstRecord(
-      { username }
-      , { username: 1, function_apis: 1 }
-    )
-      .then(async data => {
-
-        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 })
-          .catch(error => { throw error });
+    function_granted
+      .getFirstRecord({ username }, { username: 1, function_apis: 1 })
+      .then(async (data) => {
+        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 }).catch((error) => {
+          throw error;
+        });
 
         if (!fApi || !fApi.id) {
           req.error = `Không tìm thấy chức năng nào theo method=${method} và api_function=${api_function}`;
@@ -821,44 +779,44 @@ class UserRightsHandler {
         let jsonData = {
           function_apis: JSON.stringify(fApis),
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
         if (!data || !data.username) {
-          await function_granted.insertOneRecord({ ...jsonData, username })
-            .catch(err => { throw err });
+          await function_granted.insertOneRecord({ ...jsonData, username }).catch((err) => {
+            throw err;
+          });
         } else {
           // dữ liệu có tìm thấy theo id, thực hiện update theo id
-          await function_granted.updateOneRecord(jsonData, { username })
-            .catch(err => { throw err });
+          await function_granted.updateOneRecord(jsonData, { username }).catch((err) => {
+            throw err;
+          });
         }
 
-        req.finalJson = { status: "OK", message: `Đã thêm quyền (${fApi.id}) ${method} ${api_function} cho user ${username} thành công` };
+        req.finalJson = {
+          status: "OK",
+          message: `Đã thêm quyền (${fApi.id}) ${method} ${api_function} cho user ${username} thành công`,
+        };
         next();
-
       })
-      .catch(err => {
-        console.log('Lỗi: ', err);
+      .catch((err) => {
+        console.log("Lỗi: ", err);
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (13) POST /sample-api/user-rights/remove-function-2-user
-   * 
+   *
    * Thu hồi 1 quyền API cho user
    * User chỉ gửi api_function và method yêu cầu remove khỏi function_aps của user
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"username":"0903500888","method":"GET","api_function":"/grant-functions-2-group"}
    */
   removeFunction2User(req, res, next) {
-
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -882,14 +840,15 @@ class UserRightsHandler {
     }
 
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-    function_granted.getFirstRecord(
-      { username } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      , { username: 1, function_apis: 1 }    // jsonFields = list field to select field_1, field_2 from <table>
-    )
-      .then(async data => {
-
-        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 })
-          .catch(error => { throw error });
+    function_granted
+      .getFirstRecord(
+        { username }, // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        { username: 1, function_apis: 1 } // jsonFields = list field to select field_1, field_2 from <table>
+      )
+      .then(async (data) => {
+        let fApi = await function_apis.getFirstRecord({ method, api_function }, { id: 1 }).catch((error) => {
+          throw error;
+        });
 
         if (!fApi || !fApi.id) {
           req.error = `Không tìm thấy chức năng nào theo method=${method} và api_function=${api_function}`;
@@ -910,7 +869,7 @@ class UserRightsHandler {
           tApis = [];
         }
 
-        let idx = tApis.findIndex(x => x === fApi.id);
+        let idx = tApis.findIndex((x) => x === fApi.id);
 
         if (idx > -1) tApis.splice(idx, 1);
 
@@ -919,38 +878,38 @@ class UserRightsHandler {
         let jsonData = {
           function_apis: JSON.stringify(fApis),
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
         // dữ liệu có tìm thấy theo id, thực hiện update theo id
-        await function_granted.updateOneRecord(jsonData, { username })
-          .catch(err => { throw err });
+        await function_granted.updateOneRecord(jsonData, { username }).catch((err) => {
+          throw err;
+        });
 
-        req.finalJson = { status: "OK", message: `Đã thu hồi quyền (${fApi.id}) ${method} ${api_function} của user ${username} thành công` };
+        req.finalJson = {
+          status: "OK",
+          message: `Đã thu hồi quyền (${fApi.id}) ${method} ${api_function} của user ${username} thành công`,
+        };
         next();
-
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (14) POST /sample-api/user-rights/grant-function-root-2-user
-   * 
+   *
    * Gán quyền root API cho user
    * Select toàn bộ has_granted bổ sung vào function_groups id =99 tất cả các quyền. Sau đó gán cho user ở trường function_groups
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"username":"0903500888"}
    */
   grantFunctionRoot2User(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -973,94 +932,105 @@ class UserRightsHandler {
       return;
     }
 
-    function_apis.getAllData(
-      { has_granted: 1 } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      , { id: 1 }        // jsonFields = list field to select field_1, field_2 from <table>
-      , { id: 1 }        // jsonSort = order by field_1 asc, field_2 desc
-    )
-      .then(async apis => {
-
-        let fApi = apis.map(o => o["id"]);
+    function_apis
+      .getAllData(
+        { has_granted: 1 }, // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        { id: 1 }, // jsonFields = list field to select field_1, field_2 from <table>
+        { id: 1 } // jsonSort = order by field_1 asc, field_2 desc
+      )
+      .then(async (apis) => {
+        let fApi = apis.map((o) => o["id"]);
 
         // console.log("**99", fApi);
 
-        let g99 = await function_groups.getFirstRecord({ id: 99 }, { id: 1, function_apis: 1 })
-          .catch(error => { throw error });
+        let g99 = await function_groups.getFirstRecord({ id: 99 }, { id: 1, function_apis: 1 }).catch((error) => {
+          throw error;
+        });
 
         let jsonData = {
           function_apis: JSON.stringify(fApi),
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
         if (!g99 || !g99.id) {
-          await function_groups.insertOneRecord({ id: 99, ...jsonData, name: "Nhóm 99 giành cho DEV" })
-            .catch(error => { throw error });
+          await function_groups.insertOneRecord({ id: 99, ...jsonData, name: "Nhóm 99 giành cho DEV" }).catch((error) => {
+            throw error;
+          });
         } else {
-          await function_groups.updateOneRecord({ ...jsonData }, { id: 99 })
-            .catch(err => { throw err });
+          await function_groups.updateOneRecord({ ...jsonData }, { id: 99 }).catch((err) => {
+            throw err;
+          });
         }
 
         let fGroup = [];
         let jsonUser = {
           updated_time: Date.now(),
-          updated_user: req.user.username
-        }
+          updated_user: req.user.username,
+        };
 
-        let user = await function_granted.getFirstRecord({ username }, { username: 1, function_groups: 1 })
-          .catch(err => { throw err });
-
+        let user = await function_granted.getFirstRecord({ username }, { username: 1, function_groups: 1 }).catch((err) => {
+          throw err;
+        });
 
         if (!user || !user.username) {
           fGroup = [99];
-          await function_granted.insertOneRecord({
-            username
-            , ...jsonUser
-            , function_groups: JSON.stringify(fGroup)
-          })
-            .catch(error => { throw error });
+          await function_granted
+            .insertOneRecord({
+              username,
+              ...jsonUser,
+              function_groups: JSON.stringify(fGroup),
+            })
+            .catch((error) => {
+              throw error;
+            });
         } else {
-
           try {
             fGroup = JSON.parse(user.function_groups) || [];
           } catch {
             fGroup = [];
           }
 
-          fGroup = [...new Set([...fGroup, ...[99]])]
+          fGroup = [...new Set([...fGroup, ...[99]])];
 
-          await function_granted.updateOneRecord({
-            ...jsonUser,
-            function_groups: JSON.stringify(fGroup)
-          }, { username })
-            .catch(err => { throw err });
+          await function_granted
+            .updateOneRecord(
+              {
+                ...jsonUser,
+                function_groups: JSON.stringify(fGroup),
+              },
+              { username }
+            )
+            .catch((err) => {
+              throw err;
+            });
         }
 
         // console.log('Data: ', data);
-        req.finalJson = { status: "OK", message: `Bạn đã gán quyền function root (99) ${JSON.stringify(fGroup)} cho user ${username}` };
+        req.finalJson = {
+          status: "OK",
+          message: `Bạn đã gán quyền function root (99) ${JSON.stringify(fGroup)} cho user ${username}`,
+        };
         next();
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
-
   }
-
 
   /**
    * (15) POST /sample-api/user-rights/revoke-function-root-2-user
-   * 
+   *
    * Thu hồi quyền root của user
    * Thu hồi nhóm quyền root (tức là xóa nhóm 99 trong user)
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
+   *
    * SAMPLE INPUTS:  {"username":"0903500888"}
    */
   revokeFunctionRoot2User(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
@@ -1083,14 +1053,14 @@ class UserRightsHandler {
       return;
     }
 
-    function_granted.getFirstRecord({ username }, { username: 1, function_groups: 1 })
-      .then(async user => {
+    function_granted
+      .getFirstRecord({ username }, { username: 1, function_groups: 1 })
+      .then(async (user) => {
         if (!user || !user.username) {
           req.error = "User bạn muốn thu quyền không tồn tại";
           next();
           return;
         } else {
-
           let fGroup = [];
           try {
             fGroup = JSON.parse(user.function_groups) || [];
@@ -1098,42 +1068,46 @@ class UserRightsHandler {
             fGroup = [];
           }
 
-          let idx = fGroup.findIndex(x => x === 99);
+          let idx = fGroup.findIndex((x) => x === 99);
           if (idx > -1) fGroup.splice(idx, 1);
 
-          await function_granted.updateOneRecord({
-            updated_time: Date.now(),
-            updated_user: req.user.username,
-            function_groups: JSON.stringify(fGroup)
-          }, { username })
-            .catch(err => { throw err });
+          await function_granted
+            .updateOneRecord(
+              {
+                updated_time: Date.now(),
+                updated_user: req.user.username,
+                function_groups: JSON.stringify(fGroup),
+              },
+              { username }
+            )
+            .catch((err) => {
+              throw err;
+            });
         }
 
         // console.log('Data: ', data);
         req.finalJson = { status: "OK", message: `Bạn đã thu hồi quyền function root (99) của user ${username} thành công` };
         next();
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
   }
 
-
   /**
    * (16) POST /socket/user-rights/import-function-apis
-   * 
+   *
    * Import danh sách Api mới
    * Khi có Api mới - csdl không cần tạo lại, chỉ cần import danh sách api mới là đc
    * Sau khi import xong, phải tạo các api trong routers và hàm xử lý trong handlers phù hợp với api mới
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   importFunctionApis(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1170,11 +1144,7 @@ class UserRightsHandler {
           if (jsonTableStructure[key]) {
             let value = data[key];
             jsonData[key] = value;
-            if (
-              value &&
-              typeof value !== "string" &&
-              typeof value !== "number"
-            ) {
+            if (value && typeof value !== "string" && typeof value !== "number") {
               // chuyển các loại dữ liệu khác ra string trước khi chèn vào mô hình
               jsonData[key] = JSON.stringify(value);
             }
@@ -1236,13 +1206,13 @@ class UserRightsHandler {
 
   /**
    * (16) GET /lucky-draw/user-rights/get-online-tokens
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   getOnlineTokens(req, res, next) {
     return require("../../midlewares/verify-token").getOnlineTokens(req, res, next);
@@ -1250,16 +1220,15 @@ class UserRightsHandler {
 
   /**
    * (51) GET /leader-direct/user-rights/get-function-group
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   getFunctionGroup(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1268,33 +1237,29 @@ class UserRightsHandler {
 
     let { id } = req.json_data;
 
-    function_groups.getFirstRecord(
-      { id },
-      {}
-    )
-      .then(data => {
+    function_groups
+      .getFirstRecord({ id }, {})
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
+      .catch((err) => {
         req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (52) POST /leader-direct/user-rights/create-function-group
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   createFunctionGroup(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1303,32 +1268,29 @@ class UserRightsHandler {
 
     let jsonData = req.json_data;
     // console.log(jsonData);
-    function_groups.insertOneRecord(
-      jsonData
-    )
-      .then(data => {
+    function_groups
+      .insertOneRecord(jsonData)
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (53) POST /leader-direct/user-rights/update-function-group
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   updateFunctionGroup(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1337,57 +1299,52 @@ class UserRightsHandler {
 
     let jsonData = req.json_data;
     // console.log(jsonData);
-    function_groups.updateOneRecord(
-      jsonData,
-      { id: jsonData.id }
-    )
-      .then(data => {
+    function_groups
+      .updateOneRecord(jsonData, { id: jsonData.id })
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (54) POST /leader-direct/user-rights/get-menu-api
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   getMenuApi(req, res, next) {
-
-    menu_apis.getAllData()
-      .then(data => {
+    menu_apis
+      .getAllData()
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (55) POST /leader-direct/user-rights/create-menu-api
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   createMenuApi(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1396,32 +1353,29 @@ class UserRightsHandler {
 
     let jsonData = req.json_data;
 
-    menu_apis.insertOneRecord(
-      jsonData
-    )
-      .then(data => {
+    menu_apis
+      .insertOneRecord(jsonData)
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (56) POST /leader-direct/user-rights/update-menu-api
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   updateMenuApi(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1430,33 +1384,29 @@ class UserRightsHandler {
 
     let jsonData = req.json_data;
 
-    menu_apis.updateOneRecord(
-      jsonData,
-      { id: jsonData.id }
-    )
-      .then(data => {
+    menu_apis
+      .updateOneRecord(jsonData, { id: jsonData.id })
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
    * (57) POST /leader-direct/user-rights/get-function-granted
-   * 
+   *
    * Lấy danh sách token đang online
    * Trả về danh sách token đang online không cần xác thực máy chủ xác thực
-   * 
+   *
    * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   * 
-   * SAMPLE INPUTS:  
+   *
+   * SAMPLE INPUTS:
    */
   getFunctionGranted(req, res, next) {
-
     if (!req.json_data) {
       req.error = "Dữ liệu post json không hợp lệ";
       next();
@@ -1465,33 +1415,29 @@ class UserRightsHandler {
 
     let { username } = req.json_data;
 
-    function_granted.getFirstRecord(
-      { username },
-      {}
-    )
-      .then(data => {
+    function_granted
+      .getFirstRecord({ username }, {})
+      .then((data) => {
         req.finalJson = data;
         next();
       })
-      .catch(err => {
-        req.finalJson = err
+      .catch((err) => {
+        req.finalJson = err;
         next();
-      })
-
+      });
   }
 
   /**
-     * (18) GET /tttm-apis/user-rights/get-function-api/:id
-     * 
-     * Lấy chi tiết hàm Api theo Id
-     * Trả về hàm API để xem tính năng là gì, hoặc để tạo form nhập liệu động
-     * 
-     * - Yêu cầu CÓ TOKEN
-     * 
-     * SAMPLE INPUTS:  
-     */
+   * (18) GET /tttm-apis/user-rights/get-function-api/:id
+   *
+   * Lấy chi tiết hàm Api theo Id
+   * Trả về hàm API để xem tính năng là gì, hoặc để tạo form nhập liệu động
+   *
+   * - Yêu cầu CÓ TOKEN
+   *
+   * SAMPLE INPUTS:
+   */
   getFunctionApiId(req, res, next) {
-
     let { id } = req.params;
 
     if (!id) {
@@ -1500,19 +1446,19 @@ class UserRightsHandler {
       return;
     }
 
-    function_apis.getFirstRecord({ id })
-      .then(data => {
+    function_apis
+      .getFirstRecord({ id })
+      .then((data) => {
         // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
   }
-
 }
 
 module.exports = new UserRightsHandler();
