@@ -205,3 +205,43 @@ export const getGrantedGroupsFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------------------------
+// 6 - GET ALL FUNCTIONS
+export const getFunctions = (token) => {
+  return (dispatch) => {
+    dispatch(getFunctionsStart());
+    userApi
+      .getFunctions(token)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFunctionsSuccess(data.data.data));
+        } else {
+          dispatch(getFunctionsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFunctionsFail(err));
+      });
+  };
+};
+
+export const getFunctionsStart = () => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_START,
+  };
+};
+
+export const getFunctionsSuccess = (data) => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getFunctionsFail = (error) => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_FAIL,
+    payload: error,
+  };
+};

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Switch, InputNumber, DatePicker, Tooltip, Button } from "antd";
+import { Input, Switch, InputNumber, DatePicker, Tooltip, Button, Tag } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import * as COMMON from "@constants/common";
 import * as datatypes from "@constants/datatypes";
@@ -44,12 +44,23 @@ export const reCreateOrderSttArray = (array) => {
 export const createColumnsFromObj = (obj, fnHandleChange) => {
   let columns = [];
   for (const [key, _value] of Object.entries(obj)) {
+    if (key === "_id") {
+      continue;
+    }
     let defaultCol = {
       title: key,
       width: key === "id" || key === "is_active" ? 2 : 5,
       dataIndex: key,
       key: key,
     };
+    if (key === "status") {
+      defaultCol = {
+        ...defaultCol,
+        render: (key) => {
+          return <Tag color={key === 1 ? "green" : "volcano"}>{key === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>;
+        },
+      };
+    }
     if (COMMON.NO_TOOLTIP_COLS.includes(key)) {
       columns.push(defaultCol);
     } else {

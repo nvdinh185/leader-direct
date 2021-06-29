@@ -21,6 +21,8 @@ import "@assets/styles/containers/EditableCell.css";
 export default function AdminUser() {
   const { rowStyle, colStyle, gutter } = basicStyle;
   const groups = useSelector((state) => state.adminUser.groups);
+  const apis = useSelector((state) => state.adminUser.apis);
+  const menus = useSelector((state) => state.adminUser.menus);
   const token = useSelector((state) => state.Auth.idToken);
   const dispatch = useDispatch();
 
@@ -69,9 +71,11 @@ export default function AdminUser() {
 
   return (
     <LayoutWrapper>
-      <PageHeader>{<IntlMessages id="sidebar.adminMenu" />}</PageHeader>
+      <PageHeader>{<IntlMessages id="sidebar.adminUserGroup" />}</PageHeader>
       <GroupAddForm
-        width={size.width > 1200 ? size.width * 0.5 : size.width * 0.4}
+        apis={apis}
+        menus={menus}
+        width={size.width > 1200 ? size.width * 0.8 : size.width * 0.7}
         modalMode={modalMode}
         initialValues={modalMode === "EDIT" ? editMenu : {}}
         okText={modalMode === "ADD" ? "Thêm Mới" : "Thay Đổi"}

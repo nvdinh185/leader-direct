@@ -35,3 +35,11 @@ export const updateMenuApi = (token, data) => {
 export const getGrantedGroups = (token) => {
   return callUserRightAPI("get", baseUserRightURL + "/get-granted-groups", null, token);
 };
+
+// ---------------------------------------------------------------------------------
+// -------------------------------- APIS DATA SECTION -------------------------------
+// --------------------------------------------------------------------------------
+
+export const getFunctions = (token) => {
+  return callUserRightAPI("get", baseUserRightURL + "/get-functions", null, token);
+};
