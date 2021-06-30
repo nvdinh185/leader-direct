@@ -121,6 +121,43 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
 
     // ---------------------------------------------------------------------------------
+    case userTypes.CREATE_FUNCTION_GROUP_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.CREATE_FUNCTION_GROUP_SUCCESS:
+      return {
+        ...state,
+        createFuncGroup: action.payload,
+        loading: false,
+      };
+    case userTypes.CREATE_FUNCTION_GROUP_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case userTypes.GRANT_FUNCTIONS_TO_GROUP_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.GRANT_FUNCTIONS_TO_GROUP_SUCCESS:
+      return {
+        ...state,
+        grantFuncToGroup: action.payload,
+        loading: false,
+      };
+    case userTypes.GRANT_FUNCTIONS_TO_GROUP_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
     // 4 - FUNCTION APIS SECTION
     // ---------------------------------------------------------------------------------
     case userTypes.GET_ALL_FUNCTION_API_START:

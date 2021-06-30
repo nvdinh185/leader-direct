@@ -36,6 +36,14 @@ export const getGrantedGroups = (token) => {
   return callUserRightAPI("get", baseUserRightURL + "/get-granted-groups", null, token);
 };
 
+export const createFunctionGroup = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/create-function-group", data, token);
+};
+
+export const grantFunctionsToGroup = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/grant-functions-2-group", data, token);
+};
+
 // ---------------------------------------------------------------------------------
 // -------------------------------- APIS DATA SECTION -------------------------------
 // --------------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import { EditOutlined } from "@ant-design/icons";
 import * as COMMON from "@constants/common";
 import * as datatypes from "@constants/datatypes";
 import moment from "moment";
+import DateCell from "@components/Admin/DateCell";
 
 export const reCreateOrderSttArray = (array) => {
   if (array[0]["stt"] !== undefined || array[0]["order"] !== undefined) {
@@ -56,26 +57,34 @@ export const createColumnsFromObj = (obj, fnHandleChange) => {
     if (key === "status") {
       defaultCol = {
         ...defaultCol,
-        render: (key) => {
-          return <Tag color={key === 1 ? "green" : "volcano"}>{key === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>;
+        render: (col) => {
+          return <Tag color={col === 1 ? "green" : "volcano"}>{col === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>;
         },
       };
     }
-    if (COMMON.NO_TOOLTIP_COLS.includes(key)) {
-      columns.push(defaultCol);
-    } else {
+    if (COMMON.DATETIME_COLUMNS.includes(key)) {
+      defaultCol = {
+        ...defaultCol,
+        render: (col) => {
+          return <DateCell date={col} format="DD/MM/YYYY HH:mm"></DateCell>;
+        },
+      };
+    }
+    if (COMMON.TOOLTIP_COLS.includes(key)) {
       columns.push({
         ...defaultCol,
         width: 7,
         ellipsis: {
           showTitle: true,
         },
-        render: (key) => (
-          <Tooltip placement="topLeft" title={key}>
-            {key}
+        render: (col) => (
+          <Tooltip placement="topLeft" title={col}>
+            {col}
           </Tooltip>
         ),
       });
+    } else {
+      columns.push(defaultCol);
     }
   }
   if (fnHandleChange) {

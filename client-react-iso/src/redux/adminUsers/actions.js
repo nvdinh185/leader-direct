@@ -207,6 +207,91 @@ export const getGrantedGroupsFail = (error) => {
 };
 
 // ---------------------------------------------------------------------------------------------------
+// 4 - ADD FUNCTION GROUP
+export const createFunctionGroup = (token, form) => {
+  return (dispatch) => {
+    dispatch(createFunctionGroupStart(token, form));
+    userApi
+      .createFunctionGroup(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(createFunctionGroupSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getGrantedGroups(token));
+        } else {
+          dispatch(createFunctionGroupFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(createFunctionGroupFail(err));
+      });
+  };
+};
+
+export const createFunctionGroupStart = () => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_START,
+  };
+};
+
+export const createFunctionGroupSuccess = (data) => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+
+export const createFunctionGroupFail = (error) => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_FAIL,
+    payload: error,
+  };
+};
+// ---------------------------------------------------------------------------------------------------
+// 4 - UPDATE FUNCTION GROUP
+export const grantFunctionsToGroup = (token, form) => {
+  return (dispatch) => {
+    dispatch(grantFunctionsToGroupStart(token, form));
+    userApi
+      .grantFunctionsToGroup(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(grantFunctionsToGroupSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getGrantedGroups(token));
+        } else {
+          dispatch(grantFunctionsToGroupFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(grantFunctionsToGroupFail(err));
+      });
+  };
+};
+
+export const grantFunctionsToGroupStart = () => {
+  return {
+    type: userTypes.GRANT_FUNCTIONS_TO_GROUP_START,
+  };
+};
+
+export const grantFunctionsToGroupSuccess = (data) => {
+  return {
+    type: userTypes.GRANT_FUNCTIONS_TO_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+
+export const grantFunctionsToGroupFail = (error) => {
+  return {
+    type: userTypes.GRANT_FUNCTIONS_TO_GROUP_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
 // 6 - GET ALL FUNCTIONS
 export const getFunctions = (token) => {
   return (dispatch) => {
@@ -255,7 +340,6 @@ export const getAllOrganization = (token) => {
       .getAllOrganization(token)
       .then((data) => {
         if (data.status === 200) {
-          console.log(data.data);
           dispatch(getAllOrganizationSuccess(data.data));
         } else {
           dispatch(getAllOrganizationFail(data));
