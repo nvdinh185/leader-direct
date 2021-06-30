@@ -245,3 +245,44 @@ export const getFunctionsFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------------------------
+// 7 - GET ALL ORGANIZATIONS
+export const getAllOrganization = (token) => {
+  return (dispatch) => {
+    dispatch(getAllOrganizationStart());
+    userApi
+      .getAllOrganization(token)
+      .then((data) => {
+        if (data.status === 200) {
+          console.log(data.data);
+          dispatch(getAllOrganizationSuccess(data.data));
+        } else {
+          dispatch(getAllOrganizationFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getAllOrganizationFail(err));
+      });
+  };
+};
+
+export const getAllOrganizationStart = () => {
+  return {
+    type: userTypes.GET_ALL_ORGANIZATION_START,
+  };
+};
+
+export const getAllOrganizationSuccess = (data) => {
+  return {
+    type: userTypes.GET_ALL_ORGANIZATION_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getAllOrganizationFail = (error) => {
+  return {
+    type: userTypes.GET_ALL_ORGANIZATION_FAIL,
+    payload: error,
+  };
+};

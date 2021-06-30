@@ -143,6 +143,29 @@ export default function adminUserReducer(state = defaultUser, action) {
         err: action.payload,
         loading: false,
       };
+    // ---------------------------------------------------------------------------------
+    // 4 - ORGANIZATIONS APIS SECTION
+    // ---------------------------------------------------------------------------------
+    case userTypes.GET_ALL_ORGANIZATION_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.GET_ALL_ORGANIZATION_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        organizations: action.payload,
+        loading: false,
+      };
+    case userTypes.GET_ALL_ORGANIZATION_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
     default:
       return state;
   }

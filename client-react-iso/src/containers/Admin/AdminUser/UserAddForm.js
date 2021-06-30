@@ -8,6 +8,7 @@ import Transfers from "@components/uielements/transfer";
 const { Option } = Select;
 
 export default function UserAddForm({
+  organizations,
   apis,
   groups,
   modalMode,
@@ -99,11 +100,13 @@ export default function UserAddForm({
             filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
           >
-            <Option value="1">Công Ty 3</Option>
-            <Option value="2">P.DVKT</Option>
-            <Option value="3">P.TH</Option>
-            <Option value="4">P.KHCN</Option>
-            <Option value="5">P.CSKH</Option>
+            {organizations?.[0]
+              ? organizations.map((org) => (
+                  <Option key={org.id} svalue={org.id}>
+                    {org.name}
+                  </Option>
+                ))
+              : null}
           </Select>
         </Form.Item>
         <Form.Item label="Nhóm Quyền" name="function_groups">

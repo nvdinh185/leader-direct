@@ -43,3 +43,11 @@ export const getGrantedGroups = (token) => {
 export const getFunctions = (token) => {
   return callUserRightAPI("get", baseUserRightURL + "/get-functions", null, token);
 };
+
+// ---------------------------------------------------------------------------------
+// -------------------------------- ORGANIZATIONS DATA SECTION -------------------------------
+// --------------------------------------------------------------------------------
+
+export const getAllOrganization = (token) => {
+  return callUserRightAPI("post", baseUserRightURL + "/get-organizations", null, token);
+};
