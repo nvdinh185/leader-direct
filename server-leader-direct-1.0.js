@@ -1,7 +1,14 @@
 // Đây là cấu hình máy chủ API tự đông được tạo từ ./test/create-api-functions/create-routers-handlers/x-create-api-routers-handlers.js
 
 "use strict";
+// add libs
+const path = require("path");
 
+// add root
+const ROOT_DIR = __dirname
+  .split(path.sep)
+  .slice(0, __dirname.split(path.sep).length - 0)
+  .join(path.sep);
 /**
  * Thủ tục test này dùng để khai báo máy chủ web API một cách nhanh chóng
  */
@@ -18,19 +25,19 @@ const expressCfg = {
   // đường dẫn phụ của máy chủ
   baseDirectory: "/leader-direct",
   // đường dẫn trỏ khi truy cập không có router/function được khai báo
-  redirectUrl: "/",
+  redirectUrl: "/leader-direct",
 
   // đường dẫn trỏ web tĩnh root
-  staticRoot: __dirname + "/client-test-apis",
+  // staticRoot: __dirname + "/client-react-iso/build",
 
   // đường dẫn trỏ web tĩnh theo duong dan baseDirectory tren
-  staticHtml: __dirname + "/client-www-sample",
+  staticHtml: `${ROOT_DIR}/client-react-iso/build`,
 
   // in ra các dòng debug để dev phát hiện lỗi
-  isDebug: true,
+  // isDebug: true,
 
   // các domain cho phép truy cập API này mà không báo lỗi cors
-  domainIncludeCors: ["localhost"],
+  domainIncludeCors: ["localhost", "10.151.59.", "10.151.50.", "10.16.150."],
 };
 
 // khai báo phòng chống tấn công ddos
@@ -38,7 +45,7 @@ const ddosUse = null; //= require('./ddos/ddos-config').express('ip', 'path');
 
 // khai báo các router cho các chức năng nghiệp vụ riêng
 // Lưu ý mẫu khai router theo cách mới cũng sẽ đơn giản và gọn nhẹ hơn
-const apiRoutes = require("./routes/apis-route-logs-1.0.js");
+const apiRoutes = require("./routes/apis-route-leader-direct-1.0.js");
 
 // nhúng lớp thành phần khai báo máy chủ đơn giản
 const { ExpressServer } = require("cng-node-js-utils");
