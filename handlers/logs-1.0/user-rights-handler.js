@@ -99,13 +99,7 @@ class UserRightsHandler {
     function_groups
       .getPage(
         { status: 1 },
-        {
-          id: 1,
-          function_apis: 1,
-          name: 1,
-          description: 1,
-          status: 1,
-        },
+        {},
         { id: 1 },
         { limit, page } // jsonPaging = limit 5 offset 0
       )
@@ -366,9 +360,9 @@ class UserRightsHandler {
       return;
     }
 
-    let { id, function_apis } = req.json_data; // truyền lên là {id, function_apis:[]}
+    let { id, function_apis, menus_api } = req.json_data; // truyền lên là {id, function_apis:[]}
 
-    if (!id || !function_apis) {
+    if (!id || !function_apis || !menus_api) {
       req.error = "Không có dữ liệu theo yêu cầu";
       next();
       return;
@@ -388,7 +382,8 @@ class UserRightsHandler {
         let jsonData = {
           function_apis: JSON.stringify(function_apis),
           updated_time: Date.now(),
-          updated_user: req.user.username
+          updated_user: req.user.username,
+          menus_api: JSON.stringify(menus_api)
         };
 
         if (!data || !data.id) {
@@ -516,11 +511,7 @@ class UserRightsHandler {
       .getFirstRecord({ username })
       .then(async (user) => {
 
-        let jsonData = {
-          function_apis: JSON.stringify(function_apis),
-          updated_time: Date.now(),
-          updated_user: req.user.username,
-        }
+        let jsonData = req.json_data;
 
         if (!user || !user.username) {
           // user chưa được tạo trong phân quyền thì chèn vào
@@ -1512,6 +1503,110 @@ class UserRightsHandler {
         next();
       })
       .catch(err => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (129) POST /leader-direct/api/get-organizations
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getOrganizations(req, res, next) {
+    leaderDirectModels.organizations
+      .getAllData()
+
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (130) POST /leader-direct/api/create-organization
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  createOrganization(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    jsonData.created_time = new Date().getTime();
+
+    // chèn một bảng ghi vào csdl
+    leaderDirectModels.organizations
+      .insertOneRecord(
+        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+      )
+      //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (131) POST /leader-direct/api/update-organization
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  updateOrganization(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    jsonData.updated_time = new Date().getTime();
+
+    // update 1 bảng ghi vào csdl
+    leaderDirectModels.organizations
+      .updateOneRecord(
+        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+      )
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
         // console.log('Lỗi: ', err);
         req.error = err;
         next();

@@ -31,6 +31,8 @@ db.waitingConnected()
       , 'function_apis'
       , 'function_groups'
       , 'function_granted'
+      , 'menu_apis'
+      , 'organizations'
     ];
 
     // 3. Thực hiện import dữ liệu, nhớ xem biến true debug để xem kết quả import có bị lỗi ở đâu không nhé
