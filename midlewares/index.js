@@ -5,7 +5,7 @@ module.exports = {
     dynamicModels: require("./dynamic-models"),
     grantedUsers: require("./granted-users"),
     leaderDirect: require("./leader-direct"),
-    // logs:require("./logs"),
+    logs: require("./logs"),
     verifyToken: require("./verify-token"),
 
 }

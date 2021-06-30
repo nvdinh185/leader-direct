@@ -54,7 +54,7 @@ module.exports = {
         organization: { type: 'STRING', length: 200 },
         function_groups: { type: 'STRING', length: 2000 },
         function_apis: { type: 'STRING', length: 2000 },
-        menu_granted: { type: 'STRING', length: 2000 },
+        menus_granted: { type: 'STRING', length: 2000 },
         menu_webs_granted: { type: 'STRING', length: 2000 },
         menu_apps_granted: { type: 'STRING', length: 2000 },
         description: { type: 'STRING', length: 200 },

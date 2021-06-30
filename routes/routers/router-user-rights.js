@@ -583,7 +583,7 @@ const funcPaths = {
         ],
 
         /**
-         * (129) POST /leader-direct/api/get-organizations
+         * (58) POST /leader-direct/user-rights/get-organizations
          * 
          * 
          * 
@@ -605,7 +605,7 @@ const funcPaths = {
         ],
 
         /**
-         * (130) POST /leader-direct/api/create-organization
+         * (59) POST /leader-direct/user-rights/create-organization
          * 
          * 
          * 
@@ -627,7 +627,7 @@ const funcPaths = {
         ],
 
         /**
-         * (131) POST /leader-direct/api/update-organization
+         * (60) POST /leader-direct/user-rights/update-organization
          * 
          * 
          * 

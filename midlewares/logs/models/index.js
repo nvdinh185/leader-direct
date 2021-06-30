@@ -7,13 +7,12 @@ const db = require("../config");
 module.exports = {
     // các mô hình được xuất bản:
     jsonModels: require("./json-text-models"),
-    meetings: new (require("./meetings"))(db),
-    directs: new (require("./directs"))(db),
-    direct_loops: new (require("./direct_loops"))(db),
-    direct_orgs: new (require("./direct_orgs"))(db),
-    direct_executes: new (require("./direct_executes"))(db),
-    attachments: new (require("./attachments"))(db),
-    categories: new (require("./categories"))(db),
+    hacks: new (require("./hacks"))(db),
+    fails: new (require("./fails"))(db),
+    blocks: new (require("./blocks"))(db),
+    errors: new (require("./errors"))(db),
+    cors: new (require("./cors"))(db),
+    access: new (require("./access"))(db),
 
     // khai báo các mô hình dữ liệu khác nếu cần 
     // ...

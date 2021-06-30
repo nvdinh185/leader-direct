@@ -33,16 +33,35 @@ module.exports = {
             autoIncrement: 1
         },
         description: { type: 'STRING', length: 2000 },
-        categories: { type: 'STRING', length: 255 },
-        executors: { type: 'STRING', length: 2000 },
+        category: { type: 'STRING', length: 255 },
+        leader: { type: 'STRING', length: 255 },
+        executors: { type: 'STRING', length: 500 },
         assessors: { type: 'STRING', length: 2000 },
         img_url: { type: 'STRING', length: 255 },
         attachments: { type: 'STRING', length: 1000 },
+        expired_date: { type: 'DATETIME' },
         created_time: { type: 'DATETIME' },
         created_user: { type: 'STRING', length: 255 },
         updated_time: { type: 'DATETIME' },
         updated_user: { type: 'STRING', length: 255 },
-        status: { type: 'STRING', length: 255, defaultValue: '1' }
+        status: { type: 'STRING', length: 255, defaultValue: '1' },
+        percent_complete: { type: 'STRING', length: 255 },
+        delay_reason: { type: 'STRING', length: 500 },
+        leader_opinion: { type: 'STRING', length: 500 }
+    },
+    direct_loops:
+    {
+        id: { type: 'NUMBER' },
+        direct_id: { type: 'NUMBER' },
+        executors: { type: 'STRING', length: 500 },
+        assessors: { type: 'STRING', length: 500 },
+        frequency: { type: 'STRING', length: 255 },
+        loop_number: { type: 'NUMBER' },
+        created_time: { type: 'DATETIME' },
+        created_user: { type: 'DATETIME' },
+        updated_time: { type: 'STRING', length: 255 },
+        updated_user: { type: 'DATETIME' },
+        status: { type: 'NUMBER' }
     },
     direct_orgs:
     {
@@ -55,7 +74,6 @@ module.exports = {
             length: 50
         },
         organization_role: {},
-        description: { type: 'STRING', length: 255 },
         histories: { type: 'STRING', length: 255 },
         status: { type: 'STRING', length: 255 },
         created_time: { type: 'DATETIME' },
@@ -84,7 +102,7 @@ module.exports = {
         description: { type: 'STRING', length: 2000 },
         category: { type: 'STRING', length: 255 },
         attachments: { type: 'STRING', length: 2000 },
-        status: { type: 'STRING', length: 255 },
+        status: { type: 'NUMBER' },
         created_time: { type: 'DATETIME' },
         created_user: { type: 'STRING', length: 50 },
         updated_time: { type: 'DATETIME' },
