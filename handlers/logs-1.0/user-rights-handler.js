@@ -361,8 +361,8 @@ class UserRightsHandler {
       .then(async (data) => {
         console.log("Data: ", data);
         let jsonData = {
-          function_apis: JSON.stringify(function_apis),
-          menus_granted: JSON.stringify(menus_granted),
+          function_apis: function_apis,
+          menus_granted: menus_granted,
           status: req.json_data.status,
           updated_time: Date.now(),
           updated_user: req.user.username,
