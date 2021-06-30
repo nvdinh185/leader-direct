@@ -19,6 +19,9 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.GET_MENU_API_ALL_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
       return {
         ...state,
         menus: action.payload,
@@ -71,12 +74,16 @@ export default function adminUserReducer(state = defaultUser, action) {
 
     // ---------------------------------------------------------------------------------
     // 2 - USER SECTION
+    // ---------------------------------------------------------------------------------
     case userTypes.GET_GRANTED_USER_LIST_START:
       return {
         ...state,
         loading: true,
       };
     case userTypes.GET_GRANTED_USER_LIST_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
       return {
         ...state,
         users: action.payload,
@@ -91,18 +98,46 @@ export default function adminUserReducer(state = defaultUser, action) {
 
     // ---------------------------------------------------------------------------------
     // 3 - GROUPS SECTION
-    case userTypes.GET_GROUP_USER_LIST_START:
+    // ---------------------------------------------------------------------------------
+    case userTypes.GET_GRANTED_GROUP_ALL_START:
       return {
         ...state,
         loading: true,
       };
-    case userTypes.GET_GROUP_USER_LIST_SUCCESS:
+    case userTypes.GET_GRANTED_GROUP_ALL_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
       return {
         ...state,
         groups: action.payload,
         loading: false,
       };
-    case userTypes.GET_GRANTED_USER_LIST_FAIL:
+    case userTypes.GET_GRANTED_GROUP_ALL_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    // 4 - FUNCTION APIS SECTION
+    // ---------------------------------------------------------------------------------
+    case userTypes.GET_ALL_FUNCTION_API_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.GET_ALL_FUNCTION_API_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        apis: action.payload,
+        loading: false,
+      };
+    case userTypes.GET_ALL_FUNCTION_API_FAIL:
       return {
         ...state,
         err: action.payload,

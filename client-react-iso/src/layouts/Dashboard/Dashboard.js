@@ -1,10 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout } from "antd";
+import { getFunctions, getMenuApiAll, getGrantedGroups, getGrantedUserList } from "@redux/adminUsers/actions";
+
 import useWindowSize from "@lib/hooks/useWindowSize";
 import appActions from "@redux/app/actions";
-import ThemeSwitcher from "@containers/ThemeSwitcher/ThemeSwitcher";
 import siteConfig from "@config/site.config";
+
+import ThemeSwitcher from "@containers/ThemeSwitcher/ThemeSwitcher";
 import Sidebar from "@layouts/Sidebar/Sidebar";
 import Topbar from "@layouts/Topbar/Topbar";
 import DashboardRoutes from "./DashboardRoutes";
@@ -31,11 +34,16 @@ const styles = {
 export default function Dashboard() {
   const dispatch = useDispatch();
   const appHeight = useSelector((state) => state.App.height);
+  const token = useSelector((state) => state.Auth.idToken);
   const { width, height } = useWindowSize();
 
   // TODO: Call dispatch to get init data here (menu, user menu, filter data)
   React.useEffect(() => {
     dispatch(toggleAll(width, height));
+    dispatch(getFunctions(token));
+    dispatch(getMenuApiAll(token));
+    dispatch(getGrantedGroups(token));
+    dispatch(getGrantedUserList(token));
   }, [width, height, dispatch]);
 
   return (

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Form } from "antd";
+import { Modal, Input, Form, Select } from "antd";
 import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined } from "@ant-design/icons";
 import { createMenuApi, updateMenuApi } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
+
+const { Option } = Select;
 
 export default function MenuAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
   const [form] = Form.useForm();
@@ -94,6 +96,19 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
         >
           <Input.TextArea size="large" placeholder="Nhập Mô Tả Cho Route" prefix={<FileTextOutlined />} />
         </Form.Item>
+        {modalMode === "EDIT" ? (
+          <Form.Item label="Trạng Thái Menu" name="status">
+            <Select
+              placeholder="Chọn Menu Nhóm Này Có Thể Truy Cập"
+              optionFilterProp="children"
+              filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+            >
+              <Option value={1}>Hoạt Động</Option>
+              <Option value={0}>Không Hoạt Động</Option>
+            </Select>
+          </Form.Item>
+        ) : null}
         <p style={{ fontSize: 10, color: "grey" }}>
           <span style={{ color: "red" }}>*</span> Trường bắt buộc nhập liệu
         </p>

@@ -165,3 +165,83 @@ export const updateMenuApiFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------------------------
+// 5 - GET GROUPS MENU
+export const getGrantedGroups = (token) => {
+  return (dispatch) => {
+    dispatch(getGrantedGroupsStart());
+    userApi
+      .getGrantedGroups(token)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getGrantedGroupsSuccess(data.data.data));
+        } else {
+          dispatch(getGrantedGroupsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getGrantedGroupsFail(err));
+      });
+  };
+};
+
+export const getGrantedGroupsStart = () => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_START,
+  };
+};
+
+export const getGrantedGroupsSuccess = (data) => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getGrantedGroupsFail = (error) => {
+  return {
+    type: userTypes.GET_GRANTED_GROUP_ALL_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 6 - GET ALL FUNCTIONS
+export const getFunctions = (token) => {
+  return (dispatch) => {
+    dispatch(getFunctionsStart());
+    userApi
+      .getFunctions(token)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFunctionsSuccess(data.data.data));
+        } else {
+          dispatch(getFunctionsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFunctionsFail(err));
+      });
+  };
+};
+
+export const getFunctionsStart = () => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_START,
+  };
+};
+
+export const getFunctionsSuccess = (data) => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getFunctionsFail = (error) => {
+  return {
+    type: userTypes.GET_ALL_FUNCTION_API_FAIL,
+    payload: error,
+  };
+};

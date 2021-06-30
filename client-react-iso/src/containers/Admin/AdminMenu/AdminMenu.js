@@ -43,10 +43,6 @@ export default function AdminUser() {
   };
 
   useEffect(() => {
-    console.log(size);
-  }, [size]);
-
-  useEffect(() => {
     if (token && menus && menus.length === 0) {
       dispatch(getMenuApiAll(token));
     }
@@ -74,9 +70,10 @@ export default function AdminUser() {
     <LayoutWrapper>
       <PageHeader>{<IntlMessages id="sidebar.adminMenu" />}</PageHeader>
       <MenuAddForm
+        width={size.width > 1200 ? size.width * 0.5 : size.width * 0.4}
         modalMode={modalMode}
         initialValues={modalMode === "EDIT" ? editMenu : {}}
-        okText={modalMode === "ADD" ? "Thêm Mới" : "Cập Nhập"}
+        okText={modalMode === "ADD" ? "Thêm Mới" : "Thay Đổi"}
         cancelText="Bỏ Qua"
         title="Tạo Mới Menu"
         centered={true}
@@ -124,7 +121,7 @@ export default function AdminUser() {
                       },
                     }}
                     sticky
-                    scroll={{ x: size.width }}
+                    scroll={{ x: size.width, y: size.height * 0.5 }}
                   />
                 </Card>
               </Col>
