@@ -55,7 +55,7 @@ const failCfg = {
 const socketIoCfg = null; // require("./server-socketio");
 
 // theo dõi log các sự kiện của truy cập máy chủ
-const logViewer = null; // require("./logs-viewer");
+// const logViewer = null; // require("./logs-viewer");
 
 // tạo lớp máy chủ
 const expressServer = new ExpressServer(
@@ -63,8 +63,8 @@ const expressServer = new ExpressServer(
   ddosUse,
   apiRoutes,
   socketIoCfg,
-  failCfg,
-  logViewer
+  failCfg
+  // logViewer
 );
 
 // và cho chạy máy chủ
