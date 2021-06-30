@@ -48,7 +48,7 @@ const verifyGrantedChain = [
 
 
 // bộ xử lý máy chủ trả kết quả xử lý hander
-const { modelsHandler } = require("../../handlers/logs-1.0");
+const { modelsHandler } = require("../../handlers/leader-direct-1.0");
 // thực hiện viết các handler để xử lý dữ liệu, trả kết quả về cho các function của api
 
 // gán req.finalJson = json để tự động trả kết quả, hoặc lỗi thì gán req.error = json
@@ -174,7 +174,7 @@ const funcPaths = {
          */
         '/get-model-structure': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
-            
+
             modelsHandler.getModelStructure
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
@@ -213,7 +213,7 @@ const funcPaths = {
          */
         '/convert-params-2-json': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
-            
+
             modelsHandler.convertParams2Json
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
@@ -231,7 +231,7 @@ const funcPaths = {
          */
         '/convert-params-2-where-clause': [
             // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
-            
+
             modelsHandler.convertParams2WhereClause
             // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
             // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)

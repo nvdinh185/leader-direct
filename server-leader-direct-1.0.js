@@ -38,7 +38,7 @@ const ddosUse = null; //= require('./ddos/ddos-config').express('ip', 'path');
 
 // khai báo các router cho các chức năng nghiệp vụ riêng
 // Lưu ý mẫu khai router theo cách mới cũng sẽ đơn giản và gọn nhẹ hơn
-const apiRoutes = require("./routes/apis-route-logs-1.0.js");
+const apiRoutes = require("./routes/apis-route-leader-direct-1.0.js");
 
 // nhúng lớp thành phần khai báo máy chủ đơn giản
 const { ExpressServer } = require("cng-node-js-utils");
