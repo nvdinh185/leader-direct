@@ -16,7 +16,7 @@ const {
 // const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
 class UserRightsHandler {
-  constructor() {}
+  constructor() { }
 
   /**
    * (1) GET /sample-api/user-rights/get-functions
@@ -1542,6 +1542,110 @@ class UserRightsHandler {
 
     // update 1 bảng ghi vào csdl
     organizations
+      .updateOneRecord(
+        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+      )
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (123) POST /leader-direct/api/get-users
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getUsers(req, res, next) {
+    leaderDirectModels.users
+      .getAllData()
+
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (124) POST /leader-direct/api/create-user
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  createUser(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    jsonData.created_time = new Date().getTime();
+
+    // chèn một bảng ghi vào csdl
+    leaderDirectModels.users
+      .insertOneRecord(
+        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
+      )
+      //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (125) POST /leader-direct/api/update-user
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  updateUser(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    jsonData.updated_time = new Date().getTime();
+
+    // update 1 bảng ghi vào csdl
+    leaderDirectModels.users
       .updateOneRecord(
         jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
         { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
