@@ -10,20 +10,13 @@ const {
   function_groups,
   function_granted,
   menu_apis,
-<<<<<<< HEAD
-} = require("../../midlewares/granted-users/models");
-
-class UserRightsHandler {
-  constructor() {}
-=======
-  organizations
+  organizations,
 } = require("../../midlewares/granted-users/models");
 
 // const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
 class UserRightsHandler {
-  constructor() { }
->>>>>>> dinh-checkout
+  constructor() {}
 
   /**
    * (1) GET /sample-api/user-rights/get-functions
@@ -365,10 +358,7 @@ class UserRightsHandler {
           function_apis: JSON.stringify(function_apis),
           updated_time: Date.now(),
           updated_user: req.user.username,
-<<<<<<< HEAD
-=======
-          menus_granted: JSON.stringify(menus_granted)
->>>>>>> dinh-checkout
+          menus_granted: JSON.stringify(menus_granted),
         };
 
         if (!data || !data.id) {
@@ -482,16 +472,7 @@ class UserRightsHandler {
     function_granted
       .getFirstRecord({ username })
       .then(async (user) => {
-<<<<<<< HEAD
-        let jsonData = {
-          function_apis: JSON.stringify(function_apis),
-          updated_time: Date.now(),
-          updated_user: req.user.username,
-        };
-=======
-
         let jsonData = req.json_data;
->>>>>>> dinh-checkout
 
         if (!user || !user.username) {
           // user chưa được tạo trong phân quyền thì chèn vào
@@ -1463,8 +1444,6 @@ class UserRightsHandler {
     function_apis
       .getFirstRecord({ id })
       .then((data) => {
-<<<<<<< HEAD
-=======
         // console.log('Data: ', data);
         req.finalJson = data;
         next();
@@ -1530,14 +1509,11 @@ class UserRightsHandler {
       )
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
->>>>>>> dinh-checkout
         // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-<<<<<<< HEAD
-=======
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
@@ -1577,7 +1553,6 @@ class UserRightsHandler {
         next();
       })
       .catch((err) => {
->>>>>>> dinh-checkout
         // console.log('Lỗi: ', err);
         req.error = err;
         next();
