@@ -199,7 +199,8 @@ class UserRightsHandler {
           username: 1,
           function_groups: 1,
           function_apis: 1,
-          menu_apis_granted: 1,
+          organization: 1,
+          menus_granted: 1,
           description: 1,
           updated_time: 1,
           updated_user: 1,
@@ -248,8 +249,13 @@ class UserRightsHandler {
         { username },
         {
           username: 1,
+          organization: 1,
+          menus_granted: 1,
           function_groups: 1,
           function_apis: 1,
+          description: 1,
+          updated_time: 1,
+          updated_user: 1,
           status: 1,
         }
       )
@@ -356,9 +362,10 @@ class UserRightsHandler {
         console.log("Data: ", data);
         let jsonData = {
           function_apis: JSON.stringify(function_apis),
+          menus_granted: JSON.stringify(menus_granted),
+          status: req.json_data.status,
           updated_time: Date.now(),
           updated_user: req.user.username,
-          menus_granted: JSON.stringify(menus_granted),
         };
 
         if (!data || !data.id) {

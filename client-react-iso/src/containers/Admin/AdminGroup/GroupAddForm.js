@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Select, Tag } from "antd";
 import Transfers from "@components/uielements/transfer";
-import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
-import { createMenuApi, updateMenuApi } from "@redux/adminUsers/actions";
+import { UserOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
+import { grantFunctionsToGroup, createFunctionGroup } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const { Option } = Select;
@@ -35,13 +35,17 @@ export default function GroupAddForm({
       console.log("Success:", values);
       // TODO: Send dữ liệu về server và thông báo kết quả
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
+      let newData = {
+        ...form.getFieldValue(),
+        function_apis: JSON.stringify(targetApiKeys.sort((a, b) => a - b)),
+        menus_granted: JSON.stringify(targetMenuKeys.sort()),
+      };
       if (initialValues && modalMode === "EDIT") {
-        // dispatch(updateMenuApi(token, form.getFieldValue()));
-        console.log(form.getFieldValue());
+        dispatch(grantFunctionsToGroup(token, newData));
         setIsModalVisible(false);
         return;
       }
-      //   dispatch(createMenuApi(token, form.getFieldValue()));
+      dispatch(createFunctionGroup(token, { ...newData, status: 1 }));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -65,9 +69,9 @@ export default function GroupAddForm({
       let apiArr = JSON.parse(initialValues.function_apis);
       let targetInitArr = apis.filter((api) => apiArr.includes(api.id)).map((item) => item.id);
       setTargetApiKeys(targetInitArr);
-      // let menuArr = JSON.parse(initialValues.menus_granted);
-      // let targetInitMenuArr = menus.filter((menu) => menuArr.includes(menu.id)).map((item) => item.id);
-      // setTargetMenuKeys(targetInitMenuArr);
+      let menuArr = JSON.parse(initialValues.menus_granted);
+      let targetInitMenuArr = menus.filter((menu) => menuArr.includes(menu.id)).map((item) => item.id);
+      setTargetMenuKeys(targetInitMenuArr);
     }
   }, [initialValues, modalMode, apis, menus]);
 
@@ -126,7 +130,7 @@ export default function GroupAddForm({
             targetKeys={targetMenuKeys}
             onChange={onChangeMenu}
             rowKey={(item) => item.id}
-            render={(item) => `${item.tag_id} -- ${item.name}`}
+            render={(item) => `${item.id}. ${item.tag_id} -- ${item.name}`}
             oneWay={true}
             showSearch={true}
             pagination

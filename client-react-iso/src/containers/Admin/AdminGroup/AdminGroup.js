@@ -28,7 +28,7 @@ export default function AdminUser() {
 
   const [cols, setCols] = useState([]);
   const [modalMode, setModalMode] = useState("ADD");
-  const [editMenu, setEditMenu] = useState();
+  const [editGroup, setEditGroup] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const size = useWindowSize();
 
@@ -60,14 +60,14 @@ export default function AdminUser() {
 
   const handleChange = (row) => {
     setModalMode("EDIT");
-    setEditMenu({ ...row });
+    setEditGroup({ ...row });
   };
 
   useEffect(() => {
-    if (editMenu) {
+    if (editGroup) {
       setIsModalVisible(true);
     }
-  }, [editMenu]);
+  }, [editGroup]);
 
   return (
     <LayoutWrapper>
@@ -77,10 +77,10 @@ export default function AdminUser() {
         menus={menus}
         width={size.width > 1200 ? size.width * 0.8 : size.width * 0.7}
         modalMode={modalMode}
-        initialValues={modalMode === "EDIT" ? editMenu : {}}
+        initialValues={modalMode === "EDIT" ? editGroup : {}}
         okText={modalMode === "ADD" ? "Thêm Mới" : "Thay Đổi"}
         cancelText="Bỏ Qua"
-        title="Tạo Mới Menu"
+        title={modalMode === "ADD" ? "Tạo Mới Group" : "Điều Chỉnh Group ID " + editGroup.id}
         centered={true}
         destroyOnClose={true}
         isModalVisible={isModalVisible}
