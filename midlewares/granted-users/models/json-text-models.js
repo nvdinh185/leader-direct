@@ -118,6 +118,5 @@ module.exports = {
         display_name: { type: 'STRING', length: 200 },
         updated_time: { type: 'DATETIME' },
         updated_user: { type: 'STRING', length: 50 }
-    },
-    '': { '': {} }
+    }
 }

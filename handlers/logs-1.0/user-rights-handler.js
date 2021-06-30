@@ -10,7 +10,10 @@ const {
   function_groups,
   function_granted,
   menu_apis,
+  organizations
 } = require("../../midlewares/granted-users/models");
+
+// const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
 class UserRightsHandler {
   constructor() { }
@@ -331,9 +334,9 @@ class UserRightsHandler {
       return;
     }
 
-    let { id, function_apis, menus_api } = req.json_data; // truyền lên là {id, function_apis:[]}
+    let { id, function_apis, menus_granted } = req.json_data; // truyền lên là {id, function_apis:[]}
 
-    if (!id || !function_apis || !menus_api) {
+    if (!id || !function_apis || !menus_granted) {
       req.error = "Không có dữ liệu theo yêu cầu";
       next();
       return;
@@ -355,7 +358,7 @@ class UserRightsHandler {
           function_apis: JSON.stringify(function_apis),
           updated_time: Date.now(),
           updated_user: req.user.username,
-          menus_api: JSON.stringify(menus_api)
+          menus_granted: JSON.stringify(menus_granted)
         };
 
         if (!data || !data.id) {
@@ -1464,7 +1467,7 @@ class UserRightsHandler {
    * SAMPLE INPUTS:
    */
   getOrganizations(req, res, next) {
-    leaderDirectModels.organizations
+    organizations
       .getAllData()
 
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
@@ -1501,7 +1504,7 @@ class UserRightsHandler {
     jsonData.created_time = new Date().getTime();
 
     // chèn một bảng ghi vào csdl
-    leaderDirectModels.organizations
+    organizations
       .insertOneRecord(
         jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
       )
@@ -1539,7 +1542,7 @@ class UserRightsHandler {
     jsonData.updated_time = new Date().getTime();
 
     // update 1 bảng ghi vào csdl
-    leaderDirectModels.organizations
+    organizations
       .updateOneRecord(
         jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
         { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
