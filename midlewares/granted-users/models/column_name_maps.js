@@ -1,22 +1,21 @@
-// Mô hình này được tạo tự động từ quy trình ./test/create-models/create-models-interface.js
+// Mô hình này được tạo tự động từ quy trình ./test/create-api-functions/3-create-models-interface-granted.js
 
 // ĐỂ sử dụng thực tế, hãy viết thêm các thủ tục theo nhu cầu giao tiếp khác
 
 // Mô hình giao tiếp csdl mẫu qua một bảng.
 // Trường hợp, sử dụng các phương thức runSql, hoặc runFunc trực tiếp qua this.db
 // hoặc sử dụng các lệnh nguyên gốc db của các DAO như SqliteDAO, OracleDAO thì sử dụng this.db.getDbInstance()
-const TABLE_NAME = "hacks";
-const { hacks } = require("./json-text-models");
+const TABLE_NAME = "column_name_maps";
+const { column_name_maps } = require("./json-text-models");
 const { DynamicModel } = require("node-js-orm");
 
 // Định nghĩa khai báo một mô hình với csdl bằng mở rộng lớp mô hình từ thư viện và gọi lại thư viện
-class Hacks extends DynamicModel {
+class Column_name_maps extends DynamicModel {
     
     constructor(db) {
-        // thực hiện khởi tạo mô hình lớp trên
-        super(db, TABLE_NAME, hacks);
+        super(db, TABLE_NAME, column_name_maps);
     }
-    
+
     /*
     // Danh sách các hàm mặt định của mô hình thuộc đối tượng Model gồm:
     - this.sync() = tạo bảng trong csdl
@@ -75,4 +74,4 @@ class Hacks extends DynamicModel {
 
 }
 
-module.exports = Hacks;
+module.exports = Column_name_maps;
