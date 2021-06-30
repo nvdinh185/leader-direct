@@ -48,7 +48,7 @@ const verifyGrantedChain = [
 
 
 // bộ xử lý máy chủ trả kết quả xử lý hander
-const { userTablesHandler } = require("../../handlers/logs-1.0");
+const { userTablesHandler } = require("../../handlers/leader-direct-1.0");
 // thực hiện viết các handler để xử lý dữ liệu, trả kết quả về cho các function của api
 
 // gán req.finalJson = json để tự động trả kết quả, hoặc lỗi thì gán req.error = json
