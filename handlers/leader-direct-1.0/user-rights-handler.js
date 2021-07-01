@@ -1659,7 +1659,7 @@ class UserRightsHandler {
     function_granted
       .updateOneRecord(
         jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
+        { username: jsonData.username } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
       )
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
