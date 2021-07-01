@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
 import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
-import { createMenuApi, updateMenuApi } from "@redux/adminUsers/actions";
+import { createGrantedUser, updateGrantedUser } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Transfers from "@components/uielements/transfer";
 
@@ -20,6 +20,7 @@ export default function UserAddForm({
 }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
+  const status = useSelector((state) => state.adminUser.loading);
   const [targetApiKeys, setTargetApiKeys] = useState([]);
 
   const dispatch = useDispatch();
@@ -35,12 +36,16 @@ export default function UserAddForm({
       console.log("Success:", values);
       // TODO: Send dữ liệu về server và thông báo kết quả
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
+      let newData = {
+        ...form.getFieldValue(),
+        function_apis: JSON.stringify(targetApiKeys.sort((a, b) => a - b)),
+      };
       if (initialValues && modalMode === "EDIT") {
-        // dispatch(updateMenuApi(token, form.getFieldValue()));
+        dispatch(updateGrantedUser(token, newData));
         setIsModalVisible(false);
         return;
       }
-      //   dispatch(createMenuApi(token, form.getFieldValue()));
+      dispatch(createGrantedUser(token, newData));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -77,7 +82,7 @@ export default function UserAddForm({
     <Modal
       {...props}
       // cancelButtonProps={{ block: true }}
-      // okButtonProps={{ block: true }}
+      okButtonProps={{ loading: status }}
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}

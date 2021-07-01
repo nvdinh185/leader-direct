@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
 import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined } from "@ant-design/icons";
 import { createMenuApi, updateMenuApi } from "@redux/adminUsers/actions";
@@ -9,6 +9,7 @@ const { Option } = Select;
 export default function MenuAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
+  const status = useSelector((state) => state.adminUser.loading);
 
   const dispatch = useDispatch();
 
@@ -51,7 +52,7 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
     <Modal
       {...props}
       // cancelButtonProps={{ block: true }}
-      // okButtonProps={{ block: true }}
+      okButtonProps={{ loading: status }}
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}

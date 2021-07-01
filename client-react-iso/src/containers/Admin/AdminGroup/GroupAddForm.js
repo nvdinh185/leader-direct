@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 const { Option } = Select;
 
 export default function GroupAddForm({
+  auth,
   apis,
   menus,
   modalMode,
@@ -19,10 +20,12 @@ export default function GroupAddForm({
 }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
-  const [targetApiKeys, setTargetApiKeys] = useState([]);
-  const [targetMenuKeys, setTargetMenuKeys] = useState([]);
+  const status = useSelector((state) => state.adminUser.loading);
 
   const dispatch = useDispatch();
+
+  const [targetApiKeys, setTargetApiKeys] = useState([]);
+  const [targetMenuKeys, setTargetMenuKeys] = useState([]);
 
   const formItemLayout = {
     labelCol: { xs: { span: 24 }, sm: { span: 5 } },
@@ -45,7 +48,7 @@ export default function GroupAddForm({
         setIsModalVisible(false);
         return;
       }
-      dispatch(createFunctionGroup(token, { ...newData, status: 1 }));
+      dispatch(createFunctionGroup(token, newData));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -89,7 +92,7 @@ export default function GroupAddForm({
     <Modal
       {...props}
       // cancelButtonProps={{ block: true }}
-      // okButtonProps={{ block: true }}
+      okButtonProps={{ loading: status }}
       visible={isModalVisible}
       style={{ height: "90vh", overflow: "auto" }}
       onOk={handleOk}

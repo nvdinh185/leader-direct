@@ -108,7 +108,6 @@ export const createMenuApiStart = () => {
 };
 
 export const createMenuApiSuccess = (data) => {
-  console.log(data);
   return {
     type: userTypes.CREATE_MENU_API_SUCCESS,
     payload: data,
@@ -453,6 +452,92 @@ export const createOrganizationSuccess = (data) => {
 export const createOrganizationFail = (error) => {
   return {
     type: userTypes.CREATE_ORGANIZATION_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 10 - CREATE GRANTED USER
+export const createGrantedUser = (token, form) => {
+  return (dispatch) => {
+    dispatch(createGrantedUserStart(token, form));
+    userApi
+      .createGrantedUser(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(createGrantedUserSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getGrantedUserList(token));
+        } else {
+          dispatch(createGrantedUserFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(createGrantedUserFail(err));
+      });
+  };
+};
+
+export const createGrantedUserStart = () => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_START,
+  };
+};
+
+export const createGrantedUserSuccess = (data) => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+
+export const createGrantedUserFail = (error) => {
+  return {
+    type: userTypes.CREATE_FUNCTION_GROUP_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 11 - CREATE GRANTED USER
+export const updateGrantedUser = (token, form) => {
+  return (dispatch) => {
+    dispatch(updateGrantedUserStart(token, form));
+    userApi
+      .updateGrantedUser(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(updateGrantedUserSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getGrantedUserList(token));
+        } else {
+          dispatch(updateGrantedUserFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(updateGrantedUserFail(err));
+      });
+  };
+};
+
+export const updateGrantedUserStart = () => {
+  return {
+    type: userTypes.UPDATE_GRANTED_USER_START,
+  };
+};
+
+export const updateGrantedUserSuccess = (data) => {
+  return {
+    type: userTypes.UPDATE_GRANTED_USER_SUCCESS,
+    payload: data,
+  };
+};
+
+export const updateGrantedUserFail = (error) => {
+  return {
+    type: userTypes.UPDATE_GRANTED_USER_FAIL,
     payload: error,
   };
 };

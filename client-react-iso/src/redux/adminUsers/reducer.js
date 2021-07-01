@@ -1,4 +1,5 @@
 import * as userTypes from "@redux/adminUsers/types";
+import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultUser = {
   users: [],
@@ -42,12 +43,14 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.CREATE_MENU_API_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thêm mới menu thành công");
       return {
         ...state,
         createMenu: action.payload,
         loading: false,
       };
     case userTypes.CREATE_MENU_API_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thêm mới menu: " + action.payload);
       return {
         ...state,
         err: action.payload,
@@ -97,6 +100,47 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
 
     // ---------------------------------------------------------------------------------
+    case userTypes.CREATE_GRANTED_USER_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.CREATE_GRANTED_USER_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thêm mới người dùng thành công");
+      return {
+        ...state,
+        createGrantedUser: action.payload,
+        loading: false,
+      };
+    case userTypes.CREATE_GRANTED_USER_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thêm mới người dùng: " + action.payload);
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case userTypes.UPDATE_GRANTED_USER_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.UPDATE_GRANTED_USER_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thay đổi thông tin đơn vị thành công");
+      return {
+        ...state,
+        updateGrantedUser: action.payload,
+        loading: false,
+      };
+    case userTypes.UPDATE_GRANTED_USER_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thay đổi thông tin người dùng: " + action.payload);
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
     // 3 - GROUPS SECTION
     // ---------------------------------------------------------------------------------
     case userTypes.GET_GRANTED_GROUP_ALL_START:
@@ -127,12 +171,16 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.CREATE_FUNCTION_GROUP_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thêm mới nhóm thành công");
+
       return {
         ...state,
         createFuncGroup: action.payload,
         loading: false,
       };
     case userTypes.CREATE_FUNCTION_GROUP_FAIL:
+      errorAlert("Lỗi", "Có lỗi khi thêm mới nhóm: " + action.payload);
+
       return {
         ...state,
         err: action.payload,
@@ -145,12 +193,14 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.GRANT_FUNCTIONS_TO_GROUP_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thay đổi thông tin nhóm thành công");
       return {
         ...state,
         grantFuncToGroup: action.payload,
         loading: false,
       };
     case userTypes.GRANT_FUNCTIONS_TO_GROUP_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thay đổi thông tin nhóm: " + action.payload);
       return {
         ...state,
         err: action.payload,
@@ -210,12 +260,14 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.CREATE_ORGANIZATION_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thêm mới đơn vị thành công");
       return {
         ...state,
         createOrganization: action.payload,
         loading: false,
       };
     case userTypes.CREATE_ORGANIZATION_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thêm mới đơn vị: " + action.payload);
       return {
         ...state,
         err: action.payload,
@@ -228,12 +280,14 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.UPDATE_ORGANIZATION_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thay đổi thông tin đơn vị thành công");
       return {
         ...state,
         updateOrganization: action.payload,
         loading: false,
       };
     case userTypes.UPDATE_ORGANIZATION_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thay đổi thông tin đơn vị: " + action.payload);
       return {
         ...state,
         err: action.payload,

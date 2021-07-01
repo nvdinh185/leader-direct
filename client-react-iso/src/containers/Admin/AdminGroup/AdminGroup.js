@@ -24,6 +24,7 @@ export default function AdminUser() {
   const apis = useSelector((state) => state.adminUser.apis);
   const menus = useSelector((state) => state.adminUser.menus);
   const token = useSelector((state) => state.Auth.idToken);
+  const auth = useSelector((state) => state.Auth.data);
   const dispatch = useDispatch();
 
   const [cols, setCols] = useState([]);
@@ -73,6 +74,7 @@ export default function AdminUser() {
     <LayoutWrapper>
       <PageHeader>{<IntlMessages id="sidebar.adminUserGroup" />}</PageHeader>
       <GroupAddForm
+        auth={auth}
         apis={apis}
         menus={menus}
         width={size.width > 1200 ? size.width * 0.8 : size.width * 0.7}

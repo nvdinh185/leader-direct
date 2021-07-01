@@ -18,6 +18,7 @@ export default function OrgAddForm({
 }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
+  const status = useSelector((state) => state.adminUser.loading);
 
   const dispatch = useDispatch();
 
@@ -37,7 +38,7 @@ export default function OrgAddForm({
         setIsModalVisible(false);
         return;
       }
-      dispatch(createOrganization(token, { ...form.getFieldValue(), status: 1, updated_user: auth.username?.toUpperCase() }));
+      dispatch(createOrganization(token, { ...form.getFieldValue(), status: 1, updated_user: auth.username }));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -59,8 +60,8 @@ export default function OrgAddForm({
   return (
     <Modal
       {...props}
-      // cancelButtonProps={{ block: true }}
-      // okButtonProps={{ block: true }}
+      // cancelButtonProps={{ loading: status }}
+      okButtonProps={{ loading: status }}
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}

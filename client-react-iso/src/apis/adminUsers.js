@@ -13,6 +13,14 @@ export const getGrantedUserInfo = (token) => {
   return callUserRightAPI("post", baseUserRightURL + "/get-granted-user", null, token);
 };
 
+export const createGrantedUser = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/create-user", data, token);
+};
+
+export const updateGrantedUser = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/update-user", data, token);
+};
+
 // ---------------------------------------------------------------------------------
 // ------------------------------- MENU DATA SECTION ----------------------------
 // --------------------------------------------------------------------------------
