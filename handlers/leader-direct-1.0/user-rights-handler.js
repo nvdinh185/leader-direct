@@ -1266,7 +1266,7 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date(), update_user: req.user.username, status: 1 };
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), update_user: req.user.username, status: 1 };
     // console.log(jsonData);
     function_groups
       .insertOneRecord(jsonData)
@@ -1351,7 +1351,7 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date(), updated_user: req.user.username, status: 1 };
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username, status: 1 };
 
     menu_apis
       .insertOneRecord(jsonData)
@@ -1382,7 +1382,7 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date(), updated_user: req.user.username };
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
 
     menu_apis
       .updateOneRecord(jsonData, { id: jsonData.id })
@@ -1504,8 +1504,12 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, created_time: new Date(), updated_time: new Date(), updated_user: req.user.username };
-    jsonData.created_time = new Date().getTime();
+    let jsonData = {
+      ...req.json_data,
+      created_time: new Date().getTime(),
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
+    };
 
     // chèn một bảng ghi vào csdl
     organizations
@@ -1542,7 +1546,7 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date(), updated_user: req.user.username };
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
 
     // update 1 bảng ghi vào csdl
     organizations
@@ -1609,7 +1613,7 @@ class UserRightsHandler {
 
     let jsonData = {
       ...req.json_data,
-      updated_time: new Date(),
+      updated_time: new Date().getTime(),
       updated_user: req.user.username,
       status: 1,
     };
@@ -1649,7 +1653,7 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date(), updated_user: req.user.username };
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
 
     // update 1 bảng ghi vào csdl
     function_granted
