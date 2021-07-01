@@ -361,8 +361,8 @@ class UserRightsHandler {
       .then(async (data) => {
         console.log("Data: ", data);
         let jsonData = {
-          function_apis: JSON.stringify(function_apis),
-          menus_granted: JSON.stringify(menus_granted),
+          function_apis: function_apis,
+          menus_granted: menus_granted,
           status: req.json_data.status,
           updated_time: Date.now(),
           updated_user: req.user.username,
@@ -1463,7 +1463,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (129) POST /leader-direct/api/get-organizations
+   * (58) POST /leader-direct/api/get-organizations
    *
    *
    *
@@ -1490,7 +1490,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (130) POST /leader-direct/api/create-organization
+   * (59) POST /leader-direct/api/create-organization
    *
    *
    *
@@ -1528,7 +1528,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (131) POST /leader-direct/api/update-organization
+   * (60) POST /leader-direct/api/update-organization
    *
    *
    *
@@ -1567,7 +1567,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (123) POST /leader-direct/api/get-users
+   * (61) POST /leader-direct/api/get-users
    *
    *
    *
@@ -1594,7 +1594,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (124) POST /leader-direct/api/create-user
+   * (62) POST /leader-direct/api/create-user
    *
    *
    *
@@ -1632,7 +1632,7 @@ class UserRightsHandler {
   }
 
   /**
-   * (125) POST /leader-direct/api/update-user
+   * (63) POST /leader-direct/api/update-user
    *
    *
    *

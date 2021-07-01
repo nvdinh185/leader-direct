@@ -9,7 +9,6 @@
 //và khai đúng như vậy
 const API = "/user-rights";
 
-
 // bộ xử lý dữ liệu postHandler = post + getToken để trả về req.token, req.json_data, json.form_data
 const { postHandler, Router, expHandlers } = require("cng-node-js-utils");
 
@@ -18,30 +17,30 @@ const { postHandler, Router, expHandlers } = require("cng-node-js-utils");
 const { verifyToken } = require("../../midlewares/verify-token");
 // chuỗi kiểm tra token hợp lệ như sau
 const verifyTokenChain = [
-    // Hàm tự động lấy token trên các lệnh POST, GET, OPTIONS và trả về req.token 
+    // Hàm tự động lấy token trên các lệnh POST, GET, OPTIONS và trả về req.token
     // (tiếp đầu ngữ thường dùng mặt định là Bear trên header)
-    postHandler.getToken
+    postHandler.getToken,
     // thực hiện kiểm tra tính hợp lệ của token và trả về req.user nếu thành công hoặc req.error nếu thất bại
     // phương thức xác thực bằng socketClient - nhớ định nghĩa kênh liên lạc socket
-    , verifyToken
+    verifyToken,
     // nếu thất bại - có lỗi trong phân quyền, trả kết quả ngay cho client
     // sử dụng hàm khai sẵn luôn đỡ mất công
-    , expHandlers.checkErrorBeforeResource
+    expHandlers.checkErrorBeforeResource,
 ];
 
 // nhúng bộ phân quyền chức năng của user, user được cấp quyền mới được truy vấn api
 const { checkRight } = require("../../midlewares/granted-users");
 // chuỗi kiểm tra quyền hợp lệ như sau:
 const verifyGrantedChain = [
-    ...verifyTokenChain
-    // trả kết quả req.functionCode = req.path 
+    ...verifyTokenChain,
+    // trả kết quả req.functionCode = req.path
     // (thay thế bằng hàm setRequestParameter bên trong (utils 0.0.26))
     // , expHandlers.setFunctionFromPath
     // chuẩn bị các tham số để xác thực quyền
-    , checkRight(API)
+    checkRight(API),
     // nếu thất bại - có lỗi trong phân quyền, trả kết quả ngay cho client
     // sử dụng hàm khai sẵn luôn đỡ mất công
-    , expHandlers.checkErrorBeforeResource
+    expHandlers.checkErrorBeforeResource,
 ];
 
 // ----- END PHÂN QUYỀN --- //
@@ -649,7 +648,7 @@ const funcPaths = {
         ],
 
         /**
-         * (123) POST /leader-direct/api/get-users
+         * (61) POST /leader-direct/api/get-users
          * 
          * 
          * 
@@ -671,7 +670,7 @@ const funcPaths = {
         ],
 
         /**
-         * (124) POST /leader-direct/api/create-user
+         * (62) POST /leader-direct/api/create-user
          * 
          * 
          * 
@@ -693,7 +692,7 @@ const funcPaths = {
         ],
 
         /**
-         * (125) POST /leader-direct/api/update-user
+         * (63) POST /leader-direct/api/update-user
          * 
          * 
          * 
@@ -716,4 +715,4 @@ const funcPaths = {
 
     },
 };
-module.exports = (new Router(funcPaths, API)).getExpressRouter();
+module.exports = new Router(funcPaths, API).getExpressRouter();
