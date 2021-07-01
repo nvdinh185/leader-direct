@@ -63,12 +63,14 @@ export default function adminUserReducer(state = defaultUser, action) {
         loading: true,
       };
     case userTypes.UPDATE_MENU_API_SUCCESS:
+      successAlert("Thành Công", "Bạn đã sửa thông tin menu thành công");
       return {
         ...state,
         updateMenu: action.payload,
         loading: false,
       };
     case userTypes.UPDATE_MENU_API_FAIL:
+      errorAlert("Lỗi", "Lỗi khi sửa thông tin menu: " + action.payload);
       return {
         ...state,
         err: action.payload,

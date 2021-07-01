@@ -4,34 +4,33 @@ import Loader from "@components/utility/loader";
 
 const routes = [
   {
-    path: "dashboard",
+    path: "",
     component: lazy(() => import("@containers/Widgets/Widgets")),
     exact: true,
   },
   {
+    path: "dashboard",
+    component: lazy(() => import("@containers/Widgets/Widgets")),
+  },
+  {
     path: "admin-menu",
     component: lazy(() => import("@containers/Admin/AdminMenu/AdminMenu")),
-    exact: true,
   },
   {
     path: "admin-organization",
     component: lazy(() => import("@containers/Admin/AdminOrg/AdminOrg")),
-    exact: true,
   },
   {
     path: "admin-user",
     component: lazy(() => import("@containers/Admin/AdminUser/AdminUser")),
-    exact: true,
   },
   {
     path: "admin-group-user",
     component: lazy(() => import("@containers/Admin/AdminGroup/AdminGroup")),
-    exact: true,
   },
   {
     path: "scrum-board",
     component: lazy(() => import("@containers/ScrumBoard")),
-    exact: false,
   },
   {
     path: "blank-page",

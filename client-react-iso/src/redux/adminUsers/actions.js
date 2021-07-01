@@ -91,6 +91,7 @@ export const createMenuApi = (token, form) => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(createMenuApiSuccess(data.data));
+          dispatch(getMenuApiAll(token));
         } else {
           dispatch(createMenuApiFail(data));
         }
@@ -146,21 +147,21 @@ export const updateMenuApi = (token, form) => {
 
 export const updateMenuApiStart = () => {
   return {
-    type: userTypes.CREATE_MENU_API_START,
+    type: userTypes.UPDATE_MENU_API_START,
   };
 };
 
 export const updateMenuApiSuccess = (data) => {
   console.log(data);
   return {
-    type: userTypes.CREATE_MENU_API_SUCCESS,
+    type: userTypes.UPDATE_MENU_API_SUCCESS,
     payload: data,
   };
 };
 
 export const updateMenuApiFail = (error) => {
   return {
-    type: userTypes.CREATE_MENU_API_FAIL,
+    type: userTypes.UPDATE_MENU_API_FAIL,
     payload: error,
   };
 };
