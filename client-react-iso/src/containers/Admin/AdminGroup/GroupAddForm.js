@@ -155,6 +155,7 @@ export default function GroupAddForm({
         {modalMode === "EDIT" ? (
           <Form.Item label="Trạng Thái Nhóm" name="status">
             <Select
+              size="large"
               placeholder="Chọn Menu Nhóm Này Có Thể Truy Cập"
               optionFilterProp="children"
               filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}

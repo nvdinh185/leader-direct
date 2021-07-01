@@ -6,11 +6,24 @@ import { useDispatch, useSelector } from "react-redux";
 
 const { Option } = Select;
 
-export default function MenuAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
+export default function OrgAddForm({
+  organizations,
+  modalMode,
+  initialValues,
+  handleCancel,
+  isModalVisible,
+  setIsModalVisible,
+  ...props
+}) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
 
   const dispatch = useDispatch();
+
+  const formItemLayout = {
+    labelCol: { xs: { span: 24 }, sm: { span: 5 } },
+    wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
+  };
 
   const handleOk = async () => {
     try {
@@ -19,11 +32,11 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
       // TODO: Send dữ liệu về server và thông báo kết quả
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
       if (initialValues && modalMode === "EDIT") {
-        dispatch(updateMenuApi(token, form.getFieldValue()));
+        // dispatch(updateMenuApi(token, form.getFieldValue()));
         setIsModalVisible(false);
         return;
       }
-      dispatch(createMenuApi(token, form.getFieldValue()));
+      //   dispatch(createMenuApi(token, form.getFieldValue()));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -42,11 +55,6 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
     }
   }, [initialValues, modalMode]);
 
-  const formItemLayout = {
-    labelCol: { xs: { span: 24 }, sm: { span: 5 } },
-    wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
-  };
-
   return (
     <Modal
       {...props}
@@ -58,21 +66,6 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
     >
       <Form {...formItemLayout} form={form}>
         <Form.Item
-          label="Tag ID"
-          name="tag_id"
-          rules={[
-            {
-              required: true,
-              message: "Bạn phải nhập tag id",
-            },
-          ]}
-        >
-          <Input size="large" placeholder="Nhập Tag ID" prefix={<TagOutlined />} />
-        </Form.Item>
-        <Form.Item label="App URL" name="page">
-          <Input size="large" placeholder="Nhập Page (Route URL)" prefix={<MenuOutlined />} />
-        </Form.Item>
-        <Form.Item
           label="Tên"
           name="name"
           rules={[
@@ -82,20 +75,36 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
             },
           ]}
         >
-          <Input size="large" placeholder="Nhập Tên Hiển Thị" prefix={<UserOutlined />} />
+          <Input size="large" placeholder="Nhập Mã Đơn Vị" prefix={<UserOutlined />} />
         </Form.Item>
+        <br></br>
         <Form.Item
-          label="Mô Tả"
-          name="description"
+          label="Mã Đơn Vị"
+          name="code"
           rules={[
             {
               required: true,
-              message: "Bạn phải nhập mô tả cho route này",
+              message: "Bạn phải nhập mã cho đơn vị này",
             },
           ]}
         >
-          <Input.TextArea size="large" placeholder="Nhập Mô Tả Cho Route" prefix={<FileTextOutlined />} />
+          <Input size="large" placeholder="Nhập mã đơn vị" prefix={<FileTextOutlined />} />
         </Form.Item>
+        <br></br>
+
+        <Form.Item label="Đơn Vị Cấp Cha" name="parent_id">
+          <Select
+            size="large"
+            placeholder="Chọn Đơn Vị Cấp Cha"
+            optionFilterProp="children"
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+          >
+            {organizations?.[0] ? organizations.map((org) => <Option value={org.id}>{org.name}</Option>) : null}
+          </Select>
+        </Form.Item>
+        <br></br>
+
         {modalMode === "EDIT" ? (
           <Form.Item label="Trạng Thái Menu" name="status">
             <Select

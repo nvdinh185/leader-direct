@@ -94,6 +94,7 @@ export default function UserAddForm({
         </Form.Item>
         <Form.Item label="Đơn Vị" name="organization" prefix={<IdcardOutlined />}>
           <Select
+            size="large"
             showSearch
             placeholder="Chọn Đơn Vị"
             optionFilterProp="children"
@@ -112,6 +113,7 @@ export default function UserAddForm({
         <Form.Item label="Nhóm Quyền" name="function_groups">
           <Select
             // defaultValue={initialValues && initialValues.function_groups?.[0] ? initialValues.function_groups[0] : null}
+            size="large"
             showSearch
             placeholder="Chọn Nhóm Quyền"
             optionFilterProp="children"
@@ -145,6 +147,7 @@ export default function UserAddForm({
         {modalMode === "EDIT" ? (
           <Form.Item label="Trạng Thái User" name="status">
             <Select
+              size="large"
               placeholder="Chọn Menu Nhóm Này Có Thể Truy Cập"
               optionFilterProp="children"
               filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}

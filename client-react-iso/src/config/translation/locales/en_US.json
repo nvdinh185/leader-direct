@@ -4,6 +4,7 @@
   "sidebar.adminMenu": "Quản lý Menu",
   "sidebar.adminUser": "Quản lý User",
   "sidebar.adminUserGroup": "Quản lý User Group",
+  "sidebar.adminOrganization": "Quản lý Đơn Vị",
   "page.signInTitle": "MOBIFONE 3",
   "page.forgetPassTitle": "Isomorphic",
   "page.forgetPassSubTitle": "Forgot Password?",

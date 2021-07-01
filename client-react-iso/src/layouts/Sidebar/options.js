@@ -21,6 +21,10 @@ const options = [
         key: "admin-group-user",
         label: "sidebar.adminUserGroup",
       },
+      {
+        key: "admin-organization",
+        label: "sidebar.adminOrganization",
+      },
     ],
   },
   {

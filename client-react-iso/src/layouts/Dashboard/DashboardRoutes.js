@@ -14,6 +14,11 @@ const routes = [
     exact: true,
   },
   {
+    path: "admin-organization",
+    component: lazy(() => import("@containers/Admin/AdminOrg/AdminOrg")),
+    exact: true,
+  },
+  {
     path: "admin-user",
     component: lazy(() => import("@containers/Admin/AdminUser/AdminUser")),
     exact: true,
