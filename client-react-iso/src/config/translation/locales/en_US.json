@@ -5,6 +5,8 @@
   "sidebar.adminUser": "Quản lý User",
   "sidebar.adminUserGroup": "Quản lý User Group",
   "sidebar.adminOrganization": "Quản lý Đơn Vị",
+  "sidebar.adminColumnNameMap": "Tên Cột Hiển Thị",
+  "sidebar.adminCategory": "Quản Trị Danh Mục",
   "page.signInTitle": "MOBIFONE 3",
   "page.forgetPassTitle": "Isomorphic",
   "page.forgetPassSubTitle": "Forgot Password?",

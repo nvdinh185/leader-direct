@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
 import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined } from "@ant-design/icons";
-import { createMenuApi, updateMenuApi } from "@redux/adminUsers/actions";
+import { createOrganization, updateOrganization } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const { Option } = Select;
 
 export default function OrgAddForm({
+  auth,
   organizations,
   modalMode,
   initialValues,
@@ -32,11 +33,11 @@ export default function OrgAddForm({
       // TODO: Send dữ liệu về server và thông báo kết quả
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
       if (initialValues && modalMode === "EDIT") {
-        // dispatch(updateMenuApi(token, form.getFieldValue()));
+        dispatch(updateOrganization(token, form.getFieldValue()));
         setIsModalVisible(false);
         return;
       }
-      //   dispatch(createMenuApi(token, form.getFieldValue()));
+      dispatch(createOrganization(token, { ...form.getFieldValue(), status: 1, updated_user: auth.username?.toUpperCase() }));
       setIsModalVisible(false);
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
@@ -100,7 +101,13 @@ export default function OrgAddForm({
             filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
           >
-            {organizations?.[0] ? organizations.map((org) => <Option value={org.id}>{org.name}</Option>) : null}
+            {organizations?.[0]
+              ? organizations.map((org) => (
+                  <Option key={org.id} value={org.id}>
+                    {org.name}
+                  </Option>
+                ))
+              : null}
           </Select>
         </Form.Item>
         <br></br>

@@ -55,7 +55,7 @@ export default function AdminUser() {
 
   useEffect(() => {
     if (users?.[0] && cols.length === 0) {
-      let newCols = createColumnsFromObj(users[0], handleChange);
+      let newCols = createColumnsFromObj(users, handleChange);
       setCols(newCols);
     }
   }, [users]);

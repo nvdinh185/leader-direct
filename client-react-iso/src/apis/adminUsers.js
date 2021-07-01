@@ -59,3 +59,11 @@ export const getFunctions = (token) => {
 export const getAllOrganization = (token) => {
   return callUserRightAPI("post", baseUserRightURL + "/get-organizations", null, token);
 };
+
+export const createOrganization = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/create-organization", data, token);
+};
+
+export const updateOrganization = (token, data) => {
+  return callUserRightAPI("post", baseUserRightURL + "/update-organization", data, token);
+};

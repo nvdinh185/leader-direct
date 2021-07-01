@@ -370,3 +370,89 @@ export const getAllOrganizationFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------------------------
+// 8 - UPDATE ORGANIZATION API
+export const updateOrganization = (token, form) => {
+  return (dispatch) => {
+    dispatch(updateOrganizationStart(token, form));
+    userApi
+      .updateOrganization(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(updateOrganizationSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+          dispatch(getAllOrganization(token));
+        } else {
+          dispatch(updateOrganizationFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(updateOrganizationFail(err));
+      });
+  };
+};
+
+export const updateOrganizationStart = () => {
+  return {
+    type: userTypes.UPDATE_ORGANIZATION_START,
+  };
+};
+
+export const updateOrganizationSuccess = (data) => {
+  console.log(data);
+  return {
+    type: userTypes.UPDATE_ORGANIZATION_SUCCESS,
+    payload: data,
+  };
+};
+
+export const updateOrganizationFail = (error) => {
+  return {
+    type: userTypes.UPDATE_ORGANIZATION_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 9 - CREATE MENU API
+export const createOrganization = (token, form) => {
+  return (dispatch) => {
+    dispatch(createOrganizationStart(token, form));
+    userApi
+      .createOrganization(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(createOrganizationSuccess(data.data));
+          dispatch(getAllOrganization(token));
+        } else {
+          dispatch(createOrganizationFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(createOrganizationFail(err));
+      });
+  };
+};
+
+export const createOrganizationStart = () => {
+  return {
+    type: userTypes.CREATE_ORGANIZATION_START,
+  };
+};
+
+export const createOrganizationSuccess = (data) => {
+  console.log(data);
+  return {
+    type: userTypes.CREATE_ORGANIZATION_SUCCESS,
+    payload: data,
+  };
+};
+
+export const createOrganizationFail = (error) => {
+  return {
+    type: userTypes.CREATE_ORGANIZATION_FAIL,
+    payload: error,
+  };
+};

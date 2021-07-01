@@ -203,6 +203,43 @@ export default function adminUserReducer(state = defaultUser, action) {
         err: action.payload,
         loading: false,
       };
+    // ---------------------------------------------------------------------------------
+    case userTypes.CREATE_ORGANIZATION_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.CREATE_ORGANIZATION_SUCCESS:
+      return {
+        ...state,
+        createOrganization: action.payload,
+        loading: false,
+      };
+    case userTypes.CREATE_ORGANIZATION_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case userTypes.UPDATE_ORGANIZATION_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userTypes.UPDATE_ORGANIZATION_SUCCESS:
+      return {
+        ...state,
+        updateOrganization: action.payload,
+        loading: false,
+      };
+    case userTypes.UPDATE_ORGANIZATION_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
     default:
       return state;
   }

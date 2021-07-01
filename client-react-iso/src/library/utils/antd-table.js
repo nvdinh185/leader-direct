@@ -17,34 +17,34 @@ export const reCreateOrderSttArray = (array) => {
   }
 };
 
-// const createStrEditTable = (key, handleChangeCb) => {
-//   let defaultCol = {
-//     title: key,
-//     width: 15,
-//     dataIndex: key,
-//     key: key,
-//   };
-//   if (COMMON.STR_EDITABLE_COLS.includes(key)) {
-//     const innerEditable = renderEditCellBaseOnDatatype(datatypes.STRING, key, handleChangeCb);
-//     return {
-//       ...defaultCol,
-//       ...innerEditable,
-//     };
-//   }
-//   return defaultCol;
-// };
+/**
+ * Nhận vào mảng các object và trả về các unique của mảng object này
+ * @param {obj[]} objArr Mảng object cần dựng table col
+ * @returns {string[]}
+ */
+const returnUniqueKeyOfObjArr = (objArr) => {
+  return objArr.reduce((aggr, obj) => {
+    for (let key of Object.keys(obj)) {
+      if (!aggr.includes(key)) {
+        aggr.push(key);
+      }
+    }
+    return aggr;
+  }, []);
+};
 
 // ------------------------------------------------------------------------------------------
 // ------------- CREATE COLUMNS CONFIG BASE ON OBJECT OR PRE CONFIG OBJ ---------------------
 
 /**
  * Trả về mảng đối tượng là các header config cho table của antd
- * @param {object} obj Đối tượng chứa các key cần để render lên 1 dòng của table
+ * @param {object[]} objArr Đối tượng chứa các key cần để render lên 1 dòng của table
+ * @param {object} fnHandleChange Hàm để handle sự kiện khi click vào nút sửa đổi thông tin
  * @returns trả về mảng là config các cột cho antd table
  */
-export const createColumnsFromObj = (obj, fnHandleChange) => {
+export const createColumnsFromObj = (objArr, fnHandleChange) => {
   let columns = [];
-  for (const [key, _value] of Object.entries(obj)) {
+  for (const key of returnUniqueKeyOfObjArr(objArr)) {
     if (key === "_id") {
       continue;
     }

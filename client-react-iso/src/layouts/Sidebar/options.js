@@ -25,6 +25,14 @@ const options = [
         key: "admin-organization",
         label: "sidebar.adminOrganization",
       },
+      {
+        key: "admin-column-name-map",
+        label: "sidebar.adminColumnNameMap",
+      },
+      {
+        key: "admin-category",
+        label: "sidebar.adminCategory",
+      },
     ],
   },
   {

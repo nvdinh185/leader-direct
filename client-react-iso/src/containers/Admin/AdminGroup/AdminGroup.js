@@ -53,7 +53,7 @@ export default function AdminUser() {
 
   useEffect(() => {
     if (groups?.[0] && cols.length === 0) {
-      let newCols = createColumnsFromObj(groups[0], handleChange);
+      let newCols = createColumnsFromObj(groups, handleChange);
       setCols(newCols);
     }
   }, [groups]);

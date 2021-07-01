@@ -20,6 +20,7 @@ import "@assets/styles/containers/EditableCell.css";
 export default function AdminOrg() {
   const { rowStyle, colStyle, gutter } = basicStyle;
   const organizations = useSelector((state) => state.adminUser.organizations);
+  const auth = useSelector((state) => state.Auth.data);
   const token = useSelector((state) => state.Auth.idToken);
   const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ export default function AdminOrg() {
 
   useEffect(() => {
     if (organizations?.[0] && cols.length === 0) {
-      let newCols = createColumnsFromObj(organizations[0], handleChange);
+      let newCols = createColumnsFromObj(organizations, handleChange);
       setCols(newCols);
     }
   }, [organizations]);
@@ -68,15 +69,16 @@ export default function AdminOrg() {
 
   return (
     <LayoutWrapper>
-      <PageHeader>{<IntlMessages id="sidebar.adminMenu" />}</PageHeader>
+      <PageHeader>{<IntlMessages id="sidebar.adminOrganization" />}</PageHeader>
       <OrgAddForm
+        auth={auth}
         organizations={organizations}
         width={size.width > 1200 ? size.width * 0.5 : size.width * 0.4}
         modalMode={modalMode}
         initialValues={modalMode === "EDIT" ? editOrg : {}}
         okText={modalMode === "ADD" ? "Thêm Mới" : "Thay Đổi"}
         cancelText="Bỏ Qua"
-        title="Tạo Mới Menu"
+        title="Tạo Mới Đơn Vị"
         centered={true}
         destroyOnClose={true}
         isModalVisible={isModalVisible}
