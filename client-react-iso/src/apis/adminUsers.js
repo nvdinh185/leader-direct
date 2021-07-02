@@ -5,12 +5,7 @@ import { callUserRightAPI, baseUserRightURL } from "./config/index";
 // --------------------------------------------------------------------------------
 
 export const getGrantedUserList = (token) => {
-  console.log(token);
   return callUserRightAPI("get", baseUserRightURL + "/get-granted-users", null, token);
-};
-
-export const getGrantedUserInfo = (token) => {
-  return callUserRightAPI("post", baseUserRightURL + "/get-granted-user", null, token);
 };
 
 export const createGrantedUser = (token, data) => {

@@ -1,5 +1,5 @@
 import * as actionTypes from "@redux/auth/types";
-import { logInSocket } from "@apis/auth";
+import * as authApi from "@apis/auth";
 
 export const checkAuthorization = () => {
   const token = localStorage.getItem("idToken");
@@ -17,7 +17,8 @@ export const checkAuthorization = () => {
 export const login = (username, password) => {
   return (dispatch) => {
     dispatch(authStart());
-    logInSocket(null, { username, password })
+    authApi
+      .logInSocket(null, { username, password })
       .then((res, rej) => {
         if (res.status === 200) {
           localStorage.setItem("idToken", res.data.token);
@@ -57,5 +58,48 @@ export const authFail = (error) => {
 export const logOut = () => {
   return {
     type: actionTypes.LOG_OUT,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// GRANTED USER
+// ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------
+// 1 - GET USER LIST
+export const getGrantedUserInfo = (token) => {
+  return (dispatch) => {
+    dispatch(getGrantedUserInfoStart());
+    authApi
+      .getGrantedUserInfo(token)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getGrantedUserInfoSuccess(data.data));
+        } else {
+          dispatch(getGrantedUserInfoFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getGrantedUserInfoFail(err));
+      });
+  };
+};
+
+export const getGrantedUserInfoStart = () => {
+  return {
+    type: actionTypes.GET_GRANTED_USER_INFO_START,
+  };
+};
+
+export const getGrantedUserInfoSuccess = (data) => {
+  return {
+    type: actionTypes.GET_GRANTED_USER_INFO_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getGrantedUserInfoFail = (error) => {
+  return {
+    type: actionTypes.GET_GRANTED_USER_INFO_FAIL,
+    payload: error,
   };
 };

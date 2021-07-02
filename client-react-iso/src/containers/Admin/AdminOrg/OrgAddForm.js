@@ -51,6 +51,7 @@ export default function OrgAddForm({
       return;
     }
     if (initialValues && modalMode === "EDIT") {
+      form.resetFields();
       form.setFieldsValue({
         ...initialValues,
       });

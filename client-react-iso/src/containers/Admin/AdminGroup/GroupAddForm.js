@@ -65,6 +65,7 @@ export default function GroupAddForm({
     }
     // Nếu mode là EDIT thì set giá trị ban đầu cho form và init cái transfer lên
     if (initialValues && modalMode === "EDIT" && apis?.[0] && menus?.[0]) {
+      form.resetFields();
       form.setFieldsValue({
         ...initialValues,
       });

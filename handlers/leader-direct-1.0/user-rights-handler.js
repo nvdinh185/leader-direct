@@ -233,7 +233,7 @@ class UserRightsHandler {
     let username = req.user.username;
 
     let page = 1;
-    let limit = 100;
+    let limit = 1000;
 
     // ràng buộc kiểm tra dữ liệu yêu cầu
     if (!username) {
@@ -309,6 +309,7 @@ class UserRightsHandler {
 
         req.finalJson = {
           ...functions,
+          grantedUser: granted,
           // chỉ trả độ dài id duy nhất thôi
           length: [...new Set([...funcs, ...funcsGroup])].length,
         };
@@ -359,9 +360,7 @@ class UserRightsHandler {
       .then(async (data) => {
         console.log("Data: ", data);
         let jsonData = {
-          function_apis: function_apis,
-          menus_granted: menus_granted,
-          status: req.json_data.status,
+          ...req.json_data,
           updated_time: Date.now(),
           updated_user: req.user.username,
         };

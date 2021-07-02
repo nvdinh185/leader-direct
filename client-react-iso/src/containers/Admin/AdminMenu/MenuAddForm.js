@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 const { Option } = Select;
 
 export default function MenuAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
+  console.log(initialValues);
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.adminUser.loading);
@@ -37,6 +38,7 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
       return;
     }
     if (initialValues && modalMode === "EDIT") {
+      form.resetFields();
       form.setFieldsValue({
         ...initialValues,
       });
@@ -70,7 +72,10 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
         >
           <Input size="large" placeholder="Nhập Tag ID" prefix={<TagOutlined />} />
         </Form.Item>
-        <Form.Item label="App URL" name="page">
+        <Form.Item label="Icon" name="icon">
+          <Input size="large" placeholder="Nhập icon hiển thị" prefix={<MenuOutlined />} />
+        </Form.Item>
+        <Form.Item label="App URL (Page)" name="page">
           <Input size="large" placeholder="Nhập Page (Route URL)" prefix={<MenuOutlined />} />
         </Form.Item>
         <Form.Item

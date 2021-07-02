@@ -38,7 +38,7 @@ const options = [
   {
     key: "scrum-board",
     label: "sidebar.scrumboard",
-    leftIcon: "ion-android-checkbox-outline",
+    leftIcon: "ion-android-calendar",
   },
   {
     key: "pages",

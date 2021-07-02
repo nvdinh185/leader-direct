@@ -47,6 +47,27 @@ const reducer = (state = initialState, action) => {
       return authFail(state, action);
     case actionTypes.LOG_OUT:
       return logOut(state, action);
+    case actionTypes.GET_GRANTED_USER_INFO_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case actionTypes.GET_GRANTED_USER_INFO_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        grantedUserInfo: action.payload.grantedUser,
+        grantedApis: action.payload.data,
+        loading: false,
+      };
+    case actionTypes.GET_GRANTED_USER_INFO_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
     default:
       return state;
   }

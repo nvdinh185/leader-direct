@@ -52,6 +52,7 @@ export default function UserAddForm({
     }
   };
 
+  // Effect thay đổi form khi dữ liệu có sự thay đổi (form ADD thì xoá hết đi, EDIT thì xoá rồi ghi các dữ liệu theo row)
   useEffect(() => {
     if (modalMode === "ADD") {
       form.resetFields();
@@ -60,11 +61,11 @@ export default function UserAddForm({
       return;
     }
     if (Object.keys(initialValues).length > 0 && modalMode === "EDIT") {
+      form.resetFields();
       form.setFieldsValue({
         ...initialValues,
       });
       // Set giá trị đã có của cho target của transfer
-      // Step 1: Lấy all api trong group ra
       let groupId = JSON.parse(initialValues.function_groups)?.[0];
       let groupApis = JSON.parse(groups.find((group) => group.id === groupId).function_apis);
       let apiArr = JSON.parse(initialValues.function_apis).concat(groupApis);
