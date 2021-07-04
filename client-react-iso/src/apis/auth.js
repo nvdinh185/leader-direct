@@ -2,8 +2,12 @@ import { authServerUrl, callUserRightAPI, baseUserRightURL } from "./config/inde
 
 // --------------------------------------------------------------------------------
 // AUTH SECTION
-export const logInSocket = (token, data) => {
+export const logInSocket = (data) => {
   return callUserRightAPI("post", authServerUrl + "/user-login", data, null);
+};
+// CHECK AUTH SECTION
+export const checkTokenInfo = (token) => {
+  return callUserRightAPI("get", authServerUrl + "/get-token-info", null, token);
 };
 
 export const getGrantedUserApis = (token) => {

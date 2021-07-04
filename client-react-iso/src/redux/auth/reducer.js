@@ -16,13 +16,14 @@ const authSuccess = (state, action) => {
     ...state,
     idToken: action.payload.token,
     data: action.payload.userInfo,
+    errorAuth: null,
     error: null,
     loading: false,
   };
 };
 
 const authFail = (state, action) => {
-  return { ...state, error: action.payload, loading: false };
+  return { ...state, errorAuth: action.payload, loading: false };
 };
 
 const logOut = (state, action) => {

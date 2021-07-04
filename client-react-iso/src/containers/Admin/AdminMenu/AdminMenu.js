@@ -16,6 +16,7 @@ import basicStyle from "@assets/styles/constants";
 import MenuAddForm from "./MenuAddForm";
 
 import "@assets/styles/containers/EditableCell.css";
+import { ButtonAdd } from "@components/Admin/ButtonAdd";
 
 export default function AdminUser() {
   const { rowStyle, colStyle, gutter } = basicStyle;
@@ -90,15 +91,9 @@ export default function AdminUser() {
                 <Card>
                   <Row>
                     <Col md={24} sm={24} xs={24}>
-                      <Button
-                        size="large"
-                        shape="round"
-                        type="link"
-                        style={{ background: "#87d068", color: "white" }}
-                        onClick={handCallAddModal}
-                      >
+                      <ButtonAdd size="large" shape="round" type="link" onClick={handCallAddModal}>
                         + Thêm Mới
-                      </Button>
+                      </ButtonAdd>
                     </Col>
                   </Row>
                   <br />

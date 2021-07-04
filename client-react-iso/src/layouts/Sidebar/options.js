@@ -2,7 +2,7 @@ const options = [
   {
     key: "dashboard",
     label: "sidebar.dashboard",
-    leftIcon: "ion-android-checkbox-outline",
+    leftIcon: "ion-clock",
   },
   {
     key: "admin",

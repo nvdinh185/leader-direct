@@ -5,20 +5,29 @@ export const checkAuthorization = () => {
   const token = localStorage.getItem("idToken");
   const userInfo = JSON.parse(localStorage.getItem("userInfoLeader"));
   return (dispatch) => {
-    // TODO: add logic to check token info
+    // Mới vào chương trình thì kiểm tra token ở local còn hiệu lực hay không
     if (token) {
-      dispatch(authSuccess({ token, userInfo }));
-      return;
+      authApi
+        .checkTokenInfo(token)
+        .then((res) => {
+          // Kiểm tra nếu ngày hết hạn lớn hơn hiện tại thì tức token còn hiệu lực
+          if (new Date() < res.data?.exp) {
+            dispatch(authSuccess({ token, userInfo: { ...userInfo, iat: res.data.iat, exp: res.data.exp } }));
+            return;
+          }
+        })
+        .catch((err) => {
+          dispatch(authFail(err.response.data));
+        });
     }
-    dispatch(authFail("Chưa Xác Thực"));
   };
 };
 
-export const login = (username, password) => {
+export const login = ({ username, password, expired }) => {
   return (dispatch) => {
     dispatch(authStart());
     authApi
-      .logInSocket(null, { username, password })
+      .logInSocket({ username, password, expired })
       .then((res, rej) => {
         if (res.status === 200) {
           localStorage.setItem("idToken", res.data.token);
@@ -30,7 +39,7 @@ export const login = (username, password) => {
         return;
       })
       .catch((err) => {
-        dispatch(authFail(err));
+        dispatch(authFail(err.response.data));
       });
   };
 };
@@ -79,7 +88,7 @@ export const getGrantedUserInfo = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getGrantedUserInfoFail(err));
+        dispatch(getGrantedUserInfoFail(err.response.data));
       });
   };
 };

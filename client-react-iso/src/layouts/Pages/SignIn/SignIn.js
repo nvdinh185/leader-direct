@@ -14,10 +14,12 @@ const { clearMenu } = appAction;
 export default function SignIn() {
   let history = useHistory();
   let location = useLocation();
-  const [loginForm, setLoginForm] = useState({});
-  const dispatch = useDispatch();
-  const [errorMsg, setErrorMsg] = useState("");
   const isLoggedIn = useSelector((state) => state.Auth.idToken);
+  const auth = useSelector((state) => state.Auth);
+  const errorAuth = useSelector((state) => state.Auth.errorAuth);
+  const dispatch = useDispatch();
+
+  const [loginForm, setLoginForm] = useState({});
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
   useEffect(() => {
@@ -26,8 +28,15 @@ export default function SignIn() {
     }
   }, [isLoggedIn]);
 
-  function handleChangeForm(e) {
-    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
+  function handleChangeForm(e, mode) {
+    if (mode === "CHECK") {
+      setLoginForm({
+        ...loginForm,
+        expired: e.target.checked ? 365 : 1,
+      });
+      return;
+    }
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value, expired: 1 });
     let code = e.keyCode ? e.keyCode : e.which;
     if (code === 13) {
       handleLogin();
@@ -35,9 +44,9 @@ export default function SignIn() {
   }
 
   function handleLogin(e) {
-    dispatch(login(loginForm.username, loginForm.password));
+    console.log(loginForm);
+    dispatch(login(loginForm));
     dispatch(clearMenu());
-    console.log(isLoggedIn);
     history.push("/app/dashboard");
   }
 
@@ -71,14 +80,15 @@ export default function SignIn() {
                   onKeyUp={handleChangeForm}
                 />
               </div>
-              <div className="isoInputWrapper isoLeftRightComponent">
-                <Checkbox>
+              <div className="isoInputWrapper">
+                <Checkbox name="expired" onChange={(val) => handleChangeForm(val, "CHECK")}>
                   <IntlMessages id="page.signInRememberMe" />
                 </Checkbox>
-                <Button block type="primary" onClick={handleLogin}>
+                <Button block type="primary" onClick={handleLogin} loading={auth.loading}>
                   <IntlMessages id="page.signInButton" />
                 </Button>
-                <p style={{ color: "red" }}>{errorMsg ? errorMsg : null}</p>
+                <br></br>
+                <p style={{ color: "red" }}>{errorAuth?.message}</p>
               </div>
             </form>
           </div>
