@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "antd";
-import options from "./options";
+import { createNestedFromDb } from "@lib/utils/tree-helper";
 import Scrollbars from "@components/utility/customScrollBar";
 import Menu from "@components/uielements/menu";
 import appActions from "@redux/app/actions";
@@ -13,9 +13,18 @@ const { Sider } = Layout;
 const { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed } = appActions;
 
 export default function Sidebar() {
-  const dispatch = useDispatch();
+  const menus = useSelector((state) => state.adminUser.menus);
   const { view, openKeys, collapsed, openDrawer, current, height } = useSelector((state) => state.App);
   const customizedTheme = useSelector((state) => state.ThemeSwitcher.sidebarTheme);
+  const dispatch = useDispatch();
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    if (menus?.[0] && options.length === 0) {
+      let newMenus = createNestedFromDb(menus);
+      setOptions(newMenus);
+    }
+  }, [menus]);
 
   function handleClick(e) {
     dispatch(changeCurrent([e.key]));
@@ -71,6 +80,7 @@ export default function Sidebar() {
   const submenuColor = {
     color: customizedTheme.textColor,
   };
+
   return (
     <SidebarWrapper>
       <Sider
@@ -94,7 +104,7 @@ export default function Sidebar() {
             selectedKeys={current}
             onOpenChange={onOpenChange}
           >
-            {options.map((singleOption) => (
+            {options?.map((singleOption) => (
               <SidebarMenu
                 key={singleOption.key}
                 submenuStyle={submenuStyle}

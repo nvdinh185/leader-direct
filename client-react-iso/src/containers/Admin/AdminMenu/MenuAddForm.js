@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 const { Option } = Select;
 
 export default function MenuAddForm({ modalMode, initialValues, handleCancel, isModalVisible, setIsModalVisible, ...props }) {
-  console.log(initialValues);
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.adminUser.loading);
