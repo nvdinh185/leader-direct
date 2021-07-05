@@ -29,6 +29,26 @@ const routes = [
     component: lazy(() => import("@containers/Admin/AdminGroup/AdminGroup")),
   },
   {
+    path: "admin-category",
+    component: lazy(() => import("@containers/Admin/AdminCategory/AdmCategory")),
+  },
+  {
+    path: "leader-meeting",
+    component: lazy(() => import("@containers/LeaderDirect/Meeting/Meeting")),
+  },
+  {
+    path: "leader-direct-mng",
+    component: lazy(() => import("@containers/LeaderDirect/Direct/Direct")),
+  },
+  {
+    path: "leader-direct-history",
+    component: lazy(() => import("@containers/LeaderDirect/DirectHistory/DirectHistory")),
+  },
+  {
+    path: "leader-direct-organization",
+    component: lazy(() => import("@containers/LeaderDirect/OrgDirect/OrgDirect")),
+  },
+  {
     path: "scrum-board",
     component: lazy(() => import("@containers/ScrumBoard")),
   },

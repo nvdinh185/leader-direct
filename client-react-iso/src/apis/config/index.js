@@ -76,17 +76,13 @@ export const callAPIExcel = (method, url, data, token, params) => {
   });
 };
 
-export const callAPIForm = (method, url, formData, token) => {
-  return axios({
-    baseURL: baseURL,
+export const callAPIForm = (url, formData, token) => {
+  return axios.post(url, formData, {
     timeout: requestTimeOut,
     headers: {
-      "content-type": "multipart/form-data",
+      // "content-type": "multipart/form-data",
       // 'Ocp-Apim-Subscription-Key': '149de49b198446478de94394aced5677',
       Authorization: token,
     },
-    method,
-    url,
-    formData,
   });
 };
