@@ -13,11 +13,11 @@
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 class ApiHandler {
-  constructor() { }
+  constructor() {}
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
@@ -611,7 +611,7 @@ class ApiHandler {
    */
   getCategory(req, res, next) {
     leaderDirectModels.categories
-      .getAllData()
+      .getAllData({}, {}, { id: 1 })
 
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
@@ -637,17 +637,17 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   createCategory(req, res, next) {
+    console.log(req.json_data);
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
     }
 
-    let jsonData = req.json_data;
-    jsonData.created_time = new Date().getTime();
+    let jsonData = { ...req.json_data, created_time: new Date().getTime(), status: 1 };
 
     // chèn một bảng ghi vào csdl
-    leaderDirectModels.direct_orgs
+    leaderDirectModels.categories
       .insertOneRecord(
         jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
       )
@@ -681,8 +681,7 @@ class ApiHandler {
       return;
     }
 
-    let jsonData = req.json_data;
-    jsonData.updated_time = new Date().getTime();
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
 
     // update 1 bảng ghi vào csdl
     leaderDirectModels.categories
