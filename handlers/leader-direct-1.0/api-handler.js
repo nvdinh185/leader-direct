@@ -17,7 +17,7 @@ const fs = require("fs");
 const path = require("path");
 
 class ApiHandler {
-  constructor() {}
+  constructor() { }
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
@@ -73,6 +73,71 @@ class ApiHandler {
   }
 
   /**
+   * Upload file lên và lưu thông tin file vào csdl đồng thời xóa những file cũ
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   * @returns
+   */
+  async updateAttachments(req, res, next) {
+    const generateUUID = () => {
+      // Public Domain/MIT
+      var d = new Date().getTime(); //Timestamp
+      var d2 = Math.random() * 1000;
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      });
+    };
+
+    if (!req.form_data) {
+      req.error = "Dữ liệu post req.form_data không hợp lệ";
+      next();
+      return;
+    }
+
+    //lấy những file có trong db
+    let attachments = await leaderDirectModels.meetings.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 })
+    let str = attachments.attachments;
+    let ar = str.slice(1, str.length - 1);
+    let arAttachments = ar.split(",");
+    // xóa những tên file cũ
+    for (const id of arAttachments) {
+      await leaderDirectModels.attachments.deleteOneRecord({ uuid: id });
+    }
+
+    req.ids = [];
+    let arData = [];
+    for (let file in req.form_data.files) {
+      let jsonData = req.form_data.files[file];
+      jsonData.uuid = generateUUID();
+      req.ids.push(jsonData.uuid);
+      arData.push(jsonData);
+    }
+    // console.log(arData);
+
+    //lưu những tên file mới
+    try {
+      for (const data of arData) {
+        await leaderDirectModels.attachments.insertOneRecord(data);
+      }
+      next();
+    } catch (err) {
+      req.error = err;
+      next();
+    }
+  }
+
+  /**
    * (101) POST /leader-direct/api/get-meeting
    *
    *
@@ -110,16 +175,16 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   createMeeting(req, res, next) {
-    let jsonData = req.form_data.params;
-    jsonData.attachments = "[ ";
+    let attachments = "[";
     req.ids.every((id, idx) => {
-      jsonData.attachments += id;
+      attachments += id;
       if (idx === req.ids.length - 1) return false;
-      jsonData.attachments += ", ";
+      attachments += ",";
       return true;
     });
-    jsonData.attachments += " ]";
-    jsonData.created_time = new Date().getTime();
+    attachments += "]";
+    let jsonData = { ...req.form_data.params, attachments: attachments, created_time: new Date().getTime(), created_user: req.user.username, status: 1 };
+    // console.log(jsonData);
 
     leaderDirectModels.meetings
       .insertOneRecord(
@@ -127,12 +192,12 @@ class ApiHandler {
       )
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        console.log("Data: ", data);
+        // console.log("Data: ", data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        console.log("Lỗi: ", err);
+        // console.log("Lỗi: ", err);
         req.error = err;
         next();
       });
@@ -149,15 +214,17 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   updateMeeting(req, res, next) {
-    if (!req.json_data) {
-      req.error = "Dữ liệu post req.json_data không hợp lệ";
-      next();
-      return;
-    }
+    let attachments = "[";
+    req.ids.every((id, idx) => {
+      attachments += id;
+      if (idx === req.ids.length - 1) return false;
+      attachments += ",";
+      return true;
+    });
+    attachments += "]";
 
-    let jsonData = req.json_data;
-    jsonData.updated_time = new Date().getTime();
-
+    let jsonData = { ...req.form_data.params, attachments: attachments, updated_time: new Date().getTime(), updated_user: req.user.username };
+    jsonData.id = parseInt(jsonData.id);
     // update 1 bảng ghi vào csdl
     leaderDirectModels.meetings
       .updateOneRecord(
