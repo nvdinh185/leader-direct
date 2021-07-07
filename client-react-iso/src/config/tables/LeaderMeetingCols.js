@@ -1,0 +1,104 @@
+import React from "react";
+import { Tooltip, Button, Tag } from "antd";
+import { EditOutlined, FileAddOutlined, EyeFilled } from "@ant-design/icons";
+import DateCell from "@components/Admin/DateCell";
+import { ButtonAdd } from "@components/Admin/ButtonAdd";
+
+export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingRowClick) => {
+  return [
+    {
+      title: "Hành Động",
+      key: "operation",
+      fixed: true,
+      width: 3,
+      render: (text, record, idx) => (
+        <>
+          <Tooltip placement="topLeft" title={"Sửa Thông Tin Cuộc Họp"}>
+            <Button type="primary" shape="round" icon={<EditOutlined />} onClick={() => fnHandleChange(record)}></Button>
+          </Tooltip>
+          <Tooltip placement="topLeft" title={"Thêm Chỉ Đạo Vào Cuộc Họp"}>
+            <Button type="default" shape="round" icon={<FileAddOutlined />} onClick={() => fnCallDrawer(record)}></Button>
+          </Tooltip>
+          <Tooltip placement="topLeft" title={"Xem Chi Tiết Cuộc Họp"}>
+            <ButtonAdd
+              type="default"
+              shape="round"
+              icon={<EyeFilled />}
+              color="#e9c46a"
+              onClick={() => handleMeetingRowClick(record)}
+            ></ButtonAdd>
+          </Tooltip>
+        </>
+      ),
+    },
+    {
+      title: "Mã ID",
+      width: 1,
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên Cuộc Họp",
+      width: 3,
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Mô Tả",
+      width: 5,
+      dataIndex: "description",
+      key: "description",
+      ellipsis: {
+        showTitle: true,
+      },
+      render: (col) => (
+        <Tooltip placement="topLeft" title={col}>
+          {col}
+        </Tooltip>
+      ),
+    },
+    {
+      title: "Phân Loại",
+      width: 3,
+      dataIndex: "category",
+      key: "category",
+      render: (col, record) => {
+        return <Tag color={"geekblue"}>{col}</Tag>;
+      },
+    },
+    {
+      title: "Số lượng Chỉ Đạo",
+      width: 3,
+      dataIndex: "directs",
+      key: "directs",
+      render: (col) => {
+        let noDirect = JSON.parse(col)?.length;
+        return noDirect;
+      },
+    },
+    {
+      title: "Ngày tạo",
+      width: 3,
+      dataIndex: "created_time",
+      key: "created_time",
+      render: (col) => {
+        return <DateCell date={col} format="DD/MM/YYYY HH:mm"></DateCell>;
+      },
+    },
+    {
+      title: "TK Tạo",
+      width: 3,
+      dataIndex: "created_user",
+      key: "created_user",
+    },
+    {
+      title: "Trạng thái",
+      width: 3,
+      dataIndex: "status",
+      key: "status",
+      render: (col) => {
+        return <Tag color={col === 1 ? "green" : "volcano"}>{col === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>;
+      },
+    },
+  ];
+};

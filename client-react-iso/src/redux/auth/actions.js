@@ -7,18 +7,19 @@ export const checkAuthorization = () => {
   return (dispatch) => {
     // Mới vào chương trình thì kiểm tra token ở local còn hiệu lực hay không
     if (token) {
-      authApi
-        .checkTokenInfo(token)
-        .then((res) => {
-          // Kiểm tra nếu ngày hết hạn lớn hơn hiện tại thì tức token còn hiệu lực
-          if (new Date() < res.data?.exp) {
-            dispatch(authSuccess({ token, userInfo: { ...userInfo, iat: res.data.iat, exp: res.data.exp } }));
-            return;
-          }
-        })
-        .catch((err) => {
-          dispatch(authFail(err.response.data));
-        });
+      // authApi
+      //   .checkTokenInfo(token)
+      //   .then((res) => {
+      //     // Kiểm tra nếu ngày hết hạn lớn hơn hiện tại thì tức token còn hiệu lực
+      //     if (new Date() < res.data?.exp) {
+      //       dispatch(authSuccess({ token, userInfo: { ...userInfo, iat: res.data.iat, exp: res.data.exp } }));
+      //       return;
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     dispatch(authFail(err.response ? err.response.data : err));
+      //   });
+      dispatch(authSuccess({ token, userInfo }));
     }
   };
 };
@@ -39,7 +40,7 @@ export const login = ({ username, password, expired }) => {
         return;
       })
       .catch((err) => {
-        dispatch(authFail(err.response.data));
+        dispatch(authFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -88,7 +89,7 @@ export const getGrantedUserInfo = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getGrantedUserInfoFail(err.response.data));
+        dispatch(getGrantedUserInfoFail(err.response ? err.response.data : err));
       });
   };
 };

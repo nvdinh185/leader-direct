@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
-import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
+import { UserOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
 import { createGrantedUser, updateGrantedUser } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Transfers from "@components/uielements/transfer";

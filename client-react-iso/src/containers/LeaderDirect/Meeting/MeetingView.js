@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { Row, Col, Table } from "antd";
 import { Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getGrantedGroups } from "@redux/adminUsers/actions";
-import { createColumnsFromObj } from "@lib/utils/antd-table";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { getMeetingList } from "@redux/meetings/actions";
+import { getCategoryList } from "@redux/filterData/actions";
+import { createMeetingColsFn } from "@config/tables/LeaderMeetingCols";
+import drawerActions from "@redux/drawer/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import Box from "@components/utility/box";
@@ -14,24 +17,29 @@ import IntlMessages from "@components/utility/intlMessages";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
-import GroupAddForm from "./GroupAddForm";
-
-import "@assets/styles/containers/EditableCell.css";
+import MeetingAddForm from "./MeetingAddForm";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 
-export default function AdminUser() {
+import "@assets/styles/containers/EditableCell.css";
+
+export default function MeetingView() {
+  const history = useHistory();
+  const match = useRouteMatch();
+
   const { rowStyle, colStyle, gutter } = basicStyle;
-  const groups = useSelector((state) => state.adminUser.groups);
-  const apis = useSelector((state) => state.adminUser.apis);
-  const menus = useSelector((state) => state.adminUser.menus);
+  const organizations = useSelector((state) => state.adminUser.organizations);
+  const meetings = useSelector((state) => state.directMeeting.meetings);
+  const categories = useSelector((state) => state.filterData.categories);
   const token = useSelector((state) => state.Auth.idToken);
-  const auth = useSelector((state) => state.Auth.data);
   const dispatch = useDispatch();
 
   const [cols, setCols] = useState([]);
   const [modalMode, setModalMode] = useState("ADD");
   const [editGroup, setEditGroup] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [meetingTypes, setMeetingTypes] = useState([]);
+  const [meetingDisplay, setMeetingDisplay] = useState([]);
+
   const size = useWindowSize();
 
   const handCallAddModal = () => {
@@ -48,22 +56,28 @@ export default function AdminUser() {
   };
 
   useEffect(() => {
-    if (token && groups && groups.length === 0) {
-      dispatch(getGrantedGroups(token));
+    if (token && categories && categories.length === 0) {
+      dispatch(getCategoryList(token));
     }
-  }, [token, groups]);
+  }, [token, categories]);
 
   useEffect(() => {
-    if (groups?.[0] && cols.length === 0) {
-      let newCols = createColumnsFromObj(groups, handleChange);
+    if (token && meetings && meetings.length === 0) {
+      dispatch(getMeetingList(token));
+    }
+  }, [token, meetings]);
+
+  useEffect(() => {
+    if (meetings?.[0] && cols.length === 0 && categories?.[0] && meetingDisplay.length === 0) {
+      let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick);
+      let newDisplayInfo = meetings.map((meeting) => {
+        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category).name;
+        return { ...meeting, category: _category };
+      });
+      setMeetingDisplay(newDisplayInfo);
       setCols(newCols);
     }
-  }, [groups]);
-
-  const handleChange = (row) => {
-    setModalMode("EDIT");
-    setEditGroup({ ...row });
-  };
+  }, [meetings, categories]);
 
   useEffect(() => {
     if (editGroup) {
@@ -71,25 +85,44 @@ export default function AdminUser() {
     }
   }, [editGroup]);
 
+  useEffect(() => {
+    if (categories.length > 0 && meetingTypes.length === 0) {
+      setMeetingTypes(categories.filter((cat) => cat.parent_id === 4));
+    }
+  }, [categories]);
+
+  const fnCallDrawer = () => {
+    dispatch(drawerActions.openDrawer({ drawerType: "MEETING_DETAIL_DRAWER", drawerProps: { task: {}, columnId: 123 } }));
+  };
+
+  const handleChange = (row) => {
+    setModalMode("EDIT");
+    setEditGroup({ ...row });
+  };
+
+  const handleMeetingRowClick = (record) => {
+    history.push({ pathname: `${match.path}/${record.id}`, state: record });
+  };
+
   return (
     <LayoutWrapper>
-      <PageHeader>{<IntlMessages id="sidebar.adminUserGroup" />}</PageHeader>
-      <GroupAddForm
-        auth={auth}
-        apis={apis}
-        menus={menus}
-        width={size.width > 1200 ? size.width * 0.8 : size.width * 0.7}
+      <PageHeader>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
+      <MeetingAddForm
+        organizations={organizations}
+        meetingTypes={meetingTypes}
+        meetings={meetings}
+        width={size.width > 1200 ? size.width * 0.7 : size.width * 0.6}
         modalMode={modalMode}
         initialValues={modalMode === "EDIT" ? editGroup : {}}
         okText={modalMode === "ADD" ? "Thêm Mới" : "Thay Đổi"}
         cancelText="Bỏ Qua"
-        title={modalMode === "ADD" ? "Tạo Mới Group" : "Điều Chỉnh Group ID " + editGroup.id}
+        title={modalMode === "ADD" ? "Tạo Mới Cuộc Họp" : "Điều Chỉnh Cuộc Họp " + editGroup.id}
         centered={true}
         destroyOnClose={true}
         isModalVisible={isModalVisible}
         handleCancel={handleCancel}
         setIsModalVisible={setIsModalVisible}
-      ></GroupAddForm>
+      ></MeetingAddForm>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Box>
@@ -108,7 +141,7 @@ export default function AdminUser() {
                     // loading={loading}
                     columns={cols}
                     rowClassName={() => "editable-row"}
-                    dataSource={groups && groups.length !== 0 ? groups : null}
+                    dataSource={meetingDisplay && meetingDisplay.length !== 0 ? meetingDisplay : null}
                     scroll={{ y: 400 }}
                     pagination={{
                       pageSize: 30,

@@ -1,0 +1,147 @@
+git config --local credential.helper ""
+
+npm v grunt version
+
+curl -d '{"name": "abc"}' -H 'Content-Type: application/json' http://localhost:8080/socket/api/test
+
+
+req.finalJson = data;
+next();
+
+req.error = err;
+next();
+
+curl -d '{"sites_id":1,"site_id":"BDAL012","name":"Nguyễn Văn A","organization_id":2,"count_in":2,"content_do":"Kiểm tra, bảo dưỡng","maintenance_sheet_id":3,"introduce":"Giấy giới thiệu: ABC123 - Ngày cấp: 14/10/2020",  "image_options":""}' -H "Accept: application/json" -H "Content-Type: application/json" -X POST "http://localhost:9236/site-manager/maintain-diaries/in-out-diary"
+
+curl -d '{"sites_id":1,"site_id":"BDAL012","name":"Nguyễn Văn A","organization_id":2,"count_in":2,"content_do":"Kiểm tra, bảo dưỡng","maintenance_sheet_id":3,"introduce":"Giấy giới thiệu: ABC123 - Ngày cấp: 14/10/2020",  "image_options":""}' -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYwNjEwMTU1MDUyNCwiZXhwIjoxNjM3NjM3NTUwNTI0fQ==.RFA1a21zRUpQcDRENWd6c3lwbnlwSWRFWWp0MlJaaGJhMkl2RHB3VVVNa0FVQVRUb1JaWWxlOXJaTUpQanltNXA5SVA2VVpIWG42R252Y0RRUzFaVXc9PQ==" -X POST "http://localhost:9236/site-manager/maintain-diaries/in-out-diary"
+
+curl -d '{"id":"1","employee_options":{"1":"1","2":"2"},"mark_options":{"1":"1","2":"2"},"total_mark":6,"image_options":{"1":["http://a","http://b"],"2":["http://c"]},"maintain_status":1}' -H "Accept: application/json" -H "Content-Type: application/json" -X POST "http://localhost:9226/ql-sites/maintain-jobs/create-report"
+
+curl -d '[{"site_id":"abc","address":"xyz","latitude":100,"longitude":108,"province_id":"BD","district_id":"BDAL"}]' -H "Accept: application/json" -H "Content-Type: application/json" -X POST "http://localhost:9226/ql-sites/db-sites/import-site"
+
+curl -H 'Content-Type: multipart/form-data' -F "excel_upload=@SitesTemplate.xlsx" "http://localhost:9226/ql-sites/db-sites/import-site"
+
+curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET "http://localhost:9226/ql-sites/maintain-jobs//get-maintenance?year=2020&quarter=1"
+
+function shuffle(array) {
+			var currentIndex = array.length, temporaryValue, randomIndex;
+
+			// While there remain elements to shuffle...
+			while (0 !== currentIndex) {
+
+				// Pick a remaining element...
+				randomIndex = Math.floor(Math.random() * currentIndex);
+				currentIndex -= 1;
+
+				// And swap it with the current element.
+				temporaryValue = array[currentIndex];
+				array[currentIndex] = array[randomIndex];
+				array[randomIndex] = temporaryValue;
+			}
+
+			return array;
+		}
+		
+		getPrizeProgramid(req, res, next) {
+
+
+        let { program_id } = req.params;
+        console.log(program_id);
+        let { code } = req.paramS;
+        console.log(code);
+
+        if (!program_id || !code) {
+            req.error = "Không hợp lệ";
+            next();
+            return;
+        }
+
+
+
+
+        // Đọc csdl bảng prize_detail where code is not null; ra một array
+        // array luôn luôn nằm ở bộ nhớ máy chủ này
+
+        if (!prizeDetails4Randoms.length) {
+            // đọc trong csdl để lấy toàn bộ các giải thưởng còn hiệu lực
+            // ghi ra 
+            // 
+
+            let arrayResult = [1, 2, 3] // giả sử 1,2,3 là các đối tượng lấy được ở db
+
+
+            prizeDetails4Randoms.splice(0, 0, ...arrayResult);
+
+        }
+
+        // sau khi lấy db rồi
+        if (!prizeDetails4Randoms.length) {
+            req.error = "Hết giải thưởng rồi nhé";
+            next();
+            return;
+        }
+
+
+        // trộn mảng để tăng tính công bằng
+
+        // lấy ngẫu nhiên 1 index trong mảng đó - obj (id, prize_id ) => số tiền phải trúng thưởng = prize_id
+
+
+
+        // thực hiện lấy các dữ liệu đầu theo phương thức GET, 
+        // Có thể sử dụng theo mô hình phân trang để lấy giới hạn trang 
+        // khi truy vấn một bảng với số lượng bảng ghi nhiều gây chậm trả kết quả, và xử lý tràn bộ nhớ server và client
+        // let { code } = req.paramS;
+        // yêu cầu ràng buộc user phải được login trước đó để lấy thông tin username
+        if (!req.user || !req.user.username) {
+            req.error = "Bạn phải thực hiện login trước khi thực hiện chức năng này";
+            next();
+            return;
+        }
+
+        // Tạo một số ngẫu nhiên trong khoảng từ 1 - 200 (để lấy giải thưởng một cách ngẫu nhiên)
+        let randomNumber = 1 + Math.floor(Math.random() * Math.floor(200));
+
+        // luckyDrawModels.prize_details.updateOneRecord(
+        //     { code, time: Date.now() },
+        //     { id: randomNumber }
+        // )
+        //     .then(data => {
+        //         console.log('Data: ', data);
+        //         req.finalJson = { status: "OK", message: "Đã chèn mới dữ liệu thành công" };
+        //         next();
+        //     })
+        //     .catch(err => {
+        //         console.log('Lỗi: ', err);
+        //         req.error = err;
+        //         next();
+        //     });
+    }
+	
+	curl -H "Content-Type: application/json" http://localhost:9229/lucky/test/test-get
+	curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNTQ0Njk0MjEwMiwiZXhwIjoxNjI1NTMzMzQyMTAyfQ==.RjlKZUx5TFY1RzJNQzJ4VlgxZXpBc1ZXK1c3c1JHSEl6N0trOUdhaHlpNWhQWUlXTnZGYXNyYnc0S245d3FoV0l3R3F4bURFMDR1R3ZObUZMMURtYnc9PQ==" http://localhost:9229/lucky/test/test-get
+	
+curl -d '{"course_id": "3"}' -H 'Content-Type: application/json' http://localhost:9229/kpp-admin/course-api/create-course-section
+
+curl -d '{"id": 9, "course_id": "2", "status":1, "name": "111"}' -H 'Content-Type: application/json' http://localhost:9229/kpp-admin/course-api/edit-course-section
+
+curl -H "Content-Type: application/json" http://localhost:9229/kpp-admin/course-api/get-clip-page
+
+curl -H 'Content-Type: multipart/form-data' -F "data1=@1.pdf" -F "data2=@tenor.gif" -F "data3=@favicon.ico" -F "id=123" "http://localhost:9229/kpp-admin/course-api/create-course-attachment"
+
+curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6NDUsImlhdCI6MTYxNzIzNzk4NTQ1OCwiZXhwIjoxNjE3MzI0Mzg1NDU4fQ==.QTdVQ25ldTR3TGlmUDM0amVRaTBFZ0hwbFhDbVJUYTdzVVBzbjI0WGdYWEF6Wml2NU55N1FkU1hWRGp2YmFFVWRza09xY01RREVhejJWd21CdVpDYWc9PQ==" "http://localhost:8081/socket/qlnt/get-orgs-right"
+
+curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6NDUsImlhdCI6MTYxNzIzNzk4NTQ1OCwiZXhwIjoxNjE3MzI0Mzg1NDU4fQ==.QTdVQ25ldTR3TGlmUDM0amVRaTBFZ0hwbFhDbVJUYTdzVVBzbjI0WGdYWEF6Wml2NU55N1FkU1hWRGp2YmFFVWRza09xY01RREVhejJWd21CdVpDYWc9PQ==" "http://localhost:9229/kpp-admin/course-api/get-clip-page"
+
+curl -d '{"id": "113"}' -H 'Content-Type: application/json' -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNTUzNTA4NTE5MywiZXhwIjoxNjI1NjIxNDg1MTkzfQ==.TGlyYmdRY3pOMXIxbVFmNXRjZ29BYmFnZ1BJNXBDQUZOekVwQVFxZUhUUlI2L00ybXlQRzU0MHlINlZiMXUvYUNTUkhjdUdGTXNZUjlEeEpvZ2xmdlE9PQ==" http://localhost:9232/leader-direct/api/create-meeting
+
+
+curl -H 'Content-Type: multipart/form-data' -F "data=@favicon.ico" -F "id=123" "http://localhost:9232/leader-direct/api/create-direct"
+
+curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNDg0NzAwMjYzNiwiZXhwIjoxNjI0OTMzNDAyNjM2fQ==.V3oySzJFQXdpV2ZaMi92VHhYa1dONzdTZVFwYVBlRElnMUVIcUp6S3M5UzFrcWN2WmppYmZrZGdjMythdnhKLzYvL25mczB1TElSaVg0dFU2cnJnNWc9PQ==" "http://localhost:9232/leader-direct/user-rights/get-granted-user"
+
+curl -d -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNDU4NDMyNzkwNywiZXhwIjoxNjI0NjcwNzI3OTA3fQ==.RmFIWW1LbVUzV0U0ZUJ3ejlNZjkvdzFkTzRRV3loTlYvUWhVd2tUeGZKQjl2aytSYmwrTXFLVWpubW0wQ0M5M0M3UmFrM3lyMEkybEFkRGhRVkhQTEE9PQ==" "http://localhost:9232/leader-direct/api/get-meeting"
+curl -d -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNTAyMTQwNTI5MSwiZXhwIjoxNjI1MTA3ODA1MjkxfQ==.U0JHTnBRYllRUEZYbVZZSFIrSjJJc0pXTFo3NDlIN09KaWpmdXJzN3ZYYm9lMTBITlZXcGhQUjF3aG1XVGlKR0hoR2hyWThmL29HbXNCZWtJaWlWbXc9PQ==" "http://localhost:9232/leader-direct/api/get-meeting"
+
+curl -d -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNTQ0Njk0MjEwMiwiZXhwIjoxNjI1NTMzMzQyMTAyfQ==.RjlKZUx5TFY1RzJNQzJ4VlgxZXpBc1ZXK1c3c1JHSEl6N0trOUdhaHlpNWhQWUlXTnZGYXNyYnc0S245d3FoV0l3R3F4bURFMDR1R3ZObUZMMURtYnc9PQ==" "http://localhost:9232/leader-direct/user-rights/get-column-name-maps"
+curl -d '{"id": 1, "display_name": "111"}' -H "Content-Type: application/json" -H "Authorization: Bearer eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNTQ0Njk0MjEwMiwiZXhwIjoxNjI1NTMzMzQyMTAyfQ==.RjlKZUx5TFY1RzJNQzJ4VlgxZXpBc1ZXK1c3c1JHSEl6N0trOUdhaHlpNWhQWUlXTnZGYXNyYnc0S245d3FoV0l3R3F4bURFMDR1R3ZObUZMMURtYnc9PQ==" "http://localhost:9232/leader-direct/user-rights/update-column-name-maps"

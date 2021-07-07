@@ -34,7 +34,7 @@ const routes = [
   },
   {
     path: "leader-meeting",
-    component: lazy(() => import("@containers/LeaderDirect/Meeting/Meeting")),
+    component: lazy(() => import("@containers/LeaderDirect/Meeting/MeetingRoutes")),
   },
   {
     path: "leader-direct-mng",

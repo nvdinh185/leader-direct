@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Button, Table, Card } from "antd";
+import { Row, Col, Table, Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrganization } from "@redux/adminUsers/actions";
 import { createColumnsFromObj } from "@lib/utils/antd-table";

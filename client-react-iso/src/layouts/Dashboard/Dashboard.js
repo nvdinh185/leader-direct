@@ -47,7 +47,7 @@ export default function Dashboard() {
     dispatch(getGrantedUserList(token));
     dispatch(getAllOrganization(token));
     dispatch(getGrantedUserInfo(token));
-  }, [width, height, dispatch]);
+  }, [width, height, token]);
 
   return (
     <DashboardContainer>
