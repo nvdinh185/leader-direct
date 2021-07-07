@@ -2,7 +2,7 @@ import * as meetingTypes from "@redux/meetings/types";
 import * as meetingApi from "@apis/meetings";
 
 // ---------------------------------------------------------------------------------------------------
-// 1 - GET USER LIST
+// 1 - GET MEETING LIST
 export const getMeetingList = (token) => {
   return (dispatch) => {
     dispatch(getMeetingListStart());
@@ -123,5 +123,51 @@ export const updateMeetingFail = (error) => {
   return {
     type: meetingTypes.UPDATE_MEETING_FAIL,
     payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+//
+export const getAttachmentByIds = (token, form) => {
+  return (dispatch) => {
+    dispatch(getAttachmentByIdsStart());
+    meetingApi
+      .getAttachmentByIds(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getAttachmentByIdsSuccess(data.data));
+        } else {
+          dispatch(getAttachmentByIdsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getAttachmentByIdsFail(err.response ? err.response.data : err));
+      });
+  };
+};
+
+export const getAttachmentByIdsStart = () => {
+  return {
+    type: meetingTypes.GET_ATTACHMENT_BY_IDS_START,
+  };
+};
+
+export const getAttachmentByIdsSuccess = (data) => {
+  return {
+    type: meetingTypes.GET_ATTACHMENT_BY_IDS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getAttachmentByIdsFail = (error) => {
+  return {
+    type: meetingTypes.GET_ATTACHMENT_BY_IDS_FAIL,
+    payload: error,
+  };
+};
+
+export const deleteAttachmentsArr = (error) => {
+  return {
+    type: meetingTypes.DELETE_ATTACHMENT_ARR,
   };
 };

@@ -15,3 +15,19 @@ export const createMeeting = (token, data) => {
 export const updateMeeting = (token, data) => {
   return callAPIForm(baseURL + "/update-meeting", data, token);
 };
+
+// ---------------------------------------------------------------------------------
+// -------------------------------- ATTACHMENT DATA SECTION -------------------------------
+// --------------------------------------------------------------------------------
+
+export const getAttachmentById = (token, data) => {
+  return callAPI("post", baseURL + "/get-attachment-by-id", data, token);
+};
+
+export const getAttachmentByIds = (token, data) => {
+  return callAPI("post", baseURL + "/get-attachment-by-ids", data, token);
+};
+
+export const getFile = (token, data) => {
+  return callAPI("post", baseURL + "/get-file", data, token);
+};

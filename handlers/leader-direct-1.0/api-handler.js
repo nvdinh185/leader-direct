@@ -12,13 +12,13 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-
+const querystring = require("querystring");
 const fs = require("fs");
-const mime = require('mime-types');
+const mime = require("mime-types");
 const path = require("path");
 
 class ApiHandler {
-  constructor() { }
+  constructor() {}
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
@@ -119,9 +119,15 @@ class ApiHandler {
       //lấy những file có trong db
       let attachments = {};
       if (req.functionCode.includes("meeting")) {
-        attachments = await leaderDirectModels.meetings.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 });
+        attachments = await leaderDirectModels.meetings.getFirstRecord(
+          { id: parseInt(req.form_data.params.id) },
+          { attachments: 1 }
+        );
       } else if (req.functionCode.includes("direct")) {
-        attachments = await leaderDirectModels.directs.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 })
+        attachments = await leaderDirectModels.directs.getFirstRecord(
+          { id: parseInt(req.form_data.params.id) },
+          { attachments: 1 }
+        );
       }
 
       let str = attachments.attachments;
@@ -146,7 +152,6 @@ class ApiHandler {
     }
 
     next();
-
   }
 
   /**
@@ -195,7 +200,13 @@ class ApiHandler {
       return true;
     });
     attachments += "]";
-    let jsonData = { ...req.form_data.params, attachments: attachments, created_time: new Date().getTime(), created_user: req.user.username, status: 1 };
+    let jsonData = {
+      ...req.form_data.params,
+      attachments: attachments,
+      created_time: new Date().getTime(),
+      created_user: req.user.username,
+      status: 1,
+    };
     // console.log(jsonData);
 
     leaderDirectModels.meetings
@@ -359,14 +370,21 @@ class ApiHandler {
       return true;
     });
     attachments += "]";
-    let jsonData = { ...req.form_data.params, uuid: generateUUID(), attachments: attachments, created_time: new Date().getTime(), created_user: req.user.username, status: 1 };
+    let jsonData = {
+      ...req.form_data.params,
+      uuid: generateUUID(),
+      attachments: attachments,
+      created_time: new Date().getTime(),
+      created_user: req.user.username,
+      status: 1,
+    };
 
     leaderDirectModels.directs
       .insertOneRecord(
         jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
       )
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then(async data => {
+      .then(async (data) => {
         if (jsonData.executors) {
           let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
           for (const exe of arExecutors) {
@@ -426,11 +444,10 @@ class ApiHandler {
       )
 
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then(async data => {
+      .then(async (data) => {
         // console.log('Data: ', data);
         let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
         // console.log(directUuid);
-
 
         if (jsonData.executors) {
           let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
@@ -1032,9 +1049,10 @@ class ApiHandler {
     for (const uuid of jsonData) {
       arIds.push(uuid.uuid);
     }
+    console.log(arIds);
     // console.log(arIds);
 
-    let jsonWhere = { uuid: { $in: arIds } };//["b21062f8-5048-4b4d-92e6-93a8d5aa240f", "76ff474c-8150-4c99-b67c-395782181bcb"] } };
+    let jsonWhere = { uuid: { $in: arIds } }; //["b21062f8-5048-4b4d-92e6-93a8d5aa240f", "76ff474c-8150-4c99-b67c-395782181bcb"] } };
 
     leaderDirectModels.attachments
       .getAllData(jsonWhere)
@@ -1042,6 +1060,7 @@ class ApiHandler {
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
         // console.log('Data: ', data);
+        console.log(data);
         req.finalJson = data;
         next();
       })
@@ -1157,44 +1176,45 @@ class ApiHandler {
   }
 
   /**
-     * (125) GET /leader-direct/api/get-file
-     *
-     *
-     *
-     *
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
+   * (125) POST /leader-direct/api/get-file
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
   getFile(req, res, next) {
-
     // lấy đường dẫn gốc để cắt tên file cân lấy
-    let params = req.url.substring('/get-file?'.length);
-    let fileRead = params.replace('/', path.sep);
+    // let params = req.url.substring("/get-file?url=".length);
+    // let fileRead = decodeURIComponent(params.replace("/", path.sep));
+    let fileRead = req.json_data.url;
     // let params1 = req.pathName.substring(req.pathName.indexOf("/get-file/") + 10); //'/site-manager/news/get-file/'.length);
     console.log(fileRead);
 
     //gioi han chi doc file tu duong dan upload_files thoi nhe
     if (fileRead.indexOf("upload_files") === 0) {
-
-      let contentType = 'image/jpeg';
+      let contentType = "image/jpeg";
       if (mime.lookup(fileRead)) contentType = mime.lookup(fileRead);
-
-      fs.readFile(fileRead, { flag: 'r' }, function (error, data) {
+      console.log(contentType);
+      fs.readFile(fileRead, { flag: "r" }, function (error, data) {
+        console.log(error);
         if (!error) {
           // console.log("data: ", data);
-          res.writeHead(200, { 'Content-Type': contentType });
-          res.end(data);
+          let buff = new Buffer(data);
+          let base64data = buff.toString("base64");
+          res.writeHead(200, { "Content-Type": contentType });
+          res.end(base64data);
         } else {
-          res.writeHead(404, { 'Content-Type': 'text/html' });
+          res.writeHead(404, { "Content-Type": "text/html" });
           res.end("No file to read!");
         }
       });
     } else {
-      res.writeHead(404, { 'Content-Type': 'text/html' });
+      res.writeHead(404, { "Content-Type": "text/html" });
       res.end("Not permit to read!");
     }
-
   }
 }
 

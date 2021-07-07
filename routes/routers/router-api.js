@@ -54,7 +54,6 @@ const funcPaths = {
   // Các lệnh GET của /api này:
 
   GET: {
-
     /**
      * (121) GET /leader-direct/api/get-attachment-by-id
      *
@@ -73,27 +72,6 @@ const funcPaths = {
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.getAttachmentById,
-      // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
-      // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
-    ],
-
-    /**
-     * (125) POST /leader-direct/api/get-file
-     *
-     *
-     *
-     *
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-file": [
-      // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
-      // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
-      expHandlers.setRequestParameter("/get-file", "functionCode"),
-      // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
-      // ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      apiHandler.getFile,
       // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
       // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
     ],
@@ -675,6 +653,29 @@ const funcPaths = {
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.updateMenu,
+      // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
+      // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
+    ],
+
+    /**
+     * (125) POST /leader-direct/api/get-file
+     *
+     *
+     *
+     *
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+
+    "/get-file": [
+      // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+      // Gán đường dẫn chức năng kiểm tra phân quyền trả kết quả req.functionCode
+      expHandlers.setRequestParameter("/get-file", "functionCode"),
+      // Chuỗi hàm yêu cầu ĐƯỢC PHÂN QUYỀN đầu vào là req.functionCode
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getFile,
       // kết quả của bộ xử lý Hander sẽ cho ra req.finalJson nếu thành công hoặc req.error là thất bại
       // bộ Util-Router sẽ tự trả kết quả dựa trên 2 tham số trên (ưu tiên req.error trước)
     ],

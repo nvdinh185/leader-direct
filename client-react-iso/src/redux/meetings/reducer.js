@@ -74,6 +74,39 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
         err: action.payload,
         loading: false,
       };
+
+    // ---------------------------------------------------------------------------------
+    // 2 - ATTACHMENTS SECTION
+    // ---------------------------------------------------------------------------------
+    case meetingTypes.GET_ATTACHMENT_BY_IDS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case meetingTypes.GET_ATTACHMENT_BY_IDS_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        attachments: action.payload,
+        loading: false,
+      };
+
+    case meetingTypes.GET_ATTACHMENT_BY_IDS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    case meetingTypes.DELETE_ATTACHMENT_ARR:
+      return {
+        ...state,
+        attachments: [],
+        loading: false,
+      };
+
     default:
       return state;
   }
