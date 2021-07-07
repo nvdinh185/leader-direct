@@ -29,6 +29,10 @@ export default function DetailAttachs({ meeting, ...props }) {
     console.log("Handle Delete Attachment", uuid);
   };
 
+  const handleDownloadAttachment = (uuid) => {
+    console.log("Handle Download Attachment", uuid);
+  };
+
   return (
     <>
       <AttachmentWrapper>
@@ -43,6 +47,7 @@ export default function DetailAttachs({ meeting, ...props }) {
               fileName={attch.fileName}
               color={attch.color}
               handleDeleteAttachMent={handleDeleteAttachMent}
+              handleDownloadAttachment={handleDownloadAttachment}
             ></BadgeAttach>
           ))
         : null}
