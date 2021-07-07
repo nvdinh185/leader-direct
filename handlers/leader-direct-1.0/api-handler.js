@@ -14,6 +14,7 @@
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
 
 const fs = require("fs");
+const mime = require('mime-types');
 const path = require("path");
 
 class ApiHandler {
@@ -105,16 +106,6 @@ class ApiHandler {
       return;
     }
 
-    //lấy những file có trong db
-    let attachments = await leaderDirectModels.meetings.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 })
-    let str = attachments.attachments;
-    let ar = str.slice(1, str.length - 1);
-    let arAttachments = ar.split(",");
-    // xóa những tên file cũ
-    for (const id of arAttachments) {
-      await leaderDirectModels.attachments.deleteOneRecord({ uuid: id });
-    }
-
     req.ids = [];
     let arData = [];
     for (let file in req.form_data.files) {
@@ -124,17 +115,38 @@ class ApiHandler {
       arData.push(jsonData);
     }
     // console.log(arData);
-
-    //lưu những tên file mới
-    try {
-      for (const data of arData) {
-        await leaderDirectModels.attachments.insertOneRecord(data);
+    if (arData.length > 0) {
+      //lấy những file có trong db
+      let attachments = {};
+      if (req.functionCode.includes("meeting")) {
+        attachments = await leaderDirectModels.meetings.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 });
+      } else if (req.functionCode.includes("direct")) {
+        attachments = await leaderDirectModels.directs.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 })
       }
-      next();
-    } catch (err) {
-      req.error = err;
-      next();
+
+      let str = attachments.attachments;
+      let ar = str.slice(1, str.length - 1);
+      let arAttachments = ar.split(",");
+      // xóa những tên file cũ
+      for (const id of arAttachments) {
+        await leaderDirectModels.attachments.deleteOneRecord({ uuid: id });
+      }
+
+      //lưu những tên file mới
+      try {
+        for (const data of arData) {
+          await leaderDirectModels.attachments.insertOneRecord(data);
+        }
+        next();
+        return;
+      } catch (err) {
+        req.error = err;
+        next();
+      }
     }
+
+    next();
+
   }
 
   /**
@@ -223,7 +235,10 @@ class ApiHandler {
     });
     attachments += "]";
 
-    let jsonData = { ...req.form_data.params, attachments: attachments, updated_time: new Date().getTime(), updated_user: req.user.username };
+    let jsonData = { ...req.form_data.params, updated_time: new Date().getTime(), updated_user: req.user.username };
+    if (req.ids.length > 0) {
+      jsonData.attachments = attachments;
+    }
     jsonData.id = parseInt(jsonData.id);
     // update 1 bảng ghi vào csdl
     leaderDirectModels.meetings
@@ -317,35 +332,56 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   createDirect(req, res, next) {
-    // if (!req.form_data) {
-    //     req.error = "Dữ liệu post req.form_data không hợp lệ";
-    //     next();
-    //     return;
-    // }
+    const generateUUID = () => {
+      // Public Domain/MIT
+      var d = new Date().getTime(); //Timestamp
+      var d2 = Math.random() * 1000;
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      });
+    };
 
-    // thực hiện lấy các dữ liệu đầu vào tùy vào theo phương thức POST theo json_data hoặc form_data
-    // hoặc có thể lấy theo phương thức tham số trên link sau dấu ? bằng req.paramS
-
-    // let formData = req.form_data;
-    // console.log(req.form_data.params);
-    let jsonData = req.form_data.params;
-    jsonData.attachments = "[ ";
+    let attachments = "[";
     req.ids.every((id, idx) => {
-      jsonData.attachments += id;
+      attachments += id;
       if (idx === req.ids.length - 1) return false;
-      jsonData.attachments += ", ";
+      attachments += ",";
       return true;
     });
-    jsonData.attachments += " ]";
-    jsonData.created_time = new Date().getTime();
+    attachments += "]";
+    let jsonData = { ...req.form_data.params, uuid: generateUUID(), attachments: attachments, created_time: new Date().getTime(), created_user: req.user.username, status: 1 };
 
     leaderDirectModels.directs
       .insertOneRecord(
         jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
       )
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
-        // console.log('Data: ', data);
+      .then(async data => {
+        if (jsonData.executors) {
+          let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
+          for (const exe of arExecutors) {
+            let dataInput = { direct_uuid: jsonData.uuid, organization_id: parseInt(exe), organization_role: 22 };
+            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
+          }
+        }
+
+        if (jsonData.assessors) {
+          let arAssessors = jsonData.assessors.slice(1, jsonData.assessors.length - 1).split(",");
+          for (const ass of arAssessors) {
+            let dataInput = { direct_uuid: jsonData.uuid, organization_id: parseInt(ass), organization_role: 21 };
+            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
+          }
+        }
         req.finalJson = data;
         next();
       })
@@ -367,14 +403,21 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   updateDirect(req, res, next) {
-    if (!req.json_data) {
-      req.error = "Dữ liệu post req.json_data không hợp lệ";
-      next();
-      return;
-    }
+    let attachments = "[";
+    req.ids.every((id, idx) => {
+      attachments += id;
+      if (idx === req.ids.length - 1) return false;
+      attachments += ",";
+      return true;
+    });
+    attachments += "]";
 
-    let jsonData = req.json_data;
-    jsonData.updated_time = new Date().getTime();
+    let jsonData = { ...req.form_data.params, updated_time: new Date().getTime(), updated_user: req.user.username };
+
+    if (req.ids.length > 0) {
+      jsonData.attachments = attachments;
+    }
+    jsonData.id = parseInt(jsonData.id);
 
     leaderDirectModels.directs
       .updateOneRecord(
@@ -383,8 +426,29 @@ class ApiHandler {
       )
 
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
+      .then(async data => {
         // console.log('Data: ', data);
+        let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
+        // console.log(directUuid);
+
+
+        if (jsonData.executors) {
+          let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
+          await leaderDirectModels.direct_orgs.deleteAll({ direct_uuid: directUuid.uuid, organization_role: 22 });
+          for (const exe of arExecutors) {
+            let dataInput = { direct_uuid: directUuid.uuid, organization_id: parseInt(exe), organization_role: 22 };
+            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
+          }
+        }
+
+        if (jsonData.assessors) {
+          let arAssessors = jsonData.assessors.slice(1, jsonData.assessors.length - 1).split(",");
+          await leaderDirectModels.direct_orgs.deleteAll({ direct_uuid: directUuid.uuid, organization_role: 21 });
+          for (const ass of arAssessors) {
+            let dataInput = { direct_uuid: directUuid.uuid, organization_id: parseInt(ass), organization_role: 21 };
+            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
+          }
+        }
         req.finalJson = data;
         next();
       })
@@ -910,7 +974,7 @@ class ApiHandler {
   }
 
   /**
-   * (126) POST /leader-direct/api/get-menus
+   * (120) GET /leader-direct/api/get-attachment-by-id
    *
    *
    *
@@ -919,8 +983,87 @@ class ApiHandler {
    *
    * SAMPLE INPUTS:
    */
-  getMenus(req, res, next) {
-    leaderDirectModels.menus
+  getAttachmentById(req, res, next) {
+    if (!req.paramS) {
+      req.error = "Dữ liệu post req.paramS không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.paramS;
+    // console.log(jsonData.id);
+
+    leaderDirectModels.attachments
+      .getFirstRecord({ uuid: jsonData.uuid })
+
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (121) POST /leader-direct/api/get-attachment-by-ids
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getAttachmentByIds(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+
+    let arIds = [];
+    for (const uuid of jsonData) {
+      arIds.push(uuid.uuid);
+    }
+    // console.log(arIds);
+
+    let jsonWhere = { uuid: { $in: arIds } };//["b21062f8-5048-4b4d-92e6-93a8d5aa240f", "76ff474c-8150-4c99-b67c-395782181bcb"] } };
+
+    leaderDirectModels.attachments
+      .getAllData(jsonWhere)
+
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (122) POST /leader-direct/api/get-attachments
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getAttachments(req, res, next) {
+    leaderDirectModels.attachments
       .getAllData()
 
       // trả kết quả truy vấn cho api trực tiếp bằng cách sau
@@ -937,7 +1080,7 @@ class ApiHandler {
   }
 
   /**
-   * (127) POST /leader-direct/api/create-menu
+   * (123) POST /leader-direct/api/create-attachment
    *
    *
    *
@@ -975,7 +1118,7 @@ class ApiHandler {
   }
 
   /**
-   * (128) POST /leader-direct/api/update-menu
+   * (124) POST /leader-direct/api/update-attachment
    *
    *
    *
@@ -1011,6 +1154,47 @@ class ApiHandler {
         req.error = err;
         next();
       });
+  }
+
+  /**
+     * (125) GET /leader-direct/api/get-file
+     *
+     *
+     *
+     *
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+  getFile(req, res, next) {
+
+    // lấy đường dẫn gốc để cắt tên file cân lấy
+    let params = req.url.substring('/get-file?'.length);
+    let fileRead = params.replace('/', path.sep);
+    // let params1 = req.pathName.substring(req.pathName.indexOf("/get-file/") + 10); //'/site-manager/news/get-file/'.length);
+    console.log(fileRead);
+
+    //gioi han chi doc file tu duong dan upload_files thoi nhe
+    if (fileRead.indexOf("upload_files") === 0) {
+
+      let contentType = 'image/jpeg';
+      if (mime.lookup(fileRead)) contentType = mime.lookup(fileRead);
+
+      fs.readFile(fileRead, { flag: 'r' }, function (error, data) {
+        if (!error) {
+          // console.log("data: ", data);
+          res.writeHead(200, { 'Content-Type': contentType });
+          res.end(data);
+        } else {
+          res.writeHead(404, { 'Content-Type': 'text/html' });
+          res.end("No file to read!");
+        }
+      });
+    } else {
+      res.writeHead(404, { 'Content-Type': 'text/html' });
+      res.end("Not permit to read!");
+    }
+
   }
 }
 

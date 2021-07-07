@@ -1,33 +1,33 @@
-import * as meetingTypes from "@redux/meetings/types";
+import * as directTypes from "@redux/directs/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
-let defaultMeetings = {
-  meetings: [],
+let defaultDirects = {
+  categories: [],
   loading: false,
   err: "",
 };
 
-export default function directMeetingReducer(state = defaultMeetings, action) {
+export default function directReducer(state = defaultDirects, action) {
   switch (action.type) {
     // ---------------------------------------------------------------------------------
     // 1 - MENU SECTION
     // ---------------------------------------------------------------------------------
-    case meetingTypes.GET_MEETING_LIST_START:
+    case directTypes.GET_ALL_DIRECTS_START:
       return {
         ...state,
         loading: true,
       };
-    case meetingTypes.GET_MEETING_LIST_SUCCESS:
+    case directTypes.GET_ALL_DIRECTS_SUCCESS:
       if (action.payload.length === 0) {
         return state;
       }
       return {
         ...state,
-        meetings: action.payload,
+        categories: action.payload,
         loading: false,
       };
 
-    case meetingTypes.GET_MEETING_LIST_FAIL:
+    case directTypes.GET_ALL_DIRECTS_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -35,40 +35,40 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       };
 
     // ---------------------------------------------------------------------------------
-    case meetingTypes.CREATE_MEETING_START:
+    case directTypes.CREATE_DIRECT_START:
       return {
         ...state,
         loading: true,
       };
-    case meetingTypes.CREATE_MEETING_SUCCESS:
-      successAlert("Thành Công", "Bạn đã thêm mới cuộc họp thành công");
+    case directTypes.CREATE_DIRECT_SUCCESS:
+      successAlert("Thành Công", "Bạn đã thêm mới chỉ đạo thành công");
       return {
         ...state,
-        createMeeting: action.payload,
+        createDirect: action.payload,
         loading: false,
       };
-    case meetingTypes.CREATE_MEETING_FAIL:
-      errorAlert("Lỗi", "Lỗi khi thêm mới cuộc họp: " + action.payload);
+    case directTypes.CREATE_DIRECT_FAIL:
+      errorAlert("Lỗi", "Lỗi khi thêm mới chỉ đạo: " + action.payload.message);
       return {
         ...state,
         err: action.payload,
         loading: false,
       };
     // ---------------------------------------------------------------------------------
-    case meetingTypes.UPDATE_MEETING_START:
+    case directTypes.UPDATE_DIRECT_START:
       return {
         ...state,
         loading: true,
       };
-    case meetingTypes.UPDATE_MEETING_SUCCESS:
-      successAlert("Thành Công", "Bạn đã sửa thông tin cuộc họp thành công");
+    case directTypes.UPDATE_DIRECT_SUCCESS:
+      successAlert("Thành Công", "Bạn đã sửa thông tin chỉ đạo thành công");
       return {
         ...state,
-        updateMenu: action.payload,
+        updateDirect: action.payload,
         loading: false,
       };
-    case meetingTypes.UPDATE_MEETING_FAIL:
-      errorAlert("Lỗi", "Lỗi khi sửa thông tin cuộc họp: " + action.payload);
+    case directTypes.UPDATE_DIRECT_FAIL:
+      errorAlert("Lỗi", "Lỗi khi sửa thông tin chỉ đạo: " + action.payload.message);
       return {
         ...state,
         err: action.payload,

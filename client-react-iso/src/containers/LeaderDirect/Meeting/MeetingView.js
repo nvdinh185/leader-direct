@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { getMeetingList } from "@redux/meetings/actions";
 import { getCategoryList } from "@redux/filterData/actions";
-import { createMeetingColsFn } from "@config/tables/LeaderMeetingCols";
+import { createMeetingColsFn } from "@config/tables/MeetingCols";
 import drawerActions from "@redux/drawer/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
@@ -67,17 +67,29 @@ export default function MeetingView() {
     }
   }, [token, meetings]);
 
+  // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
     if (meetings?.[0] && cols.length === 0 && categories?.[0] && meetingDisplay.length === 0) {
       let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick);
       let newDisplayInfo = meetings.map((meeting) => {
-        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category).name;
-        return { ...meeting, category: _category };
+        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
+        return { ...meeting, category: _category ? _category.name : "" };
       });
       setMeetingDisplay(newDisplayInfo);
       setCols(newCols);
     }
   }, [meetings, categories]);
+
+  // Effect để cập nhập dữ liệu khi meetings thay đổi
+  useEffect(() => {
+    if (meetings?.[0]) {
+      let newDisplayInfo = meetings.map((meeting) => {
+        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
+        return { ...meeting, category: _category ? _category.name : "" };
+      });
+      setMeetingDisplay(newDisplayInfo);
+    }
+  }, [meetings]);
 
   useEffect(() => {
     if (editGroup) {
@@ -91,13 +103,14 @@ export default function MeetingView() {
     }
   }, [categories]);
 
-  const fnCallDrawer = () => {
-    dispatch(drawerActions.openDrawer({ drawerType: "MEETING_DETAIL_DRAWER", drawerProps: { task: {}, columnId: 123 } }));
+  const fnCallDrawer = (record) => {
+    dispatch(drawerActions.openDrawer({ drawerType: "MEETING_DETAIL_DRAWER", drawerProps: { meeting: record } }));
   };
 
   const handleChange = (row) => {
     setModalMode("EDIT");
-    setEditGroup({ ...row });
+    let originMeeting = meetings.find((meet) => meet.id === row.id);
+    setEditGroup({ ...originMeeting });
   };
 
   const handleMeetingRowClick = (record) => {

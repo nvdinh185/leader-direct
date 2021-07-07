@@ -10,9 +10,12 @@ export const ButtonAdd = styled(Button)`
     &:focus {
         background ${(props) => (props.color ? props.color : "#87d068")};
         color: white;
+        border: none;
     }
     &:hover {
         background: ${(props) => (props.color ? props.color : "#87d06899")};
         color: white;
+        border: none;
+
     }
 `;

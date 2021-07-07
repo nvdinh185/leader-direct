@@ -16,7 +16,7 @@ export const getCategoryList = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getCategoryListFail(err.response.data));
+        dispatch(getCategoryListFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -56,7 +56,7 @@ export const createCategory = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createCategoryFail(err.response.data));
+        dispatch(createCategoryFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -99,7 +99,7 @@ export const updateCategory = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(updateCategoryFail(err.response.data));
+        dispatch(updateCategoryFail(err.reponse ? err.response.data : err));
       });
   };
 };

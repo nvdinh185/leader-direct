@@ -1,8 +1,8 @@
 import React from "react";
 
-const MeetingDetailDrawer = React.lazy(() => import("@containers/LeaderDirect/Meeting/MeetingDetail"));
+const DetailDrawer = React.lazy(() => import("@containers/LeaderDirect/Meeting/Detail/DetailDrawer"));
 
 export const DRAWER_COMPONENTS = {
-  MEETING_DETAIL_DRAWER: MeetingDetailDrawer,
+  MEETING_DETAIL_DRAWER: DetailDrawer,
   /* other modals */
 };
