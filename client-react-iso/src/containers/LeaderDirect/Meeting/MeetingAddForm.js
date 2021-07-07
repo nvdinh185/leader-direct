@@ -79,10 +79,7 @@ export default function MeetingAddForm({
         console.log(pair);
       }
       if (initialValues && modalMode === "EDIT") {
-<<<<<<< HEAD
-=======
         newData.append("id", initialValues.id);
->>>>>>> 31f841590faaec64a6f6de365a99b0c8f7b75038
         dispatch(updateMeeting(token, newData));
         setIsModalVisible(false);
         return;
