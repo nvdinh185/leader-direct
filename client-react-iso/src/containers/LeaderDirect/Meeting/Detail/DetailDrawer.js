@@ -50,7 +50,7 @@ export default function DetailDrawer(props) {
       <Divider />
 
       {/* // ---------------------------------------------------------------------------------- */}
-      <DetailAttachs></DetailAttachs>
+      <DetailAttachs meeting={meeting}></DetailAttachs>
       <Divider />
       {/* // ---------------------------------------------------------------------------------- */}
       <DetailDirects></DetailDirects>

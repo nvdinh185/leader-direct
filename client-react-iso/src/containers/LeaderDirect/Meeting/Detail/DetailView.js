@@ -45,7 +45,7 @@ export default function DetailView(props) {
               <Divider />
 
               {/* // ---------------------------------------------------------------------------------- */}
-              <DetailAttachs></DetailAttachs>
+              <DetailAttachs meeting={meeting}></DetailAttachs>
               <Divider />
               {/* // ---------------------------------------------------------------------------------- */}
               <DetailDirects></DetailDirects>

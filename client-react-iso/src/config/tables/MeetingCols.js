@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip, Button, Tag } from "antd";
+import { Tooltip, Button, Tag, Space } from "antd";
 import { EditOutlined, FileAddOutlined, EyeFilled } from "@ant-design/icons";
 import DateCell from "@components/Admin/DateCell";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
@@ -12,7 +12,7 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
       fixed: true,
       width: 3,
       render: (text, record, idx) => (
-        <>
+        <Space>
           <Tooltip placement="topLeft" title={"Sửa Thông Tin Cuộc Họp"}>
             <Button type="primary" shape="round" icon={<EditOutlined />} onClick={() => fnHandleChange(record)}></Button>
           </Tooltip>
@@ -28,7 +28,7 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
               onClick={() => handleMeetingRowClick(record)}
             ></ButtonAdd>
           </Tooltip>
-        </>
+        </Space>
       ),
     },
     {

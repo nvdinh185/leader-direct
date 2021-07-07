@@ -8,6 +8,7 @@ import drawer from "@redux/drawer/reducer";
 import modal from "@redux/modal/reducer";
 import adminUserReducer from "@redux/adminUsers/reducer";
 import directMeetingReducer from "@redux/meetings/reducer";
+import directReducer from "@redux/directs/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
 
 export default combineReducers({
@@ -15,6 +16,7 @@ export default combineReducers({
   App,
   adminUser: adminUserReducer,
   directMeeting: directMeetingReducer,
+  directs: directReducer,
   filterData: filterDataReducer,
   ThemeSwitcher,
   LanguageSwitcher,
