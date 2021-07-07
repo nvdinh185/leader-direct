@@ -140,7 +140,7 @@ export const updateMenuApi = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(updateMenuApiFail(err.response.data));
+        dispatch(updateMenuApiFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -224,7 +224,7 @@ export const createFunctionGroup = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createFunctionGroupFail(err.response.data));
+        dispatch(createFunctionGroupFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -266,7 +266,7 @@ export const grantFunctionsToGroup = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(grantFunctionsToGroupFail(err.response.data));
+        dispatch(grantFunctionsToGroupFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -431,7 +431,7 @@ export const createOrganization = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createOrganizationFail(err.response.data));
+        dispatch(createOrganizationFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -475,7 +475,7 @@ export const createGrantedUser = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createGrantedUserFail(err.response.data));
+        dispatch(createGrantedUserFail(err.reponse ? err.response.data : err));
       });
   };
 };
@@ -518,7 +518,7 @@ export const updateGrantedUser = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(updateGrantedUserFail(err.response.data));
+        dispatch(updateGrantedUserFail(err.reponse ? err.response.data : err));
       });
   };
 };

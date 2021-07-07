@@ -44,7 +44,7 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       successAlert("Thành Công", "Bạn đã thêm mới cuộc họp thành công");
       return {
         ...state,
-        createMenu: action.payload,
+        createMeeting: action.payload,
         loading: false,
       };
     case meetingTypes.CREATE_MEETING_FAIL:

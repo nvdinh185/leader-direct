@@ -17,7 +17,7 @@ const fs = require("fs");
 const path = require("path");
 
 class ApiHandler {
-  constructor() { }
+  constructor() {}
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
@@ -106,7 +106,10 @@ class ApiHandler {
     }
 
     //lấy những file có trong db
-    let attachments = await leaderDirectModels.meetings.getFirstRecord({ id: parseInt(req.form_data.params.id) }, { attachments: 1 })
+    let attachments = await leaderDirectModels.meetings.getFirstRecord(
+      { id: parseInt(req.form_data.params.id) },
+      { attachments: 1 }
+    );
     let str = attachments.attachments;
     let ar = str.slice(1, str.length - 1);
     let arAttachments = ar.split(",");
@@ -183,7 +186,13 @@ class ApiHandler {
       return true;
     });
     attachments += "]";
-    let jsonData = { ...req.form_data.params, attachments: attachments, created_time: new Date().getTime(), created_user: req.user.username, status: 1 };
+    let jsonData = {
+      ...req.form_data.params,
+      attachments: attachments,
+      created_time: new Date().getTime(),
+      created_user: req.user.username,
+      status: 1,
+    };
     // console.log(jsonData);
 
     leaderDirectModels.meetings
@@ -223,7 +232,13 @@ class ApiHandler {
     });
     attachments += "]";
 
-    let jsonData = { ...req.form_data.params, attachments: attachments, updated_time: new Date().getTime(), updated_user: req.user.username };
+    let jsonData = {
+      ...req.form_data.params,
+      status: parseInt(req.form_data.params.status),
+      attachments: attachments,
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
+    };
     jsonData.id = parseInt(jsonData.id);
     // update 1 bảng ghi vào csdl
     leaderDirectModels.meetings

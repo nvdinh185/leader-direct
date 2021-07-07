@@ -16,7 +16,7 @@ export const getMeetingList = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getMeetingListFail(err.response.data));
+        dispatch(getMeetingListFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -57,7 +57,7 @@ export const createMeeting = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createMeetingFail(err.response.data));
+        dispatch(createMeetingFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -93,14 +93,14 @@ export const updateMeeting = (token, form) => {
         if (data.status === 200) {
           dispatch(updateMeetingSuccess(data.data));
           // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
-          // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
           dispatch(getMeetingList(token));
         } else {
           dispatch(updateMeetingFail(data));
         }
       })
       .catch((err) => {
-        dispatch(updateMeetingFail(err.response.data));
+        // Hơi tốn request tí nhưng được cái đồng bộ redux với server luôn
+        dispatch(updateMeetingFail(err.response ? err.response.data : err));
       });
   };
 };

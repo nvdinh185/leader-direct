@@ -72,7 +72,7 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
       dataIndex: "directs",
       key: "directs",
       render: (col) => {
-        let noDirect = JSON.parse(col)?.length;
+        let noDirect = col ? JSON.parse(col).length : 0;
         return noDirect;
       },
     },
