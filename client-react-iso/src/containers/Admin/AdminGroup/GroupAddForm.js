@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Form, Select, Tag } from "antd";
+import { Modal, Input, Form, Select } from "antd";
 import Transfers from "@components/uielements/transfer";
 import { UserOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
 import { grantFunctionsToGroup, createFunctionGroup } from "@redux/adminUsers/actions";

@@ -1,16 +1,18 @@
-import React from "react";
 import { Button } from "antd";
 import styled from "styled-components";
 
+/**
+ * params {string} styledColor
+ */
 export const ButtonAdd = styled(Button)`
-    background #87d068;
+    background: ${(props) => (props.color ? props.color : "#87d068")};
     color: white;
     &:focus {
-        background #87d068;
+        background ${(props) => (props.color ? props.color : "#87d068")};
         color: white;
     }
     &:hover {
-        background: #87d06899;
+        background: ${(props) => (props.color ? props.color : "#87d06899")};
         color: white;
     }
 `;

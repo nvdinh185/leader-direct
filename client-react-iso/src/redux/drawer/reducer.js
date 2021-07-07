@@ -1,8 +1,8 @@
-import drawerActions from './actions';
+import drawerActions from "./actions";
 
 const initialState = {
   drawerVisibility: false,
-  drawerType: '',
+  drawerType: "",
   drawerProps: {},
 };
 

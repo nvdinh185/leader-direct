@@ -16,7 +16,7 @@ export const getGrantedUserList = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getGrantedUserListFail(err.response.data));
+        dispatch(getGrantedUserListFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -56,7 +56,7 @@ export const getMenuApiAll = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getMenuApiAllFail(err.response.data));
+        dispatch(getMenuApiAllFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -97,7 +97,7 @@ export const createMenuApi = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(createMenuApiFail(err.response.data));
+        dispatch(createMenuApiFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -181,7 +181,7 @@ export const getGrantedGroups = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getGrantedGroupsFail(err.response.data));
+        dispatch(getGrantedGroupsFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -306,7 +306,7 @@ export const getFunctions = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getFunctionsFail(err.response.data));
+        dispatch(getFunctionsFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -346,7 +346,7 @@ export const getAllOrganization = (token) => {
         }
       })
       .catch((err) => {
-        dispatch(getAllOrganizationFail(err.response.data));
+        dispatch(getAllOrganizationFail(err.response ? err.response.data : err));
       });
   };
 };
@@ -389,7 +389,7 @@ export const updateOrganization = (token, form) => {
         }
       })
       .catch((err) => {
-        dispatch(updateOrganizationFail(err.response.data));
+        dispatch(updateOrganizationFail(err.response ? err.response.data : err));
       });
   };
 };

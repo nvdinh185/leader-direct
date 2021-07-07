@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal } from "antd";
 
 export function successAlert(_title, _content) {

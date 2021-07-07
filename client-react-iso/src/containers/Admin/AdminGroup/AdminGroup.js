@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Button, Table } from "antd";
+import { Row, Col, Table } from "antd";
 import { Card } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getGrantedGroups } from "@redux/adminUsers/actions";

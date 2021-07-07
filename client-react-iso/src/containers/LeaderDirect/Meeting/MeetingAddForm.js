@@ -4,7 +4,6 @@ import { TagOutlined, MenuOutlined, FileTextOutlined, InboxOutlined } from "@ant
 import { createMeeting, updateMeeting } from "@redux/meetings/actions";
 import { useDispatch, useSelector } from "react-redux";
 import * as COMMON from "@constants/fileTypes";
-import axios from "axios";
 
 const { Option } = Select;
 
@@ -80,6 +79,7 @@ export default function MeetingAddForm({
         console.log(pair);
       }
       if (initialValues && modalMode === "EDIT") {
+        newData.append("id", initialValues.id);
         dispatch(updateMeeting(token, newData));
         setIsModalVisible(false);
         return;

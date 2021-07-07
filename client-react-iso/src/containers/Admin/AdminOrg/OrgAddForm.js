@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
-import { UserOutlined, TagOutlined, MenuOutlined, FileTextOutlined } from "@ant-design/icons";
+import { UserOutlined, FileTextOutlined } from "@ant-design/icons";
 import { createOrganization, updateOrganization } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
 
