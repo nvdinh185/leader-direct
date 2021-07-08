@@ -32,6 +32,7 @@ module.exports = {
             isUnique: 1,
             autoIncrement: 1
         },
+        uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
         description: { type: 'STRING', length: 2000 },
         category: { type: 'STRING', length: 255 },
         leader: { type: 'STRING', length: 255 },
@@ -51,8 +52,10 @@ module.exports = {
     },
     direct_loops:
     {
-        id: { type: 'NUMBER' },
+        id:
+            { type: 'NUMBER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
         direct_id: { type: 'NUMBER' },
+        direct_uuid: { type: 'STRING', length: 50 },
         executors: { type: 'STRING', length: 500 },
         assessors: { type: 'STRING', length: 500 },
         frequency: { type: 'STRING', length: 255 },
@@ -65,17 +68,19 @@ module.exports = {
     },
     direct_orgs:
     {
-        id: { type: 'INTEGER' },
+        id:
+            { type: 'INTEGER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
         direct_id: { type: 'INTEGER' },
+        direct_uuid: { type: 'STRING', length: 50 },
         organization_id:
         {
-            type: 'STRING',
-            foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)',
-            length: 50
+            type: 'INTEGER',
+            foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)'
         },
-        organization_role: {},
-        histories: { type: 'STRING', length: 255 },
+        organization_role: { type: 'INTEGER' },
+        histories: { type: 'STRING', length: 2000 },
         status: { type: 'STRING', length: 255 },
+        percent_complete: { type: 'STRING', length: 255 },
         created_time: { type: 'DATETIME' },
         created_user: { type: 'STRING', length: 255 },
         updated_time: { type: 'DATETIME' },
@@ -97,6 +102,7 @@ module.exports = {
             notNull: 1,
             foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)'
         },
+        direct_uuid: { type: 'STRING', length: 50 },
         organization_id: { type: 'INTEGER', notNull: 1 },
         organization_role: { type: 'STRING', length: 255 },
         description: { type: 'STRING', length: 2000 },
@@ -137,15 +143,9 @@ module.exports = {
     },
     categories:
     {
-        id:
-        {
-            type: 'INTEGER',
-            notNull: 1,
-            primaryKey: 1,
-            isUnique: 1,
-            autoIncrement: 1
-        },
+        id: { type: 'INTEGER', notNull: 1, primaryKey: 1, isUnique: 1 },
         parent_id: { type: 'INTEGER', notNull: 1 },
+        children: { type: 'STRING', length: 2000 },
         code: { type: 'STRING', notNull: 1, length: 50 },
         name: { type: 'STRING', length: 50 },
         description: { type: 'STRING', length: 255 },
