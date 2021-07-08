@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { Route, useRouteMatch, Switch } from "react-router-dom";
 import Loader from "@components/utility/loader";
-import DrawerRoot from "@components/LeaderDirect/Drawer";
+import DrawerRoot from "@components/DrawerRoot";
 
 const routes = [
   {
