@@ -132,7 +132,7 @@ const WDSingleCardWrapper = styled.li`
 `;
 
 const WDSortableCardWrapper = styled.div`
-  padding: 50px 35px;
+  padding: 15px 35px;
 
   @media only screen and (max-width: 767px) {
     padding: 30px 20px;

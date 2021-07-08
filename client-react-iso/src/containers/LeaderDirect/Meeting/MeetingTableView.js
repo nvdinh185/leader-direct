@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import LayoutWrapper from "@components/utility/layoutWrapper";
 
 import { Row, Col, Table } from "antd";
 import { Card } from "antd";

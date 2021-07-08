@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { Route, useRouteMatch, Switch } from "react-router-dom";
 import Loader from "@components/utility/loader";
+import DrawerRoot from "@components/LeaderDirect/Drawer";
 
 const routes = [
   {
@@ -34,7 +35,7 @@ const routes = [
   },
   {
     path: "leader-meeting",
-    component: lazy(() => import("@containers/LeaderDirect/Meeting/MeetingLayout")),
+    component: lazy(() => import("@containers/LeaderDirect/MeetingRoutes")),
   },
   {
     path: "leader-direct-mng",
@@ -69,6 +70,7 @@ export default function AppRouter(props) {
           </Route>
         ))}
       </Switch>
+      <DrawerRoot></DrawerRoot>
     </Suspense>
   );
 }

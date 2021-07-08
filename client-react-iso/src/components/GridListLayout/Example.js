@@ -4,10 +4,9 @@ import throttle from "lodash/throttle";
 import articles from "./config";
 import Toggle from "@components/GridListLayout/Toggle";
 import ListItem from "@components/GridListLayout/GridListItem";
-import MeetingView from "@containers/LeaderDirect/Meeting/MeetingView";
 import IntlMessages from "@components/utility/intlMessages";
 import { SortableCardWrapper } from "@components/GridListLayout/GridList.style";
-import { BarsOutlined, AppstoreOutlined, UpOutlined, DownOutlined, TableOutlined } from "@ant-design/icons";
+import { BarsOutlined, AppstoreOutlined, UpOutlined, DownOutlined } from "@ant-design/icons";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 
 export default function () {
@@ -33,14 +32,6 @@ export default function () {
       ...state,
       view: "grid",
       enterLeaveAnimation: "accordionHorizontal",
-    });
-  }
-
-  function toggleTable() {
-    setState({
-      ...state,
-      view: "table",
-      enterLeaveAnimation: "accordionVertical",
     });
   }
 
@@ -119,29 +110,19 @@ export default function () {
             icon={<AppstoreOutlined />}
             active={state.view === "grid"}
           />
-          <Toggle
-            clickHandler={toggleTable}
-            // text={<IntlMessages id="toggle.grid" />}
-            icon={<TableOutlined />}
-            active={state.view === "table"}
-          />
         </div>
       </header>
-      {state.view === "table" ? (
-        <MeetingView></MeetingView>
-      ) : (
-        <div className="isoSortableCardsContainer">
-          <FlipMove
-            staggerDurationBy="30"
-            duration={500}
-            enterAnimation={state.enterLeaveAnimation}
-            leaveAnimation={state.enterLeaveAnimation}
-            typeName="ul"
-          >
-            {renderArticles()}
-          </FlipMove>
-        </div>
-      )}
+      <div className="isoSortableCardsContainer">
+        <FlipMove
+          staggerDurationBy="30"
+          duration={500}
+          enterAnimation={state.enterLeaveAnimation}
+          leaveAnimation={state.enterLeaveAnimation}
+          typeName="ul"
+        >
+          {renderArticles()}
+        </FlipMove>
+      </div>
     </SortableCardWrapper>
   );
 }
