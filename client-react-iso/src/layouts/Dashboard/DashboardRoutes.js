@@ -34,11 +34,11 @@ const routes = [
   },
   {
     path: "leader-meeting",
-    component: lazy(() => import("@containers/LeaderDirect/MeetingRoutes")),
+    component: lazy(() => import("@containers/LeaderDirect/Meeting/MeetingLayout")),
   },
   {
     path: "leader-direct-mng",
-    component: lazy(() => import("@containers/LeaderDirect/Direct/Direct")),
+    component: lazy(() => import("@components/GridListLayout/Example")),
   },
   {
     path: "leader-direct-history",

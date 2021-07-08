@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import LayoutWrapper from "@components/utility/layoutWrapper";
 
 import { Row, Col, Table } from "antd";
 import { Card } from "antd";
@@ -11,9 +12,6 @@ import drawerActions from "@redux/drawer/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import Box from "@components/utility/box";
-import PageHeader from "@components/utility/pageHeader";
-import LayoutWrapper from "@components/utility/layoutWrapper";
-import IntlMessages from "@components/utility/intlMessages";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
@@ -118,8 +116,7 @@ export default function MeetingView() {
   };
 
   return (
-    <LayoutWrapper>
-      <PageHeader>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
+    <>
       <MeetingAddForm
         organizations={organizations}
         meetingTypes={meetingTypes}
@@ -177,6 +174,6 @@ export default function MeetingView() {
           </Box>
         </Col>
       </Row>
-    </LayoutWrapper>
+    </>
   );
 }
