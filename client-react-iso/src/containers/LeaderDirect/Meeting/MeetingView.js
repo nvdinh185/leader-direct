@@ -69,7 +69,7 @@ export default function MeetingView() {
 
   // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
-    if (meetings?.[0] && cols.length === 0 && categories?.[0] && meetingDisplay.length === 0) {
+    if (meetings?.[0] && categories?.[0]) {
       let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick);
       let newDisplayInfo = meetings.map((meeting) => {
         let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);

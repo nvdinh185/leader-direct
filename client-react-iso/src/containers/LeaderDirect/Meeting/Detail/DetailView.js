@@ -40,17 +40,12 @@ export default function DetailView(props) {
         <Col span={24} style={colStyle}>
           <Card>
             <CardDetailsWrapper>
-              {/* // ---------------------------------------------------------------------------------  */}
               <DetailInfo meeting={meeting}></DetailInfo>
               <Divider />
-
-              {/* // ---------------------------------------------------------------------------------- */}
               <DetailAttachs meeting={meeting}></DetailAttachs>
               <Divider />
-              {/* // ---------------------------------------------------------------------------------- */}
               <DetailDirects></DetailDirects>
               <Divider></Divider>
-              {/* // ---------------------------------------------------------------------------------- */}
 
               <LeftCircleOutlined
                 style={{ fontSize: "35px", paddingRight: "10px", color: "grey" }}

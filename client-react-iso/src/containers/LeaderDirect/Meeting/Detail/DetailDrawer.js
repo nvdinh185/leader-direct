@@ -44,15 +44,10 @@ export default function DetailDrawer(props) {
         onIconClick={() => dispatch(drawerActions.closeDrawer())}
       />
       {/* // ---------------------------------------------------------------------------------  */}
-
-      {/* // ---------------------------------------------------------------------------------  */}
       <DetailInfo meeting={meeting}></DetailInfo>
       <Divider />
-
-      {/* // ---------------------------------------------------------------------------------- */}
       <DetailAttachs meeting={meeting}></DetailAttachs>
       <Divider />
-      {/* // ---------------------------------------------------------------------------------- */}
       <DetailDirects></DetailDirects>
     </CardDetailsWrapper>
   );

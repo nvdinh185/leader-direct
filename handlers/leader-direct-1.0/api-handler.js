@@ -246,7 +246,12 @@ class ApiHandler {
     });
     attachments += "]";
 
-    let jsonData = { ...req.form_data.params, updated_time: new Date().getTime(), updated_user: req.user.username };
+    let jsonData = {
+      ...req.form_data.params,
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
+      status: parseInt(req.form_data.params),
+    };
     if (req.ids.length > 0) {
       jsonData.attachments = attachments;
     }
@@ -851,146 +856,6 @@ class ApiHandler {
   }
 
   /**
-   * (119) POST /leader-direct/api/get-statuses
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   *
-   * SAMPLE INPUTS:
-   */
-  getStatuses(req, res, next) {
-    leaderDirectModels.statuses
-      .getAllData()
-
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
-        // console.log('Data: ', data);
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        // console.log('Lỗi: ', err);
-        req.error = err;
-        next();
-      });
-  }
-
-  /**
-   * (120) POST /leader-direct/api/get-status-by-cat-id
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   *
-   * SAMPLE INPUTS:
-   */
-  getStatusByCatId(req, res, next) {
-    if (!req.json_data) {
-      req.error = "Dữ liệu post req.json_data không hợp lệ";
-      next();
-      return;
-    }
-
-    let jsonData = req.json_data;
-    // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
-    leaderDirectModels.statuses
-      .getFirstRecord(
-        { cat_id: jsonData.cat_id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
-        // console.log('Data: ', data);
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        // console.log('Lỗi: ', err);
-        req.error = err;
-        next();
-      });
-  }
-
-  /**
-   * (121) POST /leader-direct/api/create-status
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   *
-   * SAMPLE INPUTS:
-   */
-  createStatus(req, res, next) {
-    if (!req.json_data) {
-      req.error = "Dữ liệu post req.json_data không hợp lệ";
-      next();
-      return;
-    }
-
-    let jsonData = req.json_data;
-    jsonData.created_time = new Date().getTime();
-
-    // chèn một bảng ghi vào csdl
-    leaderDirectModels.statuses
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
-      //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
-        // console.log('Data: ', data);
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        // console.log('Lỗi: ', err);
-        req.error = err;
-        next();
-      });
-  }
-
-  /**
-   * (122) POST /leader-direct/api/update-status
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   *
-   * SAMPLE INPUTS:
-   */
-  updateStatus(req, res, next) {
-    if (!req.json_data) {
-      req.error = "Dữ liệu post req.json_data không hợp lệ";
-      next();
-      return;
-    }
-
-    let jsonData = req.json_data;
-    jsonData.updated_time = new Date().getTime();
-
-    // update 1 bảng ghi vào csdl
-    leaderDirectModels.statuses
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then((data) => {
-        // console.log('Data: ', data);
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        // console.log('Lỗi: ', err);
-        req.error = err;
-        next();
-      });
-  }
-
-  /**
    * (120) GET /leader-direct/api/get-attachment-by-id
    *
    *
@@ -1099,7 +964,7 @@ class ApiHandler {
   }
 
   /**
-   * (123) POST /leader-direct/api/create-attachment
+   * (123) POST /leader-direct/api/create-menu
    *
    *
    *
