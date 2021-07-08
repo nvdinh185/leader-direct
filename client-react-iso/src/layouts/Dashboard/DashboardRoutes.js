@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Route, useRouteMatch, Switch } from "react-router-dom";
 import Loader from "@components/utility/loader";
 import DrawerRoot from "@components/DrawerRoot";
+import ModalRoot from "@components/ModalRoot";
 
 const routes = [
   {
@@ -39,7 +40,7 @@ const routes = [
   },
   {
     path: "leader-direct-mng",
-    component: lazy(() => import("@components/GridListLayout/Example")),
+    component: lazy(() => import("@containers/LeaderDirect/Direct/MeetingViewTest")),
   },
   {
     path: "leader-direct-history",
@@ -71,6 +72,7 @@ export default function AppRouter(props) {
         ))}
       </Switch>
       <DrawerRoot></DrawerRoot>
+      <ModalRoot></ModalRoot>
     </Suspense>
   );
 }

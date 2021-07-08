@@ -22,8 +22,16 @@ export default function ModalRoot() {
   }
   return (
     <>
-      <Modal centered visible={modalVisibility} onCancel={() => handleCloseModal()} footer={null}>
-        <SpecificModal {...modalProps} onCancel={() => handleCloseModal()} />
+      <Modal
+        {...modalProps}
+        okText={modalProps.okText}
+        getContainer={false}
+        onCancel={() => handleCloseModal()}
+        visible={modalVisibility}
+        destroyOnClose={true}
+        footer={null}
+      >
+        <SpecificModal {...modalProps} handleCancel={() => handleCloseModal()} />
       </Modal>
     </>
   );
