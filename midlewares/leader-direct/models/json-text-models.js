@@ -61,9 +61,9 @@ module.exports = {
         frequency: { type: 'STRING', length: 255 },
         loop_number: { type: 'NUMBER' },
         created_time: { type: 'DATETIME' },
-        created_user: { type: 'DATETIME' },
-        updated_time: { type: 'STRING', length: 255 },
-        updated_user: { type: 'DATETIME' },
+        created_user: { type: 'STRING', length: 50 },
+        updated_time: { type: 'DATETIME' },
+        updated_user: { type: 'STRING', length: 50 },
         status: { type: 'NUMBER' }
     },
     direct_orgs:

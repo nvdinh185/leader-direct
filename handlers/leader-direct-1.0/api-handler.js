@@ -59,6 +59,7 @@ class ApiHandler {
       let jsonData = req.form_data.files[file];
       jsonData.uuid = generateUUID();
       req.ids.push(jsonData.uuid);
+      jsonData.created_time = new Date().getTime();
       arData.push(jsonData);
     }
     // console.log(arData);
@@ -112,9 +113,10 @@ class ApiHandler {
       let jsonData = req.form_data.files[file];
       jsonData.uuid = generateUUID();
       req.ids.push(jsonData.uuid);
+      jsonData.updated_time = new Date().getTime();
       arData.push(jsonData);
     }
-    // console.log(arData);
+
     if (arData.length > 0) {
       //lấy những file có trong db
       let attachments = {};
@@ -143,11 +145,11 @@ class ApiHandler {
         for (const data of arData) {
           await leaderDirectModels.attachments.insertOneRecord(data);
         }
-        next();
-        return;
       } catch (err) {
         req.error = err;
+      } finally {
         next();
+        return;
       }
     }
 
@@ -302,6 +304,57 @@ class ApiHandler {
   }
 
   /**
+   * (104) POST /leader-direct/api/get-filter-direct
+   *
+   *
+   *
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getFilterDirect(req, res, next) {
+    const formatTime = (milisecond) => {
+      var date = new Date(milisecond);
+      var year = date.getFullYear();
+      var month = ("0" + (date.getMonth() + 1)).slice(-2);
+      var day = ("0" + date.getDate()).slice(-2);
+      return `${year}-${month}-${day}`;
+    }
+
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonData = req.json_data;
+    // console.log(jsonData);
+    let jsonWhere = {};
+    if (jsonData.from && jsonData.to) {
+      let from = formatTime(jsonData.from);
+      let to = formatTime(jsonData.to);
+      jsonWhere.created_time = { $gte: from, $lte: to };
+    }
+    jsonData.cat ? jsonWhere.category = jsonData.cat : '';
+
+    // console.log(jsonWhere);
+    leaderDirectModels.directs
+      .getAllData(jsonWhere)
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
    * (105) POST /leader-direct/api/get-direct-by-cat
    *
    * Lấy Direct theo Cat -> Truyền cat-id vào
@@ -423,7 +476,7 @@ class ApiHandler {
           await leaderDirectModels.direct_loops.insertOneRecord(dataLoops);
         }
 
-        req.finalJson = data;
+        req.finalJson = { uuid: jsonData.uuid };
         next();
       })
       .catch((err) => {
