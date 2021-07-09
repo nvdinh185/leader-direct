@@ -50,7 +50,7 @@ node ./test/create-models/1.create-main-entries.js
 
 # Bước 2: Tạo cấu trúc của mô hình từ file excel để khai báo cấu trúc giao tiếp csdl
 # LƯU Ý: copy đường dẫn in ra ở bước 1 vào đường dẫn tạo file. Nếu chạy ở môi trường win, thì việc tạo file js nó chứa format font không tương thích. Do đó phải đổi tên và tạo file mới json-text-models.js bằng thủ công trước khi thực hiện. Và sửa file tạo phía sau thêm ký tự khác.
-node ./test/create-models/2.create-model-from-excel.js > ./midlewares/logs/models/json-text-models.js
+node ./test/create-models/2.create-model-from-excel.js > ./midlewares/leader-direct/models/json-text-models-.js
 
 # Đặt tên file mới: json-text-models.js, rồi copy chỉ phần module.exports = {} sang để lưu file mô hình này, xóa file json-text-models-sample.js này đi
 

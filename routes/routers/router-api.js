@@ -215,6 +215,22 @@ const funcPaths = {
     ],
 
     /**
+     * (128) POST /leader-direct/api/get-direct-by-ids
+     *
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+
+    "/get-direct-by-ids": [
+      // ... chèn hàm tiền xử lý vào đây ví dụ: (req, res, next) => { console.log('In ra ip', req.clientIp); next() },
+      expHandlers.setRequestParameter("/get-direct-by-ids", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getDirectByIds,
+    ],
+
+    /**
      * (106) POST /leader-direct/api/create-direct
      *
      *

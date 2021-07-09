@@ -391,6 +391,36 @@ class ApiHandler {
   }
 
   /**
+   * (128) POST /leader-direct/api/get-direct-by-ids
+   *
+   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   */
+  getDirectByIds(req, res, next) {
+    if (!req.json_data.idArr) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+
+    let jsonWhere = { id: { $in: req.json_data.idArr } }; //[1, 2];
+    // console.log(jsonWhere);
+    leaderDirectModels.directs
+      .getAllData(jsonWhere)
+      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .then((data) => {
+        // console.log('Data: ', data);
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
    * (106) POST /leader-direct/api/create-direct
    *
    *

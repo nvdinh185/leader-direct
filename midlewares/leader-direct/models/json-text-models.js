@@ -12,7 +12,7 @@ module.exports = {
         },
         name: { type: 'STRING', length: 2000 },
         description: { type: 'STRING', length: 2000 },
-        category: { type: 'STRING', length: 255 },
+        category: { type: 'INTEGER' },
         img_url: { type: 'STRING', length: 255 },
         attachments: { type: 'STRING', length: 1000 },
         directs: { type: 'STRING', length: 1000 },
@@ -34,7 +34,7 @@ module.exports = {
         },
         uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
         description: { type: 'STRING', length: 2000 },
-        category: { type: 'STRING', length: 255 },
+        category: { type: 'INTEGER' },
         leader: { type: 'STRING', length: 255 },
         executors: { type: 'STRING', length: 500 },
         assessors: { type: 'STRING', length: 2000 },
@@ -52,8 +52,7 @@ module.exports = {
     },
     direct_loops:
     {
-        id:
-            { type: 'NUMBER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
+        id: { type: 'NUMBER' },
         direct_id: { type: 'NUMBER' },
         direct_uuid: { type: 'STRING', length: 50 },
         executors: { type: 'STRING', length: 500 },
@@ -61,15 +60,14 @@ module.exports = {
         frequency: { type: 'STRING', length: 255 },
         loop_number: { type: 'NUMBER' },
         created_time: { type: 'DATETIME' },
-        created_user: { type: 'STRING', length: 50 },
-        updated_time: { type: 'DATETIME' },
-        updated_user: { type: 'STRING', length: 50 },
+        created_user: { type: 'DATETIME' },
+        updated_time: { type: 'STRING', length: 255 },
+        updated_user: { type: 'DATETIME' },
         status: { type: 'NUMBER' }
     },
     direct_orgs:
     {
-        id:
-            { type: 'INTEGER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
+        id: { type: 'INTEGER' },
         direct_id: { type: 'INTEGER' },
         direct_uuid: { type: 'STRING', length: 50 },
         organization_id:
@@ -78,8 +76,8 @@ module.exports = {
             foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)'
         },
         organization_role: { type: 'INTEGER' },
-        histories: { type: 'STRING', length: 2000 },
-        status: { type: 'STRING', length: 255 },
+        attachments: { type: 'STRING', length: 2000 },
+        status: { type: 'INTEGER' },
         percent_complete: { type: 'STRING', length: 255 },
         created_time: { type: 'DATETIME' },
         created_user: { type: 'STRING', length: 255 },
@@ -106,7 +104,7 @@ module.exports = {
         organization_id: { type: 'INTEGER', notNull: 1 },
         organization_role: { type: 'STRING', length: 255 },
         description: { type: 'STRING', length: 2000 },
-        category: { type: 'STRING', length: 255 },
+        category: { type: 'INTEGER' },
         attachments: { type: 'STRING', length: 2000 },
         status: { type: 'NUMBER' },
         created_time: { type: 'DATETIME' },
@@ -127,9 +125,8 @@ module.exports = {
         uuid: { type: 'STRING', length: 50 },
         category:
         {
-            type: 'STRING',
-            foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)',
-            length: 255
+            type: 'INTEGER',
+            foreignKey: 'FOREIGN KEY (course_id) REFERENCES courses(id)'
         },
         file_name: { type: 'STRING', length: 255 },
         file_path: { type: 'STRING', length: 255 },
