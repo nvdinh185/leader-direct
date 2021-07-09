@@ -40,7 +40,7 @@ const routes = [
   },
   {
     path: "leader-direct-mng",
-    component: lazy(() => import("@containers/LeaderDirect/Direct/MeetingViewTest")),
+    component: lazy(() => import("@containers/LeaderDirect/DirectRoutes")),
   },
   {
     path: "leader-direct-history",

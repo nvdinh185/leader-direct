@@ -141,7 +141,7 @@ export default function MeetingAddForm({
           >
             {meetingTypes?.[0]
               ? meetingTypes.map((cat) => (
-                  <Option key={cat.id} svalue={cat.id}>
+                  <Option key={cat.id} value={cat.id}>
                     {cat.name}
                   </Option>
                 ))
@@ -203,6 +203,7 @@ export default function MeetingAddForm({
         <p style={{ fontSize: 10, color: "grey" }}>
           <span style={{ color: "red" }}>*</span> Trường bắt buộc nhập liệu
         </p>
+        {/* // --------------------------------------------------------------------------------- */}
         <Divider></Divider>
         <Row>
           <Col span={12}>

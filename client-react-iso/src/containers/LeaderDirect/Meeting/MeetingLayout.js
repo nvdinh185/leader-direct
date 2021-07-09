@@ -22,6 +22,7 @@ export default function () {
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
   const token = useSelector((state) => state.Auth.idToken);
+  const App = useSelector((state) => state.App);
 
   const dispatch = useDispatch();
 
@@ -145,7 +146,14 @@ export default function () {
       <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
-          {state.view === "table" ? null : (
+          {state.view === "table" ? (
+            <>
+              <ButtonAdd size="large" shape="round" onClick={handleOpenModal} style={{ margin: "15px" }}>
+                + Thêm Mới
+              </ButtonAdd>
+              {/* TODO: Add horizontal filter bar here */}
+            </>
+          ) : (
             <>
               <Sidebar categories={categories}></Sidebar>
             </>
@@ -162,12 +170,15 @@ export default function () {
                 ) : null}
               </div>
               <div className="isoControlBtnGroup">
-                <Toggle
-                  clickHandler={toggleTable}
-                  // text={<IntlMessages id="toggle.grid" />}
-                  icon={<TableOutlined />}
-                  active={state.view === "table"}
-                />
+                {App.view === "MobileView" ? null : (
+                  <Toggle
+                    clickHandler={toggleTable}
+                    // text={<IntlMessages id="toggle.grid" />}
+                    icon={<TableOutlined />}
+                    active={state.view === "table"}
+                  />
+                )}
+
                 <Toggle
                   clickHandler={toggleList}
                   // text={<IntlMessages id="toggle.list" />}

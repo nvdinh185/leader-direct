@@ -26,15 +26,6 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
 
   const { rowStyle, colStyle, gutter } = basicStyle;
 
-  const handCallAddModal = () => {
-    dispatch(
-      modalActions.openModal({
-        ...initModalProps,
-        modalProps: { ...initModalProps.modalProps, title: "Tạo Mới Cuộc Họp", okText: "Thêm Mới", modalMode: "ADD" },
-      })
-    );
-  };
-
   // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
     if (meetings?.[0] && categories) {
@@ -94,43 +85,29 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
     <div style={{ padding: "0 15px 0 15px" }}>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
-          <Box>
-            <Row>
-              <Col md={24} sm={24} xs={24} style={{ padding: "0 8px" }}>
-                <Card>
-                  <Row>
-                    <Col md={24} sm={24} xs={24}>
-                      <ButtonAdd size="large" shape="round" type="link" onClick={handCallAddModal}>
-                        + Thêm Mới
-                      </ButtonAdd>
-                    </Col>
-                  </Row>
-                  <br />
-                  <Table
-                    // loading={loading}
-                    columns={cols}
-                    rowClassName={() => "editable-row"}
-                    dataSource={meetingDisplay && meetingDisplay.length !== 0 ? meetingDisplay : null}
-                    scroll={{ y: 400 }}
-                    pagination={{
-                      pageSize: 30,
-                      showSizeChanger: true,
-                      pageSizeOptions: ["10", "20", "30", "50", "100"],
-                    }}
-                    rowKey="_id"
-                    components={{
-                      body: {
-                        row: EditableRow,
-                        cell: EditableCell,
-                      },
-                    }}
-                    sticky
-                    scroll={{ x: size.width, y: size.height * 0.5 }}
-                  />
-                </Card>
-              </Col>
-            </Row>
-          </Box>
+          <Card>
+            <Table
+              // loading={loading}
+              columns={cols}
+              rowClassName={() => "editable-row"}
+              dataSource={meetingDisplay && meetingDisplay.length !== 0 ? meetingDisplay : null}
+              scroll={{ y: 400 }}
+              pagination={{
+                pageSize: 30,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "30", "50", "100"],
+              }}
+              rowKey="_id"
+              components={{
+                body: {
+                  row: EditableRow,
+                  cell: EditableCell,
+                },
+              }}
+              sticky
+              scroll={{ x: size.width, y: size.height * 0.5 }}
+            />
+          </Card>
         </Col>
       </Row>
     </div>

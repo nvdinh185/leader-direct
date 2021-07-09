@@ -5,7 +5,7 @@ import { callAPI, callAPIForm, baseURL } from "./config/index";
 // --------------------------------------------------------------------------------
 
 export const getDirectsAll = (token) => {
-  return callAPI("post", baseURL + "/get-directs", null, token);
+  return callAPI("post", baseURL + "/get-direct", null, token);
 };
 
 export const createDirect = (token, data) => {

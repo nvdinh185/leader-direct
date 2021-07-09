@@ -2,7 +2,7 @@ import * as directTypes from "@redux/directs/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultDirects = {
-  categories: [],
+  directs: [],
   loading: false,
   err: "",
 };
@@ -23,7 +23,7 @@ export default function directReducer(state = defaultDirects, action) {
       }
       return {
         ...state,
-        categories: action.payload,
+        directs: action.payload,
         loading: false,
       };
 

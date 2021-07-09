@@ -4,8 +4,6 @@ import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined } from "@ant-design/icons";
 
 export default function SideBar({ categories }) {
-  const disableDate = (date) => {};
-
   return (
     <>
       <Card size="small" style={{ background: "none" }}>

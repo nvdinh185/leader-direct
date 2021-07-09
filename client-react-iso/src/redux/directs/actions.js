@@ -47,7 +47,7 @@ export const createDirect = (token, form) => {
   return (dispatch) => {
     dispatch(createDirectStart());
     directApi
-      .createCategory(token, form)
+      .createDirect(token, form)
       .then((data) => {
         if (data.status === 200) {
           dispatch(createDirectSuccess(data.data));
@@ -103,7 +103,7 @@ export const updateDirect = (token, form) => {
   };
 };
 
-export const updateDirectFail = () => {
+export const updateDirectStart = () => {
   return {
     type: directTypes.UPDATE_DIRECT_START,
   };
