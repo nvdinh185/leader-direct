@@ -22,6 +22,8 @@ const WDSingleCardWrapper = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
@@ -41,6 +43,7 @@ const WDSingleCardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin: 0 15px;
+    overflow: hidden;
 
     .isoCardTitle {
       white-space: nowrap;
@@ -50,6 +53,12 @@ const WDSingleCardWrapper = styled.div`
       font-weight: 500;
       color: ${palette("text", 0)};
       margin: 0 0 3px;
+    }
+
+    .isoCardDescription {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .isoCardDate {
@@ -64,10 +73,10 @@ const WDSingleCardWrapper = styled.div`
     height: 24px;
     background-color: transparent;
     flex-shrink: 0;
-    padding: 0;
+    padding: 5px 0;
     border: 0;
     font-size: 14px;
-    color: ${palette("grayscale", 0)};
+    color: ${(props) => (props.view === "grid" ? "white" : "grey")};
     cursor: pointer;
     ${transition()};
 

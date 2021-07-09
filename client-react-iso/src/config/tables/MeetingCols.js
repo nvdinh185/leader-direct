@@ -42,6 +42,14 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
       width: 3,
       dataIndex: "name",
       key: "name",
+      ellipsis: {
+        showTitle: true,
+      },
+      render: (col) => (
+        <Tooltip placement="topLeft" title={col}>
+          {col}
+        </Tooltip>
+      ),
     },
     {
       title: "Mô Tả",

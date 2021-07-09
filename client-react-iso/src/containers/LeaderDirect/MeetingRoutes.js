@@ -9,8 +9,8 @@ export default function MeetingRoutes() {
   return (
     <>
       <Switch>
-        <Route exact path={`${match.path}`} component={MeetingLayout} />
-        <Route path={`${match.path}/:id`} component={DetailView} />
+        <Route exact path={`${match.path}`} key={`${match.path}`} component={MeetingLayout} />
+        <Route path={`${match.path}/:id`} key={`${match.path}/id`} component={DetailView} />
       </Switch>
     </>
   );

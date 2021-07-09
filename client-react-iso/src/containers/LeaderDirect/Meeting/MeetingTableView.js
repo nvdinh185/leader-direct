@@ -67,8 +67,8 @@ export default function MeetingTableView() {
         modalType: "MEETING_ADD_EDIT_MODAL",
         modalProps: {
           organizations: organizations,
-          meetingTypes: meetingTypes,
           meetings: meetings,
+          meetingTypes: meetingTypes,
           width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
           centered: true,
           initialValues: {},
@@ -141,7 +141,7 @@ export default function MeetingTableView() {
   };
 
   return (
-    <>
+    <div style={{ padding: "0 15px 0 15px" }}>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Box>
@@ -183,6 +183,6 @@ export default function MeetingTableView() {
           </Box>
         </Col>
       </Row>
-    </>
+    </div>
   );
 }
