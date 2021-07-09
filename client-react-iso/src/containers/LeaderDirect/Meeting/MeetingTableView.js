@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Table } from "antd";
-import { Card } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getMeetingList } from "@redux/meetings/actions";
-import { getCategoryList } from "@redux/filterData/actions";
 import { createMeetingColsFn } from "@config/tables/MeetingCols";
 import drawerActions from "@redux/drawer/actions";
-import useWindowSize from "@lib/hooks/useWindowSize";
+import modalActions from "@redux/modal/actions";
 
+import { Row, Col, Table, Card } from "antd";
 import Box from "@components/utility/box";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
@@ -17,26 +14,17 @@ import basicStyle from "@assets/styles/constants";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 
 import "@assets/styles/containers/EditableCell.css";
-import modalActions from "@redux/modal/actions";
 
-export default function MeetingTableView() {
+export default function MeetingTableView({ meetings, organizations, size, initModalProps, categories, ...props }) {
   const history = useHistory();
   const match = useRouteMatch();
-
-  const { rowStyle, colStyle, gutter } = basicStyle;
-  const organizations = useSelector((state) => state.adminUser.organizations);
-  const meetings = useSelector((state) => state.directMeeting.meetings);
-  const categories = useSelector((state) => state.filterData.categories);
-  const token = useSelector((state) => state.Auth.idToken);
   const dispatch = useDispatch();
 
   const [cols, setCols] = useState([]);
   const [editGroup, setEditGroup] = useState();
-  const [meetingTypes, setMeetingTypes] = useState([]);
   const [meetingDisplay, setMeetingDisplay] = useState([]);
-  const [initModalProps, setInitModalProps] = useState();
 
-  const size = useWindowSize();
+  const { rowStyle, colStyle, gutter } = basicStyle;
 
   const handCallAddModal = () => {
     dispatch(
@@ -47,41 +35,9 @@ export default function MeetingTableView() {
     );
   };
 
-  // Effect để lấy các dữ liệu từ api
-  useEffect(() => {
-    if (token && categories && categories.length === 0) {
-      dispatch(getCategoryList(token));
-    }
-  }, [token, categories]);
-
-  useEffect(() => {
-    if (token && meetings && meetings.length === 0) {
-      dispatch(getMeetingList(token));
-    }
-  }, [token, meetings]);
-
-  // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
-  useEffect(() => {
-    if (organizations?.[0] && meetingTypes?.[0] && meetings?.[0]) {
-      setInitModalProps({
-        modalType: "MEETING_ADD_EDIT_MODAL",
-        modalProps: {
-          organizations: organizations,
-          meetings: meetings,
-          meetingTypes: meetingTypes,
-          width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
-          centered: true,
-          initialValues: {},
-          cancelText: "Bỏ Qua",
-          destroyOnClose: true,
-        },
-      });
-    }
-  }, [organizations, meetingTypes, meetings]);
-
   // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
-    if (meetings?.[0] && categories?.[0]) {
+    if (meetings?.[0] && categories) {
       let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick);
       let newDisplayInfo = meetings.map((meeting) => {
         let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
@@ -94,14 +50,14 @@ export default function MeetingTableView() {
 
   // Effect để cập nhập dữ liệu khi meetings thay đổi
   useEffect(() => {
-    if (meetings?.[0]) {
+    if ((meetings?.[0], categories?.[0])) {
       let newDisplayInfo = meetings.map((meeting) => {
         let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
         return { ...meeting, category: _category ? _category.name : "" };
       });
       setMeetingDisplay(newDisplayInfo);
     }
-  }, [meetings]);
+  }, [meetings, categories]);
 
   // Khi bấm vào nút sửa từng dòng làm cho editGroup thay đổi thì bắn dữ liệu vào modal
   useEffect(() => {
@@ -120,12 +76,6 @@ export default function MeetingTableView() {
       );
     }
   }, [editGroup]);
-
-  useEffect(() => {
-    if (categories.length > 0 && meetingTypes.length === 0) {
-      setMeetingTypes(categories.filter((cat) => cat.parent_id === 4));
-    }
-  }, [categories]);
 
   const fnCallDrawer = (record) => {
     dispatch(drawerActions.openDrawer({ drawerType: "MEETING_DETAIL_DRAWER", drawerProps: { meeting: record } }));

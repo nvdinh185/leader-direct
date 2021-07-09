@@ -125,7 +125,7 @@ const WDSingleCardWrapper = styled.div`
 
     .isoCardImage {
       width: 100%;
-      height: 260px;
+      height: 35px;
       display: flex;
 
       @media only screen and (min-width: 960px) {
