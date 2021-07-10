@@ -29,7 +29,7 @@ const WDSingleCardWrapper = styled.div`
     justify-content: center;
     // background-color: ${palette("grayscale", 6)};
     color: white;
-    background: linear-gradient(135deg, #ed5565 0%, #d52739 100%);
+    background: ${(props) => (props.bgColor ? props.bgColor : "linear-gradient(135deg, #ed5565 0%, #d52739 100%)")};
 
     img {
       width: 100%;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import "moment/locale/vi";
+import locale from "antd/es/date-picker/locale/vi_VN";
 import { Row, Col, Card, Input, Checkbox, Radio, Space } from "antd";
 import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined } from "@ant-design/icons";
@@ -12,7 +14,7 @@ export default function SideBar({ categories }) {
       <Card size="small" title="Loại Cuộc Họp" style={{ margin: "15px" }}>
         <Row>
           {categories
-            .filter((cat) => cat.parent_id === 3)
+            .filter((cat) => cat.parent_id === 4)
             .map((cat, idx) => (
               <Col key={idx} span={24}>
                 <Checkbox>{cat.name}</Checkbox>
@@ -24,13 +26,13 @@ export default function SideBar({ categories }) {
         <Row>
           <Space direction="vertical">
             <Col span={24}>
-              <DateRangepicker format="DD/MM/YYYY" disabledDate={(date) => date > new Date()}></DateRangepicker>
+              <DateRangepicker locale={locale} format="DD/MM/YYYY" disabledDate={(date) => date > new Date()}></DateRangepicker>
             </Col>
             <Col span={24}>
               <Radio.Group>
                 <Space direction="vertical">
-                  <Radio value={1}>Cuộc Họp Tháng Này</Radio>
-                  <Radio value={3}>Cuộc Họp Năm Nay</Radio>
+                  <Radio value={1}>Cuộc Họp Trong Tháng Này</Radio>
+                  <Radio value={3}>Cuộc Họp Trong Năm Nay</Radio>
                 </Space>
               </Radio.Group>
             </Col>

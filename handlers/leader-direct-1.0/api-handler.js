@@ -184,6 +184,7 @@ class ApiHandler {
       attachments: attachments,
       created_time: new Date().getTime(),
       created_user: req.user.username,
+      category: parseInt(jsonData.category),
       status: 1,
     };
     // console.log(jsonData);

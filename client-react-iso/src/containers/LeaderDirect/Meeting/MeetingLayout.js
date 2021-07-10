@@ -64,10 +64,10 @@ export default function () {
 
   function renderMeetings() {
     return meetings.map((meeting, i) => {
-      let width = state.view === "grid" ? 8 : 24;
+      // let width = state.view === "grid" ? 8 : 24;
       return (
         <Col key={meeting.id} {...returnListItemColSpan()}>
-          <ListItem key={meeting.id} view={state.view} index={i} meeting={meeting} {...meeting} />
+          <ListItem key={meeting.id} view={state.view} index={i} meeting={meeting} {...meeting} bgColor={meeting.bg_color} />
         </Col>
       );
     });
