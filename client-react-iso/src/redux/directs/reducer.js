@@ -9,6 +9,11 @@ let defaultDirects = {
 
 export default function directReducer(state = defaultDirects, action) {
   switch (action.type) {
+    case directTypes.CLEAR_CURRENT_MEETING_DIRECT_IDS:
+      return {
+        ...state,
+        directIds: [],
+      };
     // ---------------------------------------------------------------------------------
     // 1 - MENU SECTION
     // ---------------------------------------------------------------------------------

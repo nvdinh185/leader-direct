@@ -2,6 +2,7 @@
 // I. NON API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
 export const SET_CURRENT_MEETING_DETAIL = "SET_CURRENT_MEETING_DETAIL";
+export const CLEAR_CURRENT_MEETING_DETAIL = "CLEAR_CURRENT_MEETING_DETAIL";
 
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION

@@ -1,3 +1,4 @@
+import * as directTypes from "@redux/directs/types";
 import * as meetingTypes from "@redux/meetings/types";
 import * as meetingApi from "@apis/meetings";
 
@@ -9,6 +10,13 @@ export const setCurrentMeetingDetail = (meeting) => {
   return {
     type: meetingTypes.SET_CURRENT_MEETING_DETAIL,
     payload: meeting,
+  };
+};
+
+export const clearCurrentMeetingDetail = () => {
+  return (dispatch) => {
+    dispatch({ type: meetingTypes.CLEAR_CURRENT_MEETING_DETAIL });
+    dispatch({ type: directTypes.CLEAR_CURRENT_MEETING_DIRECT_IDS });
   };
 };
 

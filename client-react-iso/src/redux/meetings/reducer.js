@@ -19,6 +19,12 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
         ...state,
         currentMeeting: action.payload,
       };
+
+    case meetingTypes.CLEAR_CURRENT_MEETING_DETAIL:
+      return {
+        ...state,
+        currentMeeting: {},
+      };
     // ---------------------------------------------------------------------------------
     // II. API DISPATCH SECTION
     // ---------------------------------------------------------------------------------

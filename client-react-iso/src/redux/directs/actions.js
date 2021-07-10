@@ -5,7 +5,11 @@ import { getMeetingById } from "@redux/meetings/actions";
 // ---------------------------------------------------------------------------------
 // I. NON API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
-
+export const clearCurrentMeetingDirectIds = () => {
+  return {
+    type: directTypes.CLEAR_CURRENT_MEETING_DIRECT_IDS,
+  };
+};
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
