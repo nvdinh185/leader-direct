@@ -23,19 +23,26 @@ export default function DetailDirects({ meeting, directs, ...props }) {
   const size = useWindowSize();
 
   function renderDirects(_directs) {
-    console.log(directs);
     return _directs
-      ? _directs.map((direct, i) => (
-          <Col span={24} key={direct.id}>
-            <ListItem
-              index={i}
-              view={"list"}
-              meeting={meeting}
-              {...direct}
-              handleClick={() => successAlert("Click On Detail On Meeting")}
-            />
-          </Col>
-        ))
+      ? _directs.map((direct, i) => {
+          let directCat = categories.find((cat) => {
+            return direct.category === cat.id;
+          });
+          console.log(directCat);
+          return (
+            <Col span={24} key={direct.id}>
+              <ListItem
+                code={directCat?.code}
+                bgColor={directCat?.bg_color}
+                index={i}
+                view={"list"}
+                meeting={meeting}
+                {...direct}
+                handleClick={() => successAlert("Click On Detail On Meeting")}
+              />
+            </Col>
+          );
+        })
       : null;
   }
 
@@ -47,10 +54,10 @@ export default function DetailDirects({ meeting, directs, ...props }) {
   }, [categories]);
 
   useEffect(() => {
-    if (directs?.[0]) {
+    if (directs?.[0] && categories?.[0]) {
       setDirectComps(renderDirects(directs));
     }
-  }, [directs]);
+  }, [directs, categories]);
 
   // Sau khi có categories thì tạo 2 state directTypes và leaderTypes
   useEffect(() => {

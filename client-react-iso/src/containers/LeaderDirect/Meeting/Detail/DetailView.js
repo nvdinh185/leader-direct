@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDirectByIds } from "@redux/directs/actions";
-import { clearCurrentMeetingDetail, setCurrentMeetingDetail } from "@redux/meetings/actions";
+import { clearCurrentMeetingDetail, getMeetingById } from "@redux/meetings/actions";
 import { useHistory, useLocation } from "react-router-dom";
 import { Divider, Row, Col, Card } from "antd";
 import { LeftCircleOutlined } from "@ant-design/icons";
@@ -29,19 +29,20 @@ export default function DetailView() {
   // Nếu load view này thành công thì set current meeting
   useEffect(() => {
     if (Object.keys(currentMeeting).length === 0) {
-      dispatch(setCurrentMeetingDetail(meeting));
+      dispatch(getMeetingById(token, { id: meeting.id }));
     }
   }, []);
 
   // Khi current meeting trong store thay đổi thì gọi hàm lấy directs
   useEffect(() => {
     if (Object.keys(currentMeeting).length === 0) {
-      dispatch(setCurrentMeetingDetail(meeting));
+      dispatch(getMeetingById(token, { id: meeting.id }));
       return;
     }
     dispatch(getDirectByIds(token, { uuidArr: currentMeeting.directs }));
   }, [currentMeeting]);
 
+  // Khi thoát khỏi view này thì clear current meeting đi
   useEffect(() => {
     return () => {
       dispatch(clearCurrentMeetingDetail());

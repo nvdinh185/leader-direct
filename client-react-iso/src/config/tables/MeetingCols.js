@@ -3,8 +3,9 @@ import { Tooltip, Button, Tag, Space } from "antd";
 import { EditOutlined, FileAddOutlined, EyeFilled } from "@ant-design/icons";
 import DateCell from "@components/Admin/DateCell";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
+import { returnHexColor } from "@lib/utils/string";
 
-export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingRowClick) => {
+export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingRowClick, categories) => {
   return [
     {
       title: "Hành Động",
@@ -71,7 +72,10 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
       dataIndex: "category",
       key: "category",
       render: (col, record) => {
-        return <Tag color={"geekblue"}>{col}</Tag>;
+        let meetingCat = categories.find((cat) => cat.name === col);
+        let bgColorCat = returnHexColor(meetingCat.bg_color);
+        console.log(bgColorCat);
+        return <Tag color={bgColorCat}>{col}</Tag>;
       },
     },
     {

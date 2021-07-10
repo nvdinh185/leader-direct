@@ -65,9 +65,21 @@ export default function () {
   function renderMeetings() {
     return meetings.map((meeting, i) => {
       // let width = state.view === "grid" ? 8 : 24;
+
+      let meetingCat = categories.find((cat) => {
+        return meeting.category === cat.id;
+      });
       return (
         <Col key={meeting.id} {...returnListItemColSpan()}>
-          <ListItem key={meeting.id} view={state.view} index={i} meeting={meeting} {...meeting} bgColor={meeting.bg_color} />
+          <ListItem
+            code={meetingCat.code}
+            key={meeting.id}
+            view={state.view}
+            index={i}
+            meeting={meeting}
+            {...meeting}
+            bgColor={meetingCat?.bg_color}
+          />
         </Col>
       );
     });
@@ -130,10 +142,10 @@ export default function () {
   }, [categories]);
 
   useEffect(() => {
-    if (meetings?.[0]) {
+    if (meetings?.[0] && categories?.[0]) {
       setMeetingList(renderMeetings());
     }
-  }, [meetings]);
+  }, [meetings, categories]);
 
   useEffect(() => {
     if (meetings?.[0]) {

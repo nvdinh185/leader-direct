@@ -6,13 +6,6 @@ import * as meetingApi from "@apis/meetings";
 // I. NON API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
 
-export const setCurrentMeetingDetail = (meeting) => {
-  return {
-    type: meetingTypes.SET_CURRENT_MEETING_DETAIL,
-    payload: meeting,
-  };
-};
-
 export const clearCurrentMeetingDetail = () => {
   return (dispatch) => {
     dispatch({ type: meetingTypes.CLEAR_CURRENT_MEETING_DETAIL });

@@ -19,9 +19,9 @@ export default function (props) {
   };
 
   return (
-    <SingleCardWrapper id={props.id} className={listClass} style={style} view={props.view}>
+    <SingleCardWrapper className={listClass} style={style} {...props}>
       <div className="isoCardImage" onClick={props.handleClick ? props.handleClick : handleChangeRoute}>
-        {props.view === "list" ? "GBT" : null}
+        {props.view === "list" ? props.code : null}
       </div>
       <div className="isoCardContent" onClick={props.handleClick ? props.handleClick : handleChangeRoute}>
         {props.name ? (

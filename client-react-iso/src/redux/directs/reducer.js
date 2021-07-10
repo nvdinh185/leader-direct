@@ -28,6 +28,7 @@ export default function directReducer(state = defaultDirects, action) {
       }
       return {
         ...state,
+        err: "",
         directs: action.payload,
         loading: false,
       };
@@ -51,6 +52,7 @@ export default function directReducer(state = defaultDirects, action) {
       }
       return {
         ...state,
+        err: "",
         directIds: action.payload,
         loading: false,
       };
@@ -72,6 +74,7 @@ export default function directReducer(state = defaultDirects, action) {
       successAlert("Thành Công", "Bạn đã thêm mới chỉ đạo thành công");
       return {
         ...state,
+        err: "",
         createDirect: action.payload,
         loading: false,
       };
@@ -92,6 +95,7 @@ export default function directReducer(state = defaultDirects, action) {
       successAlert("Thành Công", "Bạn đã sửa thông tin chỉ đạo thành công");
       return {
         ...state,
+        err: "",
         updateDirect: action.payload,
         loading: false,
       };

@@ -8,7 +8,7 @@ node ./test/create-api-functions/create-models/1-create-main-entries.js
 # copy đường dẫn cuối cùng in ra để dán vào phía dưới
 
 # 2. LƯU Ý: copy đường dẫn in ra ở bước 1 vào đường dẫn tạo file
-node ./test/create-api-functions/create-models/2-create-model-from-excel.js > ./midlewares/granted-users/models/json-text-models-.js
+node ./test/create-api-functions/create-models/2-create-model-from-excel.js > ./midlewares/granted-users/models/json-text-models.js
 # Đặt tên file mới: json-text-models.js, rồi copy chỉ phần module.exports = {} sang để lưu file mô hình này, xóa file json-text-models-.js này đi
 
 # 3. Tạo các hàm giao tiếp csdl của mô hình phân quyền (bổ sung tạo ./granted-handler.js)

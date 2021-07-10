@@ -29,7 +29,7 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
   // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
     if (meetings?.[0] && categories) {
-      let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick);
+      let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick, categories);
       let newDisplayInfo = meetings.map((meeting) => {
         let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
         return { ...meeting, category: _category ? _category.name : "" };

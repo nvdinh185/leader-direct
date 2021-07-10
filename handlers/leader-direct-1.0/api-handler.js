@@ -417,7 +417,7 @@ class ApiHandler {
       let orgIdArr = jsonData[directOrgMode].slice(1, jsonData[directOrgMode].length - 1).split(",");
       switch (createOrUpdate) {
         case "create":
-          orgIdArr.every(async (exe) => {
+          orgIdArr.forEach(async (exe) => {
             await leaderDirectModels.direct_orgs.insertOneRecord({
               ...defaultDataInput,
               organization_id: parseInt(exe),
@@ -431,7 +431,7 @@ class ApiHandler {
             direct_uuid: directUuid.uuid,
             organization_role: directOrgMode === "executors" ? 22 : 21,
           });
-          orgIdArr.every(async (org) => {
+          orgIdArr.forEach(async (org) => {
             await leaderDirectModels.direct_orgs.insertOneRecord({
               ...defaultDataInput,
               direct_uuid: directUuid.uuid,
