@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDirectByIds } from "@redux/directs/actions";
 import { clearCurrentMeetingDetail, getMeetingById } from "@redux/meetings/actions";
@@ -39,7 +39,9 @@ export default function DetailView() {
       dispatch(getMeetingById(token, { id: meeting.id }));
       return;
     }
-    dispatch(getDirectByIds(token, { uuidArr: currentMeeting.directs }));
+    if (currentMeeting.directs) {
+      dispatch(getDirectByIds(token, { uuidArr: currentMeeting.directs }));
+    }
   }, [currentMeeting]);
 
   // Khi thoát khỏi view này thì clear current meeting đi

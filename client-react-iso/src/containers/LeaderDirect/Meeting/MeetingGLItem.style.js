@@ -19,6 +19,7 @@ const WDSingleCardWrapper = styled.div`
   }
 
   .isoCardImage {
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

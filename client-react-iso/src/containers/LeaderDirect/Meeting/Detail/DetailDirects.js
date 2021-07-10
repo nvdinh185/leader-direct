@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getCategoryList } from "@redux/filterData/actions";
+import { successAlert } from "@components/AlertModal/ModalInfo";
 import modalActions from "@redux/modal/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
-import { successAlert } from "@components/AlertModal/ModalInfo";
+
 import { Col, Row } from "antd";
 import PlusIcon from "@assets/images/icon/09-icon.svg";
 import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
-import ListItem from "@containers/LeaderDirect/Meeting/MeetingGLItem";
-import { getCategoryList } from "@redux/filterData/actions";
+import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
 
 export default function DetailDirects({ meeting, directs, ...props }) {
   const token = useSelector((state) => state.Auth.idToken);
@@ -28,7 +29,6 @@ export default function DetailDirects({ meeting, directs, ...props }) {
           let directCat = categories.find((cat) => {
             return direct.category === cat.id;
           });
-          console.log(directCat);
           return (
             <Col span={24} key={direct.id}>
               <ListItem
@@ -37,8 +37,9 @@ export default function DetailDirects({ meeting, directs, ...props }) {
                 index={i}
                 view={"list"}
                 meeting={meeting}
-                {...direct}
+                organizations={organizations}
                 handleClick={() => successAlert("Click On Detail On Meeting")}
+                {...direct}
               />
             </Col>
           );

@@ -72,6 +72,7 @@ export default function () {
       return (
         <Col key={meeting.id} {...returnListItemColSpan()}>
           <ListItem
+            categoryName={meetingCat.name}
             code={meetingCat.code}
             key={meeting.id}
             view={state.view}
@@ -97,7 +98,7 @@ export default function () {
   function returnListItemColSpan() {
     let obj = { span: 24 };
     if (state.view === "grid") {
-      return { xs: 24, sm: 12, md: 12, lg: 8, xl: 6 };
+      return { xs: 24, sm: 12, md: 12, lg: 8, xl: 8 };
     }
     return obj;
   }

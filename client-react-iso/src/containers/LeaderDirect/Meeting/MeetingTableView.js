@@ -22,31 +22,14 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
 
   const [cols, setCols] = useState([]);
   const [editGroup, setEditGroup] = useState();
-  const [meetingDisplay, setMeetingDisplay] = useState([]);
 
   const { rowStyle, colStyle, gutter } = basicStyle;
 
   // Effect để set cột lần đầu khi chưa có dữ liệu
   useEffect(() => {
-    if (meetings?.[0] && categories) {
+    if (meetings?.[0] && categories?.[0]) {
       let newCols = createMeetingColsFn(handleChange, fnCallDrawer, handleMeetingRowClick, categories);
-      let newDisplayInfo = meetings.map((meeting) => {
-        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
-        return { ...meeting, category: _category ? _category.name : "" };
-      });
-      setMeetingDisplay(newDisplayInfo);
       setCols(newCols);
-    }
-  }, [meetings, categories]);
-
-  // Effect để cập nhập dữ liệu khi meetings thay đổi
-  useEffect(() => {
-    if ((meetings?.[0], categories?.[0])) {
-      let newDisplayInfo = meetings.map((meeting) => {
-        let _category = categories.find((cat) => "" + cat.id === "" + meeting.category);
-        return { ...meeting, category: _category ? _category.name : "" };
-      });
-      setMeetingDisplay(newDisplayInfo);
     }
   }, [meetings, categories]);
 
@@ -90,7 +73,7 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
               // loading={loading}
               columns={cols}
               rowClassName={() => "editable-row"}
-              dataSource={meetingDisplay && meetingDisplay.length !== 0 ? meetingDisplay : null}
+              dataSource={meetings && meetings.length !== 0 ? meetings : null}
               scroll={{ y: 400 }}
               pagination={{
                 pageSize: 30,

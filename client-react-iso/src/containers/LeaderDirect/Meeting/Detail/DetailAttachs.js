@@ -44,7 +44,6 @@ export default function DetailAttachs({ meeting, ...props }) {
           color: fileType ? fileType.color : "",
         };
       });
-      console.log(newAttchs);
       setAttchmentInfos(newAttchs);
     }
   }, [attachments]);

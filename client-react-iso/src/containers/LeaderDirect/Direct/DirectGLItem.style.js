@@ -88,11 +88,13 @@ const WDSingleCardWrapper = styled.div`
   &.list {
     width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    flex-wrap: no-wrap;
+    align-items: stretch;
 
     .isoCardImage {
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       display: -webkit-inline-flex;
       display: -ms-inline-flex;
       display: inline-flex;
