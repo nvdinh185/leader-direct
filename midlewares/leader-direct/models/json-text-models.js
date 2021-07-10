@@ -53,7 +53,13 @@ module.exports =  {
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   direct_loops: {
-    id: { type: 'NUMBER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
+    id: {
+      type: 'NUMBER',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      autoIncrement: 1
+    },
     direct_id: { type: 'NUMBER' },
     direct_uuid: {
       type: 'STRING',
@@ -71,7 +77,13 @@ module.exports =  {
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   direct_orgs: {
-    id: { type: 'INTEGER', notNull: 1, primaryKey: 1, autoIncrement: 1 },
+    id: {
+      type: 'INTEGER',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      autoIncrement: 1
+    },
     uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
     direct_id: {
       type: 'INTEGER',
