@@ -18,6 +18,18 @@ const WDSingleCardWrapper = styled.div`
     transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
+  .isoCardTagInfo {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    right: 0;
+    bottom: 0;
+    padding: 3px;
+    border-bottom-right-radius: 8px;
+    background: ${(props) => (props.bgColor ? `${props.bgColor}` : "linear-gradient(135deg, #ed5565 0%, #d52739 100%)")};
+    opacity: 60%;
+  }
+
   .isoCardImage {
     font-weight: bold;
     white-space: nowrap;

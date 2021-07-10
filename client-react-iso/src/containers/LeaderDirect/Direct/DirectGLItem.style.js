@@ -18,8 +18,14 @@ const WDSingleCardWrapper = styled.div`
     transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
+  .isoCardWrapperFlex {
+    display: flex;
+    flex-direction: ${(props) => (props.view === "grid" ? "column" : "row")};
+  }
+
   .isoCardImage {
     white-space: nowrap;
+    font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
     border-top-left-radius: 5px;

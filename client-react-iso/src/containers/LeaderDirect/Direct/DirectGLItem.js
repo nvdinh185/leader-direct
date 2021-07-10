@@ -8,7 +8,7 @@ import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.
 import Tooltip from "@components/uielements/tooltip";
 
 export default function ({ organizations, executors, assessors, ...props }) {
-  console.log(organizations);
+  console.log(props);
   const history = useHistory();
   const location = useLocation();
 
@@ -50,7 +50,7 @@ export default function ({ organizations, executors, assessors, ...props }) {
   return (
     <>
       <SingleCardWrapper className={listClass} style={{ ...style, position: "relative" }} {...props}>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div className="isoCardWrapperFlex">
           <div className="isoCardImage" onClick={props.handleClick ? props.handleClick : handleChangeRoute}>
             {props.view === "list" ? props.code : props.categoryName}
           </div>
@@ -76,7 +76,7 @@ export default function ({ organizations, executors, assessors, ...props }) {
           </button>
         </div>
         <Avatar.Group
-          style={{ alignSelf: "flex-end" }}
+          style={{ alignSelf: "flex-end", padding: props.view === "grid" ? "5px" : "0" }}
           maxCount={4}
           size="small"
           maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}

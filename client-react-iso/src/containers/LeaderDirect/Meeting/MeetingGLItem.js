@@ -8,11 +8,12 @@ import { SingleCardWrapper } from "@containers/LeaderDirect/Meeting/MeetingGLIte
 import Tooltip from "@components/uielements/tooltip";
 
 export default function (props) {
+  console.log(props);
   const history = useHistory();
   const location = useLocation();
 
   const listClass = `isoSingleCard card ${props.view !== "table" ? props.view : ""}`;
-  const style = { zIndex: 100 - props.index };
+  const style = { zIndex: 100 - props.index, position: "relative" };
 
   const handleChangeRoute = () => {
     history.push({ pathname: `${location.pathname}/${props.id}`, state: { ...props.meeting, view: props.view } });
@@ -20,6 +21,7 @@ export default function (props) {
 
   return (
     <SingleCardWrapper className={listClass} style={style} {...props}>
+      <div className="isoCardTagInfo">{`${props.directs ? JSON.parse(props.directs).length : 0} Chỉ Đạo`}</div>
       <div className="isoCardImage" onClick={props.handleClick ? props.handleClick : handleChangeRoute}>
         {props.view === "list" ? props.code : props.categoryName}
       </div>
