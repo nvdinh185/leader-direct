@@ -18,7 +18,10 @@ const mime = require("mime-types");
 const path = require("path");
 
 class ApiHandler {
-  constructor() {}
+  constructor() {
+    this.createDirect = this.createDirect.bind(this);
+    this.updateDirect = this.updateDirect.bind(this);
+  }
 
   /**
    * Upload file lên và lưu thông tin file vào csdl
@@ -127,7 +130,6 @@ class ApiHandler {
   getMeeting(req, res, next) {
     leaderDirectModels.meetings
       .getAllData()
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -230,7 +232,6 @@ class ApiHandler {
     // update 1 bảng ghi vào csdl
     leaderDirectModels.meetings
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -250,7 +251,6 @@ class ApiHandler {
   getDirect(req, res, next) {
     leaderDirectModels.directs
       .getAllData()
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -295,7 +295,6 @@ class ApiHandler {
     // console.log(jsonWhere);
     leaderDirectModels.directs
       .getAllData(jsonWhere)
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -327,7 +326,6 @@ class ApiHandler {
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
     leaderDirectModels.directs
       .getFirstRecord({ categories: jsonData.categories })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -356,7 +354,6 @@ class ApiHandler {
 
     leaderDirectModels.directs
       .getAllData(jsonWhere)
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -367,76 +364,6 @@ class ApiHandler {
       });
   }
 
-  /**
-   * (106) POST /leader-direct/api/create-direct
-   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-   *
-   * SAMPLE INPUTS:
-   */
-  createDirect(req, res, next) {
-    let jsonData = {
-      ...req.json_data,
-      uuid: generateUUID(),
-      created_time: new Date().getTime(),
-      created_user: req.user.username,
-      status: 1,
-    };
-    // console.log(jsonData);
-
-    leaderDirectModels.directs
-      .insertOneRecord(jsonData)
-      //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
-      .then(async (data) => {
-        let dataLoops = { direct_uuid: jsonData.uuid, created_time: new Date().getTime(), created_user: req.user.username };
-        if (jsonData.executors) {
-          let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
-          for (const exe of arExecutors) {
-            let dataInput = {
-              direct_uuid: jsonData.uuid,
-              organization_id: parseInt(exe),
-              organization_role: 22,
-              created_time: new Date().getTime(),
-              created_user: req.user.username,
-            };
-            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
-          }
-          dataLoops.executors = jsonData.executors;
-        }
-
-        if (jsonData.assessors) {
-          let arAssessors = jsonData.assessors.slice(1, jsonData.assessors.length - 1).split(",");
-          for (const ass of arAssessors) {
-            let dataInput = {
-              direct_uuid: jsonData.uuid,
-              organization_id: parseInt(ass),
-              organization_role: 21,
-              created_time: new Date().getTime(),
-              created_user: req.user.username,
-            };
-            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
-          }
-          dataLoops.assessors = jsonData.assessors;
-        }
-
-        if ([31, 32, 33].includes(jsonData.category)) {
-          if (jsonData.category === 31) {
-            dataLoops.frequency = "W";
-          } else if (jsonData.category === 32) {
-            dataLoops.frequency = "M";
-          } else if (jsonData.category === 33) {
-            dataLoops.frequency = "Y";
-          }
-          await leaderDirectModels.direct_loops.insertOneRecord(dataLoops);
-        }
-        // Trả về uuid để thực hiện update meeting
-        req.json_data = jsonData;
-        next();
-      })
-      .catch((err) => {
-        req.error = err;
-        next();
-      });
-  }
   /**
    * Hàm update cho mảng directs ở meeting sau khi tạo direct xong
    * Hàm này ko đưa vào route
@@ -476,6 +403,110 @@ class ApiHandler {
   }
 
   /**
+   * Hàm tạo direct_org theo các giá trị truyền vào (để rút gọn bớt mấy cái hàm lặp lại)
+   * @param {*} jsonData
+   * @param {*} defaultDataInput
+   * @param {*} orgIdArr Mảng chứa các id của đơn vị (assessor hay executor)
+   * @param {*} mode Mode để chạy hàm này (assessors hay executors) -> Số nhiều
+   */
+  async createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, orgIdArr, mode = "create_executors") {
+    let createOrUpdate = mode.split("_")[0];
+    let directOrgMode = mode.split("_")[1];
+    if (orgIdArr && defaultDataInput && jsonData) {
+      let orgIdArr = jsonData[directOrgMode].slice(1, jsonData[directOrgMode].length - 1).split(",");
+      switch (createOrUpdate) {
+        case "create":
+          orgIdArr.every(async (exe) => {
+            await leaderDirectModels.direct_orgs.insertOneRecord({
+              ...defaultDataInput,
+              organization_id: parseInt(exe),
+              organization_role: directOrgMode === "executors" ? 22 : 21,
+            });
+          });
+          break;
+        case "update":
+          let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
+          await leaderDirectModels.direct_orgs.deleteAll({
+            direct_uuid: directUuid.uuid,
+            organization_role: directOrgMode === "executors" ? 22 : 21,
+          });
+          orgIdArr.every(async (org) => {
+            await leaderDirectModels.direct_orgs.insertOneRecord({
+              ...defaultDataInput,
+              direct_uuid: directUuid.uuid,
+              organization_id: parseInt(org),
+              organization_role: directOrgMode === "executors" ? 22 : 21,
+            });
+          });
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  /**
+   * (106) POST /leader-direct/api/create-direct
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *  Logic hàm này là: (1) Tạo Direct -> (2) Lấy uuid của direct để tạo direct_orgs dựa vào assessors và executors
+   *  -> (2') Đồng thời update mảng directs của meetings -> (2'') Insert direct_loops nếu loại chỉ đạo là lặp (31,32,33)
+   * SAMPLE INPUTS:
+   */
+  createDirect(req, res, next) {
+    let jsonData = {
+      ...req.json_data,
+      uuid: generateUUID(),
+      created_time: new Date().getTime(),
+      created_user: req.user.username,
+      status: 1,
+    };
+    leaderDirectModels.directs
+      .insertOneRecord(jsonData)
+      .then(async (data) => {
+        // Sau khi insert vào directs thành công thì update direct_orgs theo assessors và executors
+        let defaultDataLoops = {
+          status: 1,
+          direct_uuid: jsonData.uuid,
+          created_time: new Date().getTime(),
+          created_user: req.user.username,
+        };
+        let defaultDataInput = {
+          status: 1,
+          direct_uuid: jsonData.uuid,
+          created_time: new Date().getTime(),
+          created_user: req.user.username,
+        };
+        console.log(jsonData.executors);
+        if (jsonData.executors) {
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "create_executors");
+          defaultDataLoops.executors = jsonData.executors;
+        }
+        if (jsonData.assessors) {
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.assessors, "create_assessors");
+          defaultDataLoops.assessors = jsonData.assessors;
+        }
+
+        if ([31, 32, 33].includes(jsonData.category)) {
+          if (jsonData.category === 31) {
+            defaultDataLoops.frequency = "W";
+          } else if (jsonData.category === 32) {
+            defaultDataLoops.frequency = "M";
+          } else if (jsonData.category === 33) {
+            defaultDataLoops.frequency = "Y";
+          }
+          await leaderDirectModels.direct_loops.insertOneRecord(defaultDataLoops);
+        }
+        // Trả về uuid để thực hiện update meeting
+        req.json_data = jsonData;
+        next();
+      })
+      .catch((err) => {
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
    * (107) POST /leader-direct/api/update-direct
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
@@ -484,30 +515,15 @@ class ApiHandler {
   updateDirect(req, res, next) {
     let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
     jsonData.id = parseInt(jsonData.id);
-
+    let defaultDataInput = { direct_uuid: directUuid.uuid };
     leaderDirectModels.directs
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then(async (data) => {
-        let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
-        // console.log(directUuid);
-
         if (jsonData.executors) {
-          let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
-          await leaderDirectModels.direct_orgs.deleteAll({ direct_uuid: directUuid.uuid, organization_role: 22 });
-          for (const exe of arExecutors) {
-            let dataInput = { direct_uuid: directUuid.uuid, organization_id: parseInt(exe), organization_role: 22 };
-            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
-          }
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_executors");
         }
-
         if (jsonData.assessors) {
-          let arAssessors = jsonData.assessors.slice(1, jsonData.assessors.length - 1).split(",");
-          await leaderDirectModels.direct_orgs.deleteAll({ direct_uuid: directUuid.uuid, organization_role: 21 });
-          for (const ass of arAssessors) {
-            let dataInput = { direct_uuid: directUuid.uuid, organization_id: parseInt(ass), organization_role: 21 };
-            await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
-          }
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_assessors");
         }
         req.finalJson = data;
         next();
@@ -528,7 +544,6 @@ class ApiHandler {
     let jsonData = req.json_data;
     leaderDirectModels.direct_orgs
       .getFirstRecord({ id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -555,13 +570,9 @@ class ApiHandler {
       next();
       return;
     }
-
     let jsonData = req.json_data;
-    // console.log(jsonData);
-
     leaderDirectModels.direct_orgs
       .getAllData({ organization_id: jsonData.organization_id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -581,7 +592,6 @@ class ApiHandler {
   getDirectOrgAll(req, res, next) {
     leaderDirectModels.direct_orgs
       .getAllData()
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -634,13 +644,11 @@ class ApiHandler {
       next();
       return;
     }
-
     let jsonData = req.json_data;
     jsonData.updated_time = new Date().getTime();
 
     leaderDirectModels.direct_orgs
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -660,7 +668,6 @@ class ApiHandler {
   getDirectExe(req, res, next) {
     leaderDirectModels.direct_executes
       .getAllData()
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -721,7 +728,6 @@ class ApiHandler {
     // update 1 bảng ghi vào csdl
     leaderDirectModels.direct_executes
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -741,7 +747,6 @@ class ApiHandler {
   getCategory(req, res, next) {
     leaderDirectModels.categories
       .getAllData({}, {}, { id: 1 })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -800,7 +805,6 @@ class ApiHandler {
     // update 1 bảng ghi vào csdl
     leaderDirectModels.categories
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -829,7 +833,6 @@ class ApiHandler {
 
     leaderDirectModels.attachments
       .getFirstRecord({ uuid: jsonData.uuid })
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -865,7 +868,6 @@ class ApiHandler {
 
     leaderDirectModels.attachments
       .getAllData(jsonWhere)
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -1001,7 +1003,6 @@ class ApiHandler {
   getDirectLoops(req, res, next) {
     leaderDirectModels.direct_loops
       .getAllData()
-
       .then((data) => {
         req.finalJson = data;
         next();
@@ -1030,7 +1031,6 @@ class ApiHandler {
     // update 1 bảng ghi vào csdl
     leaderDirectModels.direct_loops
       .updateOneRecord(jsonData, { id: jsonData.id })
-
       .then((data) => {
         req.finalJson = data;
         next();

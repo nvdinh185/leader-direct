@@ -47,7 +47,7 @@ export default function directReducer(state = defaultDirects, action) {
       };
     case directTypes.GET_DIRECT_BY_IDS_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false };
       }
       return {
         ...state,
