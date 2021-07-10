@@ -1,10 +1,11 @@
 import React from "react";
 import moment from "moment";
+import { useHistory, useLocation } from "react-router-dom";
+
 import { Space } from "antd";
 import { CalendarFilled, SettingOutlined } from "@ant-design/icons";
 import { SingleCardWrapper } from "@containers/LeaderDirect/Meeting/MeetingGLItem.style";
 import Tooltip from "@components/uielements/tooltip";
-import { useHistory, useLocation } from "react-router-dom";
 
 export default function (props) {
   const history = useHistory();

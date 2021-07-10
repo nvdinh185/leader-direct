@@ -35,6 +35,29 @@ export default function directReducer(state = defaultDirects, action) {
       };
 
     // ---------------------------------------------------------------------------------
+    case directTypes.GET_DIRECT_BY_IDS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directTypes.GET_DIRECT_BY_IDS_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        directIds: action.payload,
+        loading: false,
+      };
+
+    case directTypes.GET_DIRECT_BY_IDS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
     case directTypes.CREATE_DIRECT_START:
       return {
         ...state,

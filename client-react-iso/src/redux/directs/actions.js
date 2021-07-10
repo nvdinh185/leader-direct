@@ -1,8 +1,15 @@
 import * as directTypes from "@redux/directs/types";
 import * as directApi from "@apis/directs";
+import { getMeetingById } from "@redux/meetings/actions";
 
-// ---------------------------------------------------------------------------------------------------
-// 1 - GET USER LIST
+// ---------------------------------------------------------------------------------
+// I. NON API DISPATCH SECTION
+// ---------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------
+// II. API DISPATCH SECTION
+// ---------------------------------------------------------------------------------
+// 1 - GET DIRECT LIST
 export const getAllDirect = (token) => {
   return (dispatch) => {
     dispatch(getAllDirectStart());
@@ -42,7 +49,47 @@ export const getAllDirectFail = (error) => {
 };
 
 // ---------------------------------------------------------------------------------------------------
-// 2 - GET MENU LIST
+// 1' - GET DIRECT BY IDS
+export const getDirectByIds = (token, data) => {
+  return (dispatch) => {
+    dispatch(getDirectByIdsStart());
+    directApi
+      .getDirectByIds(token, data)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getDirectByIdsSuccess(data.data));
+        } else {
+          dispatch(getDirectByIdsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getDirectByIdsFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
+
+export const getDirectByIdsStart = () => {
+  return {
+    type: directTypes.GET_DIRECT_BY_IDS_START,
+  };
+};
+
+export const getDirectByIdsSuccess = (data) => {
+  return {
+    type: directTypes.GET_DIRECT_BY_IDS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getDirectByIdsFail = (error) => {
+  return {
+    type: directTypes.GET_DIRECT_BY_IDS_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 2 - CREATE DIRECT
 export const createDirect = (token, form) => {
   return (dispatch) => {
     dispatch(createDirectStart());
@@ -51,6 +98,7 @@ export const createDirect = (token, form) => {
       .then((data) => {
         if (data.status === 200) {
           dispatch(createDirectSuccess(data.data));
+          dispatch(getMeetingById(token, { id: form.meeting_id }));
         } else {
           dispatch(createDirectFail(data));
         }
@@ -82,7 +130,7 @@ export const createDirectFail = (error) => {
 };
 
 // ---------------------------------------------------------------------------------------------------
-// 4 - UPDATE MENU API
+// 3 - UPDATE DIRECT API
 export const updateDirect = (token, form) => {
   return (dispatch) => {
     dispatch(updateDirectStart());

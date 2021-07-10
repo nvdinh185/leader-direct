@@ -3,6 +3,7 @@ import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultMeetings = {
   meetings: [],
+  currentMeeting: {},
   loading: false,
   err: "",
 };
@@ -10,7 +11,20 @@ let defaultMeetings = {
 export default function directMeetingReducer(state = defaultMeetings, action) {
   switch (action.type) {
     // ---------------------------------------------------------------------------------
-    // 1 - MENU SECTION
+    // I. NON API DISPATCH SECTION
+    // ---------------------------------------------------------------------------------
+
+    case meetingTypes.SET_CURRENT_MEETING_DETAIL:
+      return {
+        ...state,
+        currentMeeting: action.payload,
+      };
+    // ---------------------------------------------------------------------------------
+    // II. API DISPATCH SECTION
+    // ---------------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------------
+    // 1 - MEETING SECTION
     // ---------------------------------------------------------------------------------
     case meetingTypes.GET_MEETING_LIST_START:
       return {
@@ -28,6 +42,28 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       };
 
     case meetingTypes.GET_MEETING_LIST_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case meetingTypes.GET_MEETING_BY_ID_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case meetingTypes.GET_MEETING_BY_ID_SUCCESS:
+      if (action.payload.length === 0) {
+        return state;
+      }
+      return {
+        ...state,
+        currentMeeting: action.payload,
+        loading: false,
+      };
+
+    case meetingTypes.GET_MEETING_BY_ID_FAIL:
       return {
         ...state,
         err: action.payload,

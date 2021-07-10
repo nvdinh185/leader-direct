@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { createDirect, updateDirect } from "@redux/directs/actions";
 import { useDispatch, useSelector } from "react-redux";
 import modalActions from "@redux/modal/actions";
-import * as COMMON from "@constants/fileTypes";
-import { Button, Input, Form, Select, Upload, message, Row, Col, Divider } from "antd";
-import {
-  TagOutlined,
-  UserSwitchOutlined,
-  FileTextOutlined,
-  InboxOutlined,
-  TeamOutlined,
-  MessageOutlined,
-} from "@ant-design/icons";
+import { Button, Input, Form, Select, Row, Col, Divider } from "antd";
+import { TagOutlined, UserSwitchOutlined, FileTextOutlined, TeamOutlined, MessageOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
-export default function MeetingAddForm({
+export default function DirectAddForm({
+  meeting,
   directTypes,
   leaderTypes,
   organizations,
@@ -41,7 +34,7 @@ export default function MeetingAddForm({
       const values = await form.validateFields();
       console.log("Success:", values);
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
-
+      let newData = form.getFieldValue();
       if (initialValues && modalMode === "EDIT") {
         let newData = { ...form.getFieldValue(), id: initialValues.id };
         console.log(newData);
@@ -49,8 +42,14 @@ export default function MeetingAddForm({
         dispatch(modalActions.closeModal());
         return;
       }
-      console.log(form);
-      dispatch(createDirect(token, form.getFieldValue()));
+      dispatch(
+        createDirect(token, {
+          ...newData,
+          meeting_id: meeting.id,
+          assessors: JSON.stringify(newData.assessors),
+          executors: JSON.stringify(newData.executors),
+        })
+      );
       dispatch(modalActions.closeModal());
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);

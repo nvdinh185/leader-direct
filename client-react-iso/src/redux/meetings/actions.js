@@ -1,7 +1,22 @@
 import * as meetingTypes from "@redux/meetings/types";
 import * as meetingApi from "@apis/meetings";
 
-// ---------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
+// I. NON API DISPATCH SECTION
+// ---------------------------------------------------------------------------------
+
+export const setCurrentMeetingDetail = (meeting) => {
+  return {
+    type: meetingTypes.SET_CURRENT_MEETING_DETAIL,
+    payload: meeting,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// II. API DISPATCH SECTION
+// ---------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------
 // 1 - GET MEETING LIST
 export const getMeetingList = (token) => {
   return (dispatch) => {
@@ -41,7 +56,7 @@ export const getMeetingListFail = (error) => {
   };
 };
 
-// ---------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
 // 2 - GET MENU LIST
 export const createMeeting = (token, form) => {
   return (dispatch) => {
@@ -82,8 +97,8 @@ export const createMeetingFail = (error) => {
   };
 };
 
-// ---------------------------------------------------------------------------------------------------
-// 4 - UPDATE MENU API
+// ---------------------------------------------------------------------------------
+// 3 - UPDATE MENU API
 export const updateMeeting = (token, form) => {
   return (dispatch) => {
     dispatch(updateMeetingStart());
@@ -127,7 +142,7 @@ export const updateMeetingFail = (error) => {
 };
 
 // ---------------------------------------------------------------------------------
-//
+// 4 - GET ATTACHMENTS BY IDS
 export const getAttachmentByIds = (token, form) => {
   return (dispatch) => {
     dispatch(getAttachmentByIdsStart());
@@ -169,5 +184,45 @@ export const getAttachmentByIdsFail = (error) => {
 export const deleteAttachmentsArr = (error) => {
   return {
     type: meetingTypes.DELETE_ATTACHMENT_ARR,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// 5 - GET UPDATED CURRENT MEETING DETAIL
+export const getMeetingById = (token, data) => {
+  return (dispatch) => {
+    dispatch(getMeetingByIdStart());
+    meetingApi
+      .getMeetingById(token, data)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getMeetingByIdSuccess(data.data));
+        } else {
+          dispatch(getMeetingByIdFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getMeetingByIdFail(err.response ? err.response.data : err));
+      });
+  };
+};
+
+export const getMeetingByIdStart = () => {
+  return {
+    type: meetingTypes.GET_MEETING_BY_ID_START,
+  };
+};
+
+export const getMeetingByIdSuccess = (data) => {
+  return {
+    type: meetingTypes.GET_MEETING_BY_ID_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getMeetingByIdFail = (error) => {
+  return {
+    type: meetingTypes.GET_MEETING_BY_ID_FAIL,
+    payload: error,
   };
 };

@@ -12,7 +12,7 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const querystring = require("querystring");
+const { generateUUID } = require("./utils/index");
 const fs = require("fs");
 const mime = require("mime-types");
 const path = require("path");
@@ -28,25 +28,6 @@ class ApiHandler {
    * @returns
    */
   async createAttachments(req, res, next) {
-    const generateUUID = () => {
-      // Public Domain/MIT
-      var d = new Date().getTime(); //Timestamp
-      var d2 = Math.random() * 1000;
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-      });
-    };
-
     if (!req.form_data) {
       req.error = "Dữ liệu post req.form_data không hợp lệ";
       next();
@@ -82,25 +63,6 @@ class ApiHandler {
    * @returns
    */
   async updateAttachments(req, res, next) {
-    const generateUUID = () => {
-      // Public Domain/MIT
-      var d = new Date().getTime(); //Timestamp
-      var d2 = Math.random() * 1000;
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-      });
-    };
-
     if (!req.form_data) {
       req.error = "Dữ liệu post req.form_data không hợp lệ";
       next();
@@ -158,11 +120,7 @@ class ApiHandler {
 
   /**
    * (101) POST /leader-direct/api/get-meeting
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -170,14 +128,35 @@ class ApiHandler {
     leaderDirectModels.meetings
       .getAllData()
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (101) POST /leader-direct/api/get-meeting
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  getMeetingById(req, res, next) {
+    if (!req.json_data.id) {
+      req.error = "Không có dữ liệu meeting id theo yêu cầu";
+      next();
+      return;
+    }
+    leaderDirectModels.meetings
+      .getFirstRecord({ id: req.json_data.id })
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
         req.error = err;
         next();
       });
@@ -185,11 +164,7 @@ class ApiHandler {
 
   /**
    * (102) POST /leader-direct/api/create-meeting
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -212,9 +187,7 @@ class ApiHandler {
     // console.log(jsonData);
 
     leaderDirectModels.meetings
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
         // console.log("Data: ", data);
@@ -230,11 +203,7 @@ class ApiHandler {
 
   /**
    * (103) POST /leader-direct/api/update-meeting
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -260,18 +229,13 @@ class ApiHandler {
     jsonData.id = parseInt(jsonData.id);
     // update 1 bảng ghi vào csdl
     leaderDirectModels.meetings
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .updateOneRecord(jsonData, { id: jsonData.id })
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -279,37 +243,27 @@ class ApiHandler {
 
   /**
    * (104) POST /leader-direct/api/get-direct
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   getDirect(req, res, next) {
     leaderDirectModels.directs
       .getAllData()
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
   }
 
   /**
-   * (104) POST /leader-direct/api/get-filter-direct
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * (129) POST /leader-direct/api/get-filter-direct
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -341,14 +295,12 @@ class ApiHandler {
     // console.log(jsonWhere);
     leaderDirectModels.directs
       .getAllData(jsonWhere)
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -374,17 +326,13 @@ class ApiHandler {
     let jsonData = req.json_data;
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
     leaderDirectModels.directs
-      .getFirstRecord(
-        { categories: jsonData.categories } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .getFirstRecord({ categories: jsonData.categories })
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -397,7 +345,7 @@ class ApiHandler {
    *
    */
   getDirectByIds(req, res, next) {
-    if (!req.json_data.idArr || !req.json_data.uuidArr) {
+    if (!req.json_data.uuidArr && !req.json_data.idArr) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
@@ -408,14 +356,12 @@ class ApiHandler {
 
     leaderDirectModels.directs
       .getAllData(jsonWhere)
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -423,46 +369,14 @@ class ApiHandler {
 
   /**
    * (106) POST /leader-direct/api/create-direct
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   createDirect(req, res, next) {
-    const generateUUID = () => {
-      // Public Domain/MIT
-      var d = new Date().getTime(); //Timestamp
-      var d2 = Math.random() * 1000;
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-      });
-    };
-
-    let attachments = "[";
-    req.ids.every((id, idx) => {
-      attachments += id;
-      if (idx === req.ids.length - 1) return false;
-      attachments += ",";
-      return true;
-    });
-    attachments += "]";
     let jsonData = {
-      ...req.form_data.params,
+      ...req.json_data,
       uuid: generateUUID(),
-      attachments: attachments,
       created_time: new Date().getTime(),
       created_user: req.user.username,
       status: 1,
@@ -470,16 +384,20 @@ class ApiHandler {
     // console.log(jsonData);
 
     leaderDirectModels.directs
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then(async (data) => {
         let dataLoops = { direct_uuid: jsonData.uuid, created_time: new Date().getTime(), created_user: req.user.username };
         if (jsonData.executors) {
           let arExecutors = jsonData.executors.slice(1, jsonData.executors.length - 1).split(",");
           for (const exe of arExecutors) {
-            let dataInput = { direct_uuid: jsonData.uuid, organization_id: parseInt(exe), organization_role: 22 };
+            let dataInput = {
+              direct_uuid: jsonData.uuid,
+              organization_id: parseInt(exe),
+              organization_role: 22,
+              created_time: new Date().getTime(),
+              created_user: req.user.username,
+            };
             await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
           }
           dataLoops.executors = jsonData.executors;
@@ -488,30 +406,70 @@ class ApiHandler {
         if (jsonData.assessors) {
           let arAssessors = jsonData.assessors.slice(1, jsonData.assessors.length - 1).split(",");
           for (const ass of arAssessors) {
-            let dataInput = { direct_uuid: jsonData.uuid, organization_id: parseInt(ass), organization_role: 21 };
+            let dataInput = {
+              direct_uuid: jsonData.uuid,
+              organization_id: parseInt(ass),
+              organization_role: 21,
+              created_time: new Date().getTime(),
+              created_user: req.user.username,
+            };
             await leaderDirectModels.direct_orgs.insertOneRecord(dataInput);
           }
           dataLoops.assessors = jsonData.assessors;
         }
 
-        // console.log(jsonData.category);
-        if (jsonData.category) {
-          if (jsonData.category === "31") {
+        if ([31, 32, 33].includes(jsonData.category)) {
+          if (jsonData.category === 31) {
             dataLoops.frequency = "W";
-          } else if (jsonData.category === "32") {
+          } else if (jsonData.category === 32) {
             dataLoops.frequency = "M";
-          } else if (jsonData.category === "33") {
+          } else if (jsonData.category === 33) {
             dataLoops.frequency = "Y";
           }
-          // console.log(dataLoops);
           await leaderDirectModels.direct_loops.insertOneRecord(dataLoops);
         }
-
-        req.finalJson = { uuid: jsonData.uuid };
+        // Trả về uuid để thực hiện update meeting
+        req.json_data = jsonData;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
+        req.error = err;
+        next();
+      });
+  }
+  /**
+   * Hàm update cho mảng directs ở meeting sau khi tạo direct xong
+   * Hàm này ko đưa vào route
+   */
+  async updateMeetingDirect(req, res, next) {
+    if (!req.json_data.meeting_id || !req.json_data.uuid) {
+      req.error = "-- Không có dữ liệu theo yêu cầu ---";
+      next();
+      return;
+    }
+    let meetingData = await leaderDirectModels.meetings.getFirstRecord({ id: req.json_data.meeting_id });
+    let directArr = [];
+    // Nếu có field directs thì giá trị ban đầu là mảng này
+    if (meetingData.directs) {
+      directArr = JSON.parse(meetingData.directs);
+    }
+    directArr.push(req.json_data.uuid);
+
+    leaderDirectModels.meetings
+      .updateOneRecord(
+        {
+          ...meetingData,
+          updated_time: new Date().getTime(),
+          updated_user: req.user.username,
+          directs: JSON.stringify(directArr),
+        },
+        { id: meetingData.id }
+      )
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
         req.error = err;
         next();
       });
@@ -519,40 +477,18 @@ class ApiHandler {
 
   /**
    * (107) POST /leader-direct/api/update-direct
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   updateDirect(req, res, next) {
-    let attachments = "[";
-    req.ids.every((id, idx) => {
-      attachments += id;
-      if (idx === req.ids.length - 1) return false;
-      attachments += ",";
-      return true;
-    });
-    attachments += "]";
-
-    let jsonData = { ...req.form_data.params, updated_time: new Date().getTime(), updated_user: req.user.username };
-
-    if (req.ids.length > 0) {
-      jsonData.attachments = attachments;
-    }
+    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
     jsonData.id = parseInt(jsonData.id);
 
     leaderDirectModels.directs
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
+      .updateOneRecord(jsonData, { id: jsonData.id })
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then(async (data) => {
-        // console.log('Data: ', data);
         let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
         // console.log(directUuid);
 
@@ -577,7 +513,6 @@ class ApiHandler {
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -585,27 +520,20 @@ class ApiHandler {
 
   /**
    * (108) POST /leader-direct/api/get-direct-org
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   getDirectOrg(req, res, next) {
     let jsonData = req.json_data;
-    console.log(jsonData);
     leaderDirectModels.direct_orgs
       .getFirstRecord({ id: jsonData.id })
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -633,14 +561,12 @@ class ApiHandler {
 
     leaderDirectModels.direct_orgs
       .getAllData({ organization_id: jsonData.organization_id })
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        console.log("Data: ", data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -648,25 +574,19 @@ class ApiHandler {
 
   /**
    * (110) POST /leader-direct/api/get-direct-org-all
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   getDirectOrgAll(req, res, next) {
     leaderDirectModels.direct_orgs
       .getAllData()
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -674,11 +594,7 @@ class ApiHandler {
 
   /**
    * (111) POST /leader-direct/api/create-direct-org
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -694,17 +610,13 @@ class ApiHandler {
 
     // chèn một bảng ghi vào csdl
     leaderDirectModels.direct_orgs
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -712,11 +624,7 @@ class ApiHandler {
 
   /**
    * (112) POST /leader-direct/api/update-direct-org
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -731,19 +639,13 @@ class ApiHandler {
     jsonData.updated_time = new Date().getTime();
 
     leaderDirectModels.direct_orgs
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
+      .updateOneRecord(jsonData, { id: jsonData.id })
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -751,11 +653,7 @@ class ApiHandler {
 
   /**
    * (113) POST /leader-direct/api/get-direct-exe
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -763,14 +661,11 @@ class ApiHandler {
     leaderDirectModels.direct_executes
       .getAllData()
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -778,11 +673,7 @@ class ApiHandler {
 
   /**
    * (114) POST /leader-direct/api/create-direct-exe
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -799,17 +690,13 @@ class ApiHandler {
     console.log(jsonData);
 
     leaderDirectModels.direct_executes
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -817,11 +704,7 @@ class ApiHandler {
 
   /**
    * (115) POST /leader-direct/api/update-direct-exe
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -837,18 +720,13 @@ class ApiHandler {
 
     // update 1 bảng ghi vào csdl
     leaderDirectModels.direct_executes
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .updateOneRecord(jsonData, { id: jsonData.id })
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -856,11 +734,7 @@ class ApiHandler {
 
   /**
    * (116) POST /leader-direct/api/get-category
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -868,14 +742,11 @@ class ApiHandler {
     leaderDirectModels.categories
       .getAllData({}, {}, { id: 1 })
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -883,11 +754,7 @@ class ApiHandler {
 
   /**
    * (117) POST /leader-direct/api/create-category
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -903,17 +770,13 @@ class ApiHandler {
 
     // chèn một bảng ghi vào csdl
     leaderDirectModels.categories
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -921,11 +784,7 @@ class ApiHandler {
 
   /**
    * (118) POST /leader-direct/api/update-category
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -940,18 +799,13 @@ class ApiHandler {
 
     // update 1 bảng ghi vào csdl
     leaderDirectModels.categories
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .updateOneRecord(jsonData, { id: jsonData.id })
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -959,11 +813,7 @@ class ApiHandler {
 
   /**
    * (120) GET /leader-direct/api/get-attachment-by-id
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -980,14 +830,11 @@ class ApiHandler {
     leaderDirectModels.attachments
       .getFirstRecord({ uuid: jsonData.uuid })
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -995,11 +842,7 @@ class ApiHandler {
 
   /**
    * (121) POST /leader-direct/api/get-attachment-by-ids
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1016,7 +859,6 @@ class ApiHandler {
     for (const uuid of jsonData) {
       arIds.push(uuid.uuid);
     }
-    console.log(arIds);
     // console.log(arIds);
 
     let jsonWhere = { uuid: { $in: arIds } }; //["b21062f8-5048-4b4d-92e6-93a8d5aa240f", "76ff474c-8150-4c99-b67c-395782181bcb"] } };
@@ -1024,15 +866,11 @@ class ApiHandler {
     leaderDirectModels.attachments
       .getAllData(jsonWhere)
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
-        console.log(data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -1040,26 +878,18 @@ class ApiHandler {
 
   /**
    * (122) POST /leader-direct/api/get-attachments
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
   getAttachments(req, res, next) {
     leaderDirectModels.attachments
       .getAllData()
-
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -1067,11 +897,7 @@ class ApiHandler {
 
   /**
    * (123) POST /leader-direct/api/create-menu
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1087,29 +913,21 @@ class ApiHandler {
 
     // chèn một bảng ghi vào csdl
     leaderDirectModels.menus
-      .insertOneRecord(
-        jsonData // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-      )
+      .insertOneRecord(jsonData)
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
   }
 
   /**
-   * (124) POST /leader-direct/api/update-attachment
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * (124) POST /leader-direct/api/update-menu
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1125,18 +943,12 @@ class ApiHandler {
 
     // update 1 bảng ghi vào csdl
     leaderDirectModels.menus
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .updateOneRecord(jsonData, { id: jsonData.id })
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -1144,11 +956,7 @@ class ApiHandler {
 
   /**
    * (125) POST /leader-direct/api/get-file
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1186,11 +994,7 @@ class ApiHandler {
 
   /**
    * (126) POST /leader-direct/api/get-direct-loops
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1198,14 +1002,11 @@ class ApiHandler {
     leaderDirectModels.direct_loops
       .getAllData()
 
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });
@@ -1213,11 +1014,7 @@ class ApiHandler {
 
   /**
    * (127) POST /leader-direct/api/update-direct-loop
-   *
-   *
-   *
-   *
-   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
@@ -1232,18 +1029,13 @@ class ApiHandler {
 
     // update 1 bảng ghi vào csdl
     leaderDirectModels.direct_loops
-      .updateOneRecord(
-        jsonData, // trong đó jsonData chứa các key là tên trường của bảng (your_model = tên bảng), nếu jsonData có các trường không khai báo ở mô hình thì sẽ tự bỏ qua
-        { id: jsonData.id } // jsonWhere  = where key = 'value' | where key <operator> "value" trong đó <operator> gồm <, <=, >, >=, !=, in, not in, like, is null, is not null, ...
-      )
-      // trả kết quả truy vấn cho api trực tiếp bằng cách sau
+      .updateOneRecord(jsonData, { id: jsonData.id })
+
       .then((data) => {
-        // console.log('Data: ', data);
         req.finalJson = data;
         next();
       })
       .catch((err) => {
-        // console.log('Lỗi: ', err);
         req.error = err;
         next();
       });

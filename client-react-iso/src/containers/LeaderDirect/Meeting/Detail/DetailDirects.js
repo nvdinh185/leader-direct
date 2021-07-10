@@ -23,17 +23,20 @@ export default function DetailDirects({ meeting, directs, ...props }) {
   const size = useWindowSize();
 
   function renderDirects(_directs) {
-    return _directs.map((direct, i) => (
-      <Col span={24} key={direct.id}>
-        <ListItem
-          index={i}
-          view={"list"}
-          meeting={meeting}
-          {...direct}
-          handleClick={() => successAlert("Click On Detail On Meeting")}
-        />
-      </Col>
-    ));
+    console.log(directs);
+    return _directs
+      ? _directs.map((direct, i) => (
+          <Col span={24} key={direct.id}>
+            <ListItem
+              index={i}
+              view={"list"}
+              meeting={meeting}
+              {...direct}
+              handleClick={() => successAlert("Click On Detail On Meeting")}
+            />
+          </Col>
+        ))
+      : null;
   }
 
   // Effect gọi lấy data khi chưa có
