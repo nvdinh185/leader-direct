@@ -89,7 +89,6 @@ class UserRightsHandler {
     page = page || 1;
     limit = limit || 100;
 
-    // lấy tất cả nhóm quyền có trạng thái = 1 để phân quyền cho user
     function_groups
       .getPage(
         { status: 1 },

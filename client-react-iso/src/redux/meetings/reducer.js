@@ -39,7 +39,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
       };
     case meetingTypes.GET_MEETING_LIST_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -61,7 +61,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
       };
     case meetingTypes.GET_MEETING_BY_ID_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -127,7 +127,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
       };
     case meetingTypes.GET_ATTACHMENT_BY_IDS_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,

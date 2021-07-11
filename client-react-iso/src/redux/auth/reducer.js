@@ -55,7 +55,7 @@ const reducer = (state = initialState, action) => {
       };
     case actionTypes.GET_GRANTED_USER_INFO_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,

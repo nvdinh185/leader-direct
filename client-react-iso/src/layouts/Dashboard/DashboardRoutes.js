@@ -27,7 +27,7 @@ const routes = [
     component: lazy(() => import("@containers/Admin/AdminUser/AdminUser")),
   },
   {
-    path: "admin-group-user",
+    path: "admin-group",
     component: lazy(() => import("@containers/Admin/AdminGroup/AdminGroup")),
   },
   {

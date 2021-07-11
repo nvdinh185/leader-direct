@@ -39,10 +39,12 @@ export default function DetailDirects({ meeting, directs, ...props }) {
                 code={directCat?.code}
                 bgColor={directCat?.bg_color}
                 index={i}
+                direct={direct}
                 view={"list"}
                 meeting={meeting}
+                leaderTypes={leaderTypes}
+                directTypes={directTypes}
                 organizations={organizations}
-                handleClick={() => successAlert("Click On Detail On Meeting")}
                 {...direct}
               />
             </Col>

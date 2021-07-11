@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout } from "antd";
 import { getFunctions, getMenuApiAll, getGrantedGroups, getGrantedUserList, getAllOrganization } from "@redux/adminUsers/actions";
+import { getCategoryList } from "@redux/filterData/actions";
 import { getGrantedUserInfo } from "@redux/auth/actions";
 
 import useWindowSize from "@lib/hooks/useWindowSize";
@@ -47,6 +48,7 @@ export default function Dashboard() {
     dispatch(getGrantedUserList(token));
     dispatch(getAllOrganization(token));
     dispatch(getGrantedUserInfo(token));
+    dispatch(getCategoryList(token));
   }, [token]);
 
   return (

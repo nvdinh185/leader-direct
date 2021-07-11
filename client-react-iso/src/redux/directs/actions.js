@@ -145,6 +145,8 @@ export const updateDirect = (token, form) => {
           dispatch(updateDirectSuccess(data.data));
           // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
           dispatch(getAllDirect(token));
+          // Nếu update diễn ra ở meeting thì gọi lại thằng meetings về
+          dispatch(getMeetingById(token, { id: form.meeting_id }));
         } else {
           dispatch(updateDirectFail(data));
         }

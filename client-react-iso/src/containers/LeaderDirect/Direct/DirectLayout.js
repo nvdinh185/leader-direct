@@ -19,14 +19,14 @@ export default function () {
   const directs = useSelector((state) => state.directs.directs);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const directTypes = useSelector((state) => state.filterData.directTypes);
+  const leaderTypes = useSelector((state) => state.filterData.leaderTypes);
   const token = useSelector((state) => state.Auth.idToken);
   const App = useSelector((state) => state.App);
 
   const dispatch = useDispatch();
 
   const [directList, setDirectList] = useState([]);
-  const [directTypes, setDirectTypes] = useState([]);
-  const [leaderTypes, setLeaderTypes] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
 
   const size = useWindowSize();
@@ -73,6 +73,8 @@ export default function () {
         <Col key={direct.id} {...returnListItemColSpan()}>
           <ListItem
             index={i}
+            directTypes={directTypes}
+            leaderTypes={leaderTypes}
             initModalProps={initModalProps}
             code={directCat.code}
             leaderCat={leaderCat}
@@ -112,8 +114,7 @@ export default function () {
 
   // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
   useEffect(() => {
-    if (organizations?.[0] && directTypes?.[0] && directs?.[0] && leaderTypes?.[0]) {
-      console.log(directTypes);
+    if (organizations?.[0] && directs?.[0] && leaderTypes?.[0] && directTypes?.[0]) {
       setInitModalProps({
         modalType: "DIRECT_ADD_EDIT_MODAL",
         modalProps: {
@@ -129,13 +130,6 @@ export default function () {
       });
     }
   }, [organizations, directTypes, leaderTypes, directs]);
-
-  useEffect(() => {
-    if ((categories.length > 0 && directTypes.length === 0) || leaderTypes.length === 0) {
-      setDirectTypes(categories.filter((cat) => cat.parent_id === 3));
-      setLeaderTypes(categories.filter((cat) => cat.parent_id === 6));
-    }
-  }, [categories]);
 
   // Khi direct hay categories hay initialProps thay đổi thi set lại DirectList
   useEffect(() => {

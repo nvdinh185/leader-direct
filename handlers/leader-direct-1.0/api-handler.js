@@ -447,7 +447,7 @@ class ApiHandler {
                   {
                     ...oldDirectOrg,
                     status: 1,
-                    updated_time: new Date().getTime(),
+                    updated_time: new Date(),
                     updated_user: defaultDataInput.updated_user,
                   },
                   { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
@@ -477,7 +477,7 @@ class ApiHandler {
                 {
                   ...oldDirectOrg,
                   status: 0,
-                  updated_time: new Date().getTime(),
+                  updated_time: new Date(),
                   updated_user: defaultDataInput.updated_user,
                 },
                 { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
@@ -570,8 +570,8 @@ class ApiHandler {
       status: 1,
       meeting_id: jsonData.meeting_id,
       direct_uuid: jsonData.uuid,
-      created_time: new Date().getTime(),
-      updated_time: new Date().getTime(),
+      created_time: new Date(),
+      updated_time: new Date(),
       updated_user: req.user.username,
       created_user: req.user.username,
     };

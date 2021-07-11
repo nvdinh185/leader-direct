@@ -58,7 +58,9 @@ export const createColumnsFromObj = (objArr, fnHandleChange) => {
       defaultCol = {
         ...defaultCol,
         render: (col) => {
-          return <Tag color={col === 1 ? "green" : "volcano"}>{col === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>;
+          return (
+            <Tag color={parseInt(col) === 1 ? "green" : "volcano"}>{parseInt(col) === 1 ? "Hoạt Động" : "Không Hoạt Động"}</Tag>
+          );
         },
       };
     }

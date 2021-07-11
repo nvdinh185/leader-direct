@@ -8,15 +8,17 @@ import { Space, Avatar, Row, Col, Divider, Tag, Dropdown, Menu } from "antd";
 import { CalendarFilled, SettingOutlined, MessageOutlined, TagOutlined, EditOutlined, EyeFilled } from "@ant-design/icons";
 import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.style";
 import Tooltip from "@components/uielements/tooltip";
+import useWindowSize from "@lib/hooks/useWindowSize";
 
-export default function ({ initModalProps, organizations, executors, assessors, ...props }) {
-  console.log(props.direct);
+export default function ({ initModalProps, organizations, executors, assessors, directTypes, leaderTypes, ...props }) {
+  console.log(directTypes);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
   const [avatarGroup, setAvatarGroup] = useState();
-  const [avatarAssGroup, setAvatarAssGroup] = useState();
+  const [initModalPropsState, setInitModalPropsState] = useState();
+  const size = useWindowSize();
 
   const listClass = `isoSingleCard card ${props.view !== "table" ? props.view : ""}`;
   const style = { zIndex: 100 - props.index };
@@ -38,12 +40,35 @@ export default function ({ initModalProps, organizations, executors, assessors, 
     </Menu>
   );
 
+  // Nếu ko có initModalProps tức đang gọi ở view meeting thì tạo modal props như sau:
+  useEffect(() => {
+    if (!initModalProps && leaderTypes?.[0] && directTypes?.[0] && organizations?.[0]) {
+      console.log("Called Set INIt MODAL props");
+      setInitModalPropsState({
+        modalType: "DIRECT_ADD_EDIT_MODAL",
+        modalProps: {
+          organizations: organizations,
+          leaderTypes: leaderTypes,
+          directTypes: directTypes,
+          width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
+          centered: true,
+          initialValues: {},
+          cancelText: "Bỏ Qua",
+          destroyOnClose: true,
+        },
+      });
+      return;
+    }
+    setInitModalPropsState(initModalProps);
+  }, [initModalProps, directTypes, leaderTypes]);
+
   function handleOpenModal() {
+    console.log("Openn Modal");
     dispatch(
       modalActions.openModal({
-        ...initModalProps,
+        ...initModalPropsState,
         modalProps: {
-          ...initModalProps.modalProps,
+          ...initModalPropsState.modalProps,
           title: "Thay Đổi Thông Tin Chỉ Đạo",
           okText: "Thay Đổi",
           modalMode: "EDIT",
@@ -73,20 +98,15 @@ export default function ({ initModalProps, organizations, executors, assessors, 
     });
   };
 
+  // Render avatar group với effect này khi exe thay đổi
   useEffect(() => {
     if ((organizations?.[0] && JSON.parse(executors)) || JSON.parse(assessors)) {
       let orgExeIdArr = JSON.parse(executors);
       let orgMap = organizations.filter((org) => orgExeIdArr.includes(org.id));
       let avatarGroup = renderOrgAvataGroup(orgMap);
       setAvatarGroup(avatarGroup);
-      if (JSON.parse(assessors)) {
-        let orgAssIdArr = JSON.parse(assessors);
-        let orgAssMap = organizations.filter((org) => orgAssIdArr.includes(org.id));
-        let avatarAssGroup = renderOrgAvataGroup(orgAssMap);
-        setAvatarAssGroup(avatarAssGroup);
-      }
     }
-  }, [organizations, executors, assessors]);
+  }, [organizations, executors]);
 
   return (
     <>
@@ -159,17 +179,6 @@ export default function ({ initModalProps, organizations, executors, assessors, 
             </Row>
           </div>
         </div>
-
-        {/* <div style={{ position: "absolute", bottom: "10px", left: "68px" }}>
-          <Avatar.Group
-            style={{ alignSelf: "center" }}
-            maxCount={4}
-            size="small"
-            maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-          >
-            {avatarAssGroup}
-          </Avatar.Group>
-        </div> */}
       </SingleCardWrapper>
     </>
   );
