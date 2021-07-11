@@ -166,8 +166,7 @@ const funcPaths = {
     "/update-direct": [
       expHandlers.setRequestParameter("/update-direct", "functionCode"),
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.formProcess,
-      apiHandler.updateAttachments,
+      postHandler.jsonProcess,
       apiHandler.updateDirect,
     ],
 

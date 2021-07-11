@@ -410,7 +410,7 @@ class ApiHandler {
    * @param {*} orgIdArr Mảng chứa các id của đơn vị (assessor hay executor)
    * @param {*} mode Mode để chạy hàm này (assessors hay executors) -> Số nhiều
    */
-  async createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, orgIdArr, mode = "create_executors") {
+  async createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, orgIdArr, mode = "create_executors", oldDirect) {
     let createOrUpdate = mode.split("_")[0];
     let directOrgMode = mode.split("_")[1];
     if (orgIdArr && defaultDataInput && jsonData) {
@@ -426,32 +426,71 @@ class ApiHandler {
           });
           break;
         case "update":
-          let directUuid = await leaderDirectModels.directs.getFirstRecord({ id: jsonData.id }, { uuid: 1 });
-          await leaderDirectModels.direct_orgs.deleteAll({
-            direct_uuid: directUuid.uuid,
-            organization_role: directOrgMode === "executors" ? 22 : 21,
-          });
-          orgIdArr.forEach(async (org) => {
-            await leaderDirectModels.direct_orgs.insertOneRecord({
-              ...defaultDataInput,
-              direct_uuid: directUuid.uuid,
-              organization_id: parseInt(org),
-              organization_role: directOrgMode === "executors" ? 22 : 21,
+          // Logic để lấy ra mảng giá trị giống và khác so với phiên bản cũ
+          let oldDOrgArr = JSON.parse(oldDirect[directOrgMode]);
+          let newDOrgsArr = JSON.parse(jsonData[directOrgMode]);
+          let newDOrgToInsert = newDOrgsArr.filter((newOrg) => !oldDOrgArr.includes(newOrg));
+          let oldDOrgToUpdate = oldDOrgArr.filter((oldOrg) => !newDOrgsArr.includes(oldOrg));
+
+          // Nếu có dữ liệu cần thêm vào thì chạy code này
+          if (newDOrgToInsert && newDOrgToInsert.length > 0) {
+            newDOrgToInsert.forEach(async (org) => {
+              // Kiểm tra đã có dữ liệu này trạng thái 0 trong csdl chưa (có rồi thì đổi status lại là 1)
+              let oldDirectOrg = await leaderDirectModels.direct_orgs.getFirstRecord({
+                direct_uuid: jsonData.uuid,
+                organization_id: parseInt(org),
+                status: 0,
+              });
+
+              if (oldDirectOrg && Object.keys(oldDirectOrg).length > 0) {
+                await leaderDirectModels.direct_orgs.updateOneRecord(
+                  {
+                    ...oldDirectOrg,
+                    status: 1,
+                    updated_time: new Date().getTime(),
+                    updated_user: defaultDataInput.updated_user,
+                  },
+                  { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
+                );
+                return;
+              }
+              // Chưa có thì insert thêm bản ghi mới
+              await leaderDirectModels.direct_orgs.insertOneRecord({
+                ...defaultDataInput,
+                direct_uuid: jsonData.uuid,
+                organization_id: parseInt(org),
+                organization_role: directOrgMode === "executors" ? 22 : 21,
+              });
             });
-          });
+          }
+
+          // Nếu có dữ liệu cần xoá thì chạy code này (không xoá hẳn, chỉ chuyển status)
+          if (oldDOrgToUpdate && oldDOrgToUpdate.length > 0) {
+            oldDOrgToUpdate.forEach(async (org) => {
+              let oldDirectOrg = await leaderDirectModels.direct_orgs.getFirstRecord({
+                direct_uuid: jsonData.uuid,
+                organization_id: parseInt(org),
+                status: 1,
+              });
+
+              await leaderDirectModels.direct_orgs.updateOneRecord(
+                {
+                  ...oldDirectOrg,
+                  status: 0,
+                  updated_time: new Date().getTime(),
+                  updated_user: defaultDataInput.updated_user,
+                },
+                { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
+              );
+            });
+          }
+
           break;
         default:
           break;
       }
     }
   }
-
-  /**
-   *
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
-   */
 
   /**
    * (106) POST /leader-direct/api/create-direct
@@ -465,9 +504,12 @@ class ApiHandler {
       ...req.json_data,
       uuid: generateUUID(),
       created_time: new Date().getTime(),
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
       created_user: req.user.username,
       status: 1,
     };
+
     leaderDirectModels.directs
       .insertOneRecord(jsonData)
       .then(async (data) => {
@@ -522,16 +564,27 @@ class ApiHandler {
    *
    * SAMPLE INPUTS:
    */
-  updateDirect(req, res, next) {
+  async updateDirect(req, res, next) {
     let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
+    let defaultDataInput = {
+      status: 1,
+      meeting_id: jsonData.meeting_id,
+      direct_uuid: jsonData.uuid,
+      created_time: new Date().getTime(),
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
+      created_user: req.user.username,
+    };
+    let oldDirect = await leaderDirectModels.directs.getFirstRecord({ uuid: jsonData.uuid });
+
     leaderDirectModels.directs
       .updateOneRecord(jsonData, { uuid: jsonData.uuid })
       .then(async (data) => {
         if (jsonData.executors) {
-          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_executors");
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_executors", oldDirect);
         }
         if (jsonData.assessors) {
-          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_assessors");
+          this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.assessors, "update_assessors", oldDirect);
         }
         req.finalJson = data;
         next();
