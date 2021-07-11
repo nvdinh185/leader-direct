@@ -19,7 +19,7 @@ export default function DetailView() {
   const meeting = useLocation().state;
 
   const token = useSelector((state) => state.Auth.idToken);
-  const currentMeeting = useSelector((state) => state.directMeeting.currentMeeting);
+  const currentMeeting = useSelector((state) => state.meetings.currentMeeting);
   const directIds = useSelector((state) => state.directs.directIds);
 
   const dispatch = useDispatch();

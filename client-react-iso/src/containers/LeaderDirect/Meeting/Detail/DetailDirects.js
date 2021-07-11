@@ -32,6 +32,7 @@ export default function DetailDirects({ meeting, directs, ...props }) {
           return (
             <Col span={24} key={direct.id}>
               <ListItem
+                categoryName={directCat.name}
                 code={directCat?.code}
                 bgColor={directCat?.bg_color}
                 index={i}

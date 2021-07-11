@@ -467,12 +467,14 @@ class ApiHandler {
         // Sau khi insert vào directs thành công thì update direct_orgs theo assessors và executors
         let defaultDataLoops = {
           status: 1,
+          meeting_id: jsonData.meeting_id,
           direct_uuid: jsonData.uuid,
           created_time: new Date().getTime(),
           created_user: req.user.username,
         };
         let defaultDataInput = {
           status: 1,
+          meeting_id: jsonData.meeting_id,
           direct_uuid: jsonData.uuid,
           created_time: new Date().getTime(),
           created_user: req.user.username,

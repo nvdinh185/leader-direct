@@ -20,7 +20,7 @@ export default function MeetingAddForm({
 }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
-  const status = useSelector((state) => state.directMeeting.loading);
+  const status = useSelector((state) => state.meetings.loading);
 
   const dispatch = useDispatch();
 

@@ -38,7 +38,7 @@ export default function (props) {
         <span className="isoCardDate">
           <Space>
             <CalendarFilled />
-            {moment(props.created_time).format("DD/MM/YYYY HH:mm")}
+            {moment(props.created_time).format("DD/MM/YYYY")}
           </Space>
         </span>
       </div>

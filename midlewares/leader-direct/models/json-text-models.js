@@ -28,6 +28,11 @@ module.exports =  {
       isUnique: 1,
       autoIncrement: 1
     },
+    meeting_id: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
+    },
     uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
     description: { type: 'STRING', length: 2000 },
     category: {
@@ -60,7 +65,8 @@ module.exports =  {
       isUnique: 1,
       autoIncrement: 1
     },
-    direct_id: { type: 'NUMBER' },
+    meeting_id: { type: 'INTEGER' },
+    direct_id: { type: 'INTEGER' },
     direct_uuid: {
       type: 'STRING',
       foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
@@ -85,6 +91,10 @@ module.exports =  {
       autoIncrement: 1
     },
     uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
+    meeting_id: {
+      type: 'INTEGER',
+      foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
+    },
     direct_id: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (direct_id) REFERENCES directs(id)'

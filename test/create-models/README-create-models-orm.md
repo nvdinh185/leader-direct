@@ -3,6 +3,7 @@
 ## Mô hình giao tiếp csdl là phương tiện để dev tiết kiệm thời gian thiết kế các hàm query trực tiếp từ csdl. Với mô hình tạo ra này, dễ dàng nhúng vào các xử lý để select, update, insert/import, delete csdl thông qua đối tượng json một cách nhanh chóng.
 
 ## Lưu ý: Mô hình được tạo tĩnh theo quy trình này là đầu mối ORM tương đương với csdl tài nguyên. Mỗi tài nguyên, khai báo một mô hình giao tiếp tương đương.
+
 ## Có thể sử dụng mô hình động thì không cần phải tạo mô hình này
 
 2020-11-10 - by cuong.dq sửa kiểu mô hình mở rộng của DynamicModel cho gọn code và bổ sung các hàm import
@@ -50,7 +51,7 @@ node ./test/create-models/1.create-main-entries.js
 
 # Bước 2: Tạo cấu trúc của mô hình từ file excel để khai báo cấu trúc giao tiếp csdl
 # LƯU Ý: copy đường dẫn in ra ở bước 1 vào đường dẫn tạo file. Nếu chạy ở môi trường win, thì việc tạo file js nó chứa format font không tương thích. Do đó phải đổi tên và tạo file mới json-text-models.js bằng thủ công trước khi thực hiện. Và sửa file tạo phía sau thêm ký tự khác.
-node ./test/create-models/2.create-model-from-excel.js > ./midlewares/logs/models/json-text-models.js
+node ./test/create-models/2.create-model-from-excel.js > ./midlewares/leader-direct/models/json-text-models.js
 
 # Đặt tên file mới: json-text-models.js, rồi copy chỉ phần module.exports = {} sang để lưu file mô hình này, xóa file json-text-models-sample.js này đi
 

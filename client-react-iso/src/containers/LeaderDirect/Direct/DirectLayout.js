@@ -15,7 +15,7 @@ import { SortableCardWrapper } from "@components/GridListLayout/GridList.style";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
-import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
+import Sidebar from "@containers/LeaderDirect/Direct/SideBar/SideBar";
 
 export default function () {
   const directs = useSelector((state) => state.directs.directs);
@@ -154,9 +154,9 @@ export default function () {
 
   return (
     <>
-      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
+      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderDirectMng" />}</PageHeader>
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
+        <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
             <>
               <ButtonAdd size="large" shape="round" onClick={handleOpenModal} style={{ margin: "15px" }}>
@@ -166,11 +166,11 @@ export default function () {
             </>
           ) : (
             <>
-              <Sidebar categories={categories}></Sidebar>
+              <Sidebar categories={categories} organizations={organizations}></Sidebar>
             </>
           )}
         </Col>
-        <Col sm={{ span: 24 }} md={{ span: 16 }} lg={{ span: 18 }}>
+        <Col sm={{ span: 24 }} md={{ span: 18 }} lg={{ span: 19 }}>
           <SortableCardWrapper id="shuffle" className={`isomorphicSortableCardsHolder ${state.view}`}>
             <header className="isoControlBar">
               <div className="isoViewBtnGroup">

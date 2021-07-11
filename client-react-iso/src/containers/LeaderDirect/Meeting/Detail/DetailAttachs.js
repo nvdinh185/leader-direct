@@ -15,7 +15,7 @@ export default function DetailAttachs({ meeting, ...props }) {
   let attachArr = returnAttchArr(meeting.attachments);
 
   const token = useSelector((state) => state.Auth.idToken);
-  const attachments = useSelector((state) => state.directMeeting.attachments);
+  const attachments = useSelector((state) => state.meetings.attachments);
   const dispatch = useDispatch();
 
   const [attchmentInfos, setAttchmentInfos] = useState([]);

@@ -18,7 +18,7 @@ import ListItem from "@containers/LeaderDirect/Meeting/MeetingGLItem";
 import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
 
 export default function () {
-  const meetings = useSelector((state) => state.directMeeting.meetings);
+  const meetings = useSelector((state) => state.meetings.meetings);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
   const token = useSelector((state) => state.Auth.idToken);

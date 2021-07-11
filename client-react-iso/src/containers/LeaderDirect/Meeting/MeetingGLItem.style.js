@@ -26,6 +26,7 @@ const WDSingleCardWrapper = styled.div`
     bottom: 0;
     padding: 3px;
     border-bottom-right-radius: 8px;
+    border-top-left-radius: 5px;
     background: ${(props) => (props.bgColor ? `${props.bgColor}` : "linear-gradient(135deg, #ed5565 0%, #d52739 100%)")};
     opacity: 60%;
   }

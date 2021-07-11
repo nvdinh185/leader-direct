@@ -8,7 +8,7 @@ let defaultMeetings = {
   err: "",
 };
 
-export default function directMeetingReducer(state = defaultMeetings, action) {
+export default function meetingReducer(state = defaultMeetings, action) {
   switch (action.type) {
     // ---------------------------------------------------------------------------------
     // I. NON API DISPATCH SECTION

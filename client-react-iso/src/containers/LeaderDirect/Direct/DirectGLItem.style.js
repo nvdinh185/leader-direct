@@ -75,17 +75,20 @@ const WDSingleCardWrapper = styled.div`
   }
 
   .isoDeleteBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
     width: 24px;
     height: 24px;
-    background-color: transparent;
-    flex-shrink: 0;
-    padding: 5px 0;
     border: 0;
+    // margin-top: ${(props) => (props.view === "grid" ? "5px" : "0")};
+    flex-shrink: 0;
     font-size: 14px;
-    color: ${(props) => (props.view === "grid" ? "white" : "grey")};
+    color: ${(props) => (props.view === "grid" ? "grey" : "grey")};
+    opacity: 0.5;
     cursor: pointer;
+    background-color: transparent;
     ${transition()};
-
     &:hover {
       color: ${palette("primary", 0)};
     }
@@ -133,11 +136,11 @@ const WDSingleCardWrapper = styled.div`
 
     .isoCardImage {
       width: 100%;
-      height: 35px;
+      height: 5px;
       display: flex;
 
       @media only screen and (min-width: 960px) {
-        height: 30px;
+        height: 5px;
       }
     }
 
