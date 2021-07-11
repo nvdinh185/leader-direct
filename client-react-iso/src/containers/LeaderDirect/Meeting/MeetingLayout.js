@@ -158,7 +158,7 @@ export default function () {
     <>
       <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
+        <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
             <>
               <ButtonAdd size="large" shape="round" onClick={handleOpenModal} style={{ margin: "15px" }}>
@@ -172,7 +172,7 @@ export default function () {
             </>
           )}
         </Col>
-        <Col sm={{ span: 24 }} md={{ span: 16 }} lg={{ span: 18 }}>
+        <Col sm={{ span: 24 }} md={{ span: 18 }} lg={{ span: 19 }}>
           <SortableCardWrapper id="shuffle" className={`isomorphicSortableCardsHolder ${state.view}`}>
             <header className="isoControlBar">
               <div className="isoViewBtnGroup">

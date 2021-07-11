@@ -105,8 +105,8 @@ const WDSingleCardWrapper = styled.div`
     align-items: center;
 
     .isoCardImage {
-      width: 35px;
-      height: 35px;
+      width: 45px;
+      height: 45px;
       display: -webkit-inline-flex;
       display: -ms-inline-flex;
       display: inline-flex;

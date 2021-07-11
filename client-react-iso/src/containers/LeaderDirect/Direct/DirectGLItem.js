@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { Space, Avatar, Row, Col, Divider } from "antd";
-import { CalendarFilled, SettingOutlined, TagOutlined } from "@ant-design/icons";
+import { Space, Avatar, Row, Col, Divider, Tag } from "antd";
+import { CalendarFilled, SettingOutlined, MessageOutlined, TagOutlined } from "@ant-design/icons";
 import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.style";
 import Tooltip from "@components/uielements/tooltip";
 
@@ -64,7 +64,7 @@ export default function ({ organizations, executors, assessors, ...props }) {
                   </Tooltip>
                 ) : null}
                 <Tooltip title={props.description}>
-                  <p className="isoCardDescription">{props.description}</p>
+                  <div className="isoCardDescription">{props.description}</div>
                 </Tooltip>
               </Col>
               <Col span={4}>
@@ -91,6 +91,14 @@ export default function ({ organizations, executors, assessors, ...props }) {
                       {props.categoryName}
                     </Space>
                   </span>
+                </Row>
+                <Row>
+                  <Tag className={"isoLeaderInfoTag"}>
+                    <Space>
+                      <MessageOutlined />
+                      {props.leaderCat.name}
+                    </Space>
+                  </Tag>
                 </Row>
               </Col>
               <Col span={12}>

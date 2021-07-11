@@ -29,9 +29,12 @@ export default function DetailDirects({ meeting, directs, ...props }) {
           let directCat = categories.find((cat) => {
             return direct.category === cat.id;
           });
+          let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
+
           return (
             <Col span={24} key={direct.id}>
               <ListItem
+                leaderCat={leaderCat}
                 categoryName={directCat.name}
                 code={directCat?.code}
                 bgColor={directCat?.bg_color}

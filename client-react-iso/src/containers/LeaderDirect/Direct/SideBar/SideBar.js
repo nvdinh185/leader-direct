@@ -5,9 +5,9 @@ import { Row, Col, Card, Input, Checkbox, Radio, Space } from "antd";
 import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined } from "@ant-design/icons";
 
-export default function SideBar({ categories, organizations }) {
+export default function ({ categories, organizations }) {
   return (
-    <div style={{ position: "sticky", top: "75px" }}>
+    <div style={{ position: "sticky", top: "75px", marginBottom: "8px" }}>
       <Card size="small" style={{ background: "none" }}>
         <Input size="large" placeholder="Tìm Kiếm" prefix={<SearchOutlined />} />
       </Card>
@@ -15,6 +15,17 @@ export default function SideBar({ categories, organizations }) {
         <Row>
           {categories
             .filter((cat) => cat.parent_id === 3)
+            .map((cat, idx) => (
+              <Col key={idx} span={24}>
+                <Checkbox>{cat.name}</Checkbox>
+              </Col>
+            ))}
+        </Row>
+      </Card>
+      <Card size="small" title="Chỉ Đạo Của" style={{ margin: "15px" }}>
+        <Row>
+          {categories
+            .filter((cat) => cat.parent_id === 6)
             .map((cat, idx) => (
               <Col key={idx} span={24}>
                 <Checkbox>{cat.name}</Checkbox>

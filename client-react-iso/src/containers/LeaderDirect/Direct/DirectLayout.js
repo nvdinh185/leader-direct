@@ -63,15 +63,18 @@ export default function () {
   }
 
   function renderDirects() {
+    // TODO: Logic to traverse through the meeting and render direct list accordingly
     return directs.map((direct, i) => {
       // let width = state.view === "grid" ? 8 : 24;
       let directCat = categories.find((cat) => {
         return direct.category === cat.id;
       });
+      let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
       return (
         <Col key={direct.id} {...returnListItemColSpan()}>
           <ListItem
             code={directCat.code}
+            leaderCat={leaderCat}
             categoryName={directCat.name}
             bgColor={directCat?.bg_color}
             view={state.view}
@@ -158,12 +161,7 @@ export default function () {
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
-            <>
-              <ButtonAdd size="large" shape="round" onClick={handleOpenModal} style={{ margin: "15px" }}>
-                + Thêm Mới
-              </ButtonAdd>
-              {/* TODO: Add horizontal filter bar here */}
-            </>
+            <>{/* TODO: Add horizontal filter bar here */}</>
           ) : (
             <>
               <Sidebar categories={categories} organizations={organizations}></Sidebar>
@@ -173,13 +171,6 @@ export default function () {
         <Col sm={{ span: 24 }} md={{ span: 18 }} lg={{ span: 19 }}>
           <SortableCardWrapper id="shuffle" className={`isomorphicSortableCardsHolder ${state.view}`}>
             <header className="isoControlBar">
-              <div className="isoViewBtnGroup">
-                {state.view !== "table" ? (
-                  <ButtonAdd size="middle" shape="round" onClick={handleOpenModal}>
-                    + Thêm Mới
-                  </ButtonAdd>
-                ) : null}
-              </div>
               <div className="isoControlBtnGroup">
                 {App.view === "MobileView" ? null : (
                   <Toggle

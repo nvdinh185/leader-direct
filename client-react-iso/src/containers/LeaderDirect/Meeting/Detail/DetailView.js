@@ -26,12 +26,11 @@ export default function DetailView() {
 
   const { rowStyle, colStyle, gutter } = basicStyle;
 
-  // Nếu load view này thành công thì set current meeting
-  useEffect(() => {
-    if (Object.keys(currentMeeting).length === 0) {
-      dispatch(getMeetingById(token, { id: meeting.id }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Object.keys(currentMeeting).length === 0) {
+  //     dispatch(getMeetingById(token, { id: meeting.id }));
+  //   }
+  // }, []);
 
   // Khi current meeting trong store thay đổi thì gọi hàm lấy directs
   useEffect(() => {

@@ -62,9 +62,18 @@ const WDSingleCardWrapper = styled.div`
     }
 
     .isoCardDescription {
-      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: initial;
+
+      @supports (-webkit-line-clamp: 2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: initial;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
     }
 
     .isoCardDate {
@@ -94,6 +103,17 @@ const WDSingleCardWrapper = styled.div`
     }
   }
 
+  .isoLeaderInfoTag {
+    /* background: ${(props) => props.leaderCat.bg_color}; */
+    /* color: ${(props) => props.leaderCat.text_color}; */
+    color: grey;
+    border: 1px lightgray line;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+
   &.list {
     width: 100%;
     display: flex;
@@ -102,8 +122,9 @@ const WDSingleCardWrapper = styled.div`
     align-items: stretch;
 
     .isoCardImage {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
+      margin: auto;
       display: -webkit-inline-flex;
       display: -ms-inline-flex;
       display: inline-flex;
