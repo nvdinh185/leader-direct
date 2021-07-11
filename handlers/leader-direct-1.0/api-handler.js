@@ -447,6 +447,13 @@ class ApiHandler {
   }
 
   /**
+   *
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+
+  /**
    * (106) POST /leader-direct/api/create-direct
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *  Logic hàm này là: (1) Tạo Direct -> (2) Lấy uuid của direct để tạo direct_orgs dựa vào assessors và executors
@@ -517,10 +524,8 @@ class ApiHandler {
    */
   updateDirect(req, res, next) {
     let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
-    jsonData.id = parseInt(jsonData.id);
-    let defaultDataInput = { direct_uuid: directUuid.uuid };
     leaderDirectModels.directs
-      .updateOneRecord(jsonData, { id: jsonData.id })
+      .updateOneRecord(jsonData, { uuid: jsonData.uuid })
       .then(async (data) => {
         if (jsonData.executors) {
           this.createOrUpdateDirectOrgAssOrExe(jsonData, defaultDataInput, jsonData.executors, "update_executors");

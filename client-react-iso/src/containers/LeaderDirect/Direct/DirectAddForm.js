@@ -18,6 +18,7 @@ export default function DirectAddForm({
   handleCancel,
   ...props
 }) {
+  console.log(meeting);
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.directs.loading);
@@ -38,7 +39,15 @@ export default function DirectAddForm({
       if (initialValues && modalMode === "EDIT") {
         let newData = { ...form.getFieldValue(), id: initialValues.id };
         console.log(newData);
-        // dispatch(updateDirect(token, newData));
+        dispatch(
+          updateDirect(token, {
+            ...newData,
+            uuid: initialValues.uuid,
+            meeting_id: initialValues.meeting_id,
+            assessors: JSON.stringify(newData.assessors),
+            executors: JSON.stringify(newData.executors),
+          })
+        );
         dispatch(modalActions.closeModal());
         return;
       }

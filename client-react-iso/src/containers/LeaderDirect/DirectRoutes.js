@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import DirectLayout from "@containers/LeaderDirect/Direct/DirectLayout";
-import DetailView from "@containers/LeaderDirect/Meeting/Detail/DetailView";
+import DetailView from "@containers/LeaderDirect/Direct/Detail/DetailView";
 import { Suspense } from "react";
 
 export default function MeetingRoutes() {

@@ -4,8 +4,10 @@ export const removeParenthesis = (str) => {
 };
 
 export const returnAttchArr = (str) => {
-  let newArr = removeParenthesis(str).split(",");
-  return newArr;
+  if (str) {
+    let newArr = removeParenthesis(str).split(",");
+    return newArr;
+  }
 };
 
 export const returnHexColor = (str) => {

@@ -3,16 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryList } from "@redux/filterData/actions";
 import { getAllDirect } from "@redux/directs/actions";
-import modalActions from "@redux/modal/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import { Col, Row } from "antd";
-import { BarsOutlined, AppstoreOutlined, TableOutlined } from "@ant-design/icons";
+import { BarsOutlined, AppstoreOutlined, TableOutlined, EditOutlined } from "@ant-design/icons";
 import Toggle from "@components/GridListLayout/Toggle";
 import DirectView from "@containers/LeaderDirect/Direct/DirectTableView";
 import IntlMessages from "@components/utility/intlMessages";
 import { SortableCardWrapper } from "@components/GridListLayout/GridList.style";
-import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
 import Sidebar from "@containers/LeaderDirect/Direct/SideBar/SideBar";
@@ -28,6 +26,7 @@ export default function () {
 
   const [directList, setDirectList] = useState([]);
   const [directTypes, setDirectTypes] = useState([]);
+  const [leaderTypes, setLeaderTypes] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
 
   const size = useWindowSize();
@@ -73,27 +72,20 @@ export default function () {
       return (
         <Col key={direct.id} {...returnListItemColSpan()}>
           <ListItem
+            index={i}
+            initModalProps={initModalProps}
             code={directCat.code}
             leaderCat={leaderCat}
             categoryName={directCat.name}
             bgColor={directCat?.bg_color}
             view={state.view}
-            index={i}
             organizations={organizations}
+            direct={direct}
             {...direct}
           />
         </Col>
       );
     });
-  }
-
-  function handleOpenModal() {
-    dispatch(
-      modalActions.openModal({
-        ...initModalProps,
-        modalProps: { ...initModalProps.modalProps, title: "Tạo Mới Cuộc Họp", okText: "Thêm Mới", modalMode: "ADD" },
-      })
-    );
   }
 
   function returnListItemColSpan() {
@@ -120,13 +112,14 @@ export default function () {
 
   // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
   useEffect(() => {
-    if (organizations?.[0] && directTypes?.[0] && directs?.[0]) {
+    if (organizations?.[0] && directTypes?.[0] && directs?.[0] && leaderTypes?.[0]) {
+      console.log(directTypes);
       setInitModalProps({
-        modalType: "MEETING_ADD_EDIT_MODAL",
+        modalType: "DIRECT_ADD_EDIT_MODAL",
         modalProps: {
           organizations: organizations,
-          directs: directs,
           directTypes: directTypes,
+          leaderTypes: leaderTypes,
           width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
           centered: true,
           initialValues: {},
@@ -135,19 +128,21 @@ export default function () {
         },
       });
     }
-  }, [organizations, directTypes, directs]);
+  }, [organizations, directTypes, leaderTypes, directs]);
 
   useEffect(() => {
-    if (categories.length > 0 && directTypes.length === 0) {
-      setDirectTypes(categories.filter((cat) => cat.parent_id === 4));
+    if ((categories.length > 0 && directTypes.length === 0) || leaderTypes.length === 0) {
+      setDirectTypes(categories.filter((cat) => cat.parent_id === 3));
+      setLeaderTypes(categories.filter((cat) => cat.parent_id === 6));
     }
   }, [categories]);
 
+  // Khi direct hay categories hay initialProps thay đổi thi set lại DirectList
   useEffect(() => {
-    if (directs?.[0] && categories?.[0]) {
+    if (directs?.[0] && categories?.[0] && initModalProps) {
       setDirectList(renderDirects());
     }
-  }, [directs, categories]);
+  }, [directs, categories, initModalProps]);
 
   useEffect(() => {
     if (directs?.[0]) {

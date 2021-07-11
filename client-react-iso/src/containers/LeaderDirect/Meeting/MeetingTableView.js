@@ -7,11 +7,9 @@ import drawerActions from "@redux/drawer/actions";
 import modalActions from "@redux/modal/actions";
 
 import { Row, Col, Table, Card } from "antd";
-import Box from "@components/utility/box";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
-import { ButtonAdd } from "@components/Admin/ButtonAdd";
 
 import "@assets/styles/containers/EditableCell.css";
 

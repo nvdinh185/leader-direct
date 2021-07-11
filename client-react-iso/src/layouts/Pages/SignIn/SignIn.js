@@ -8,6 +8,7 @@ import IntlMessages from "@components/utility/intlMessages";
 import { login } from "@redux/auth/actions";
 import appAction from "@redux/app/actions";
 import SignInStyleWrapper from "./SignIn.styles";
+import Logo from "./LogoSigin";
 
 const { clearMenu } = appAction;
 
@@ -61,7 +62,7 @@ export default function SignIn() {
         <div className="isoLoginContent">
           <div className="isoLogoWrapper">
             <Link to="/app">
-              <IntlMessages id="page.signInTitle" />
+              <Logo />
             </Link>
           </div>
           <div className="isoSignInForm">
