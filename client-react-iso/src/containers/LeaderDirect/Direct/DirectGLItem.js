@@ -9,6 +9,7 @@ import { CalendarFilled, SettingOutlined, MessageOutlined, TagOutlined, EditOutl
 import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.style";
 import Tooltip from "@components/uielements/tooltip";
 import useWindowSize from "@lib/hooks/useWindowSize";
+import { setCurrentViewDirectDetail } from "@redux/directs/actions";
 
 export default function ({ initModalProps, organizations, executors, assessors, directTypes, leaderTypes, ...props }) {
   console.log(directTypes);
@@ -22,23 +23,6 @@ export default function ({ initModalProps, organizations, executors, assessors, 
 
   const listClass = `isoSingleCard card ${props.view !== "table" ? props.view : ""}`;
   const style = { zIndex: 100 - props.index };
-
-  const directMenu = (
-    <Menu>
-      <Menu.Item key={1} onClick={handleOpenModal}>
-        <Space size={"small"}>
-          <EditOutlined />
-          <div>Sửa Thông Tin</div>
-        </Space>
-      </Menu.Item>
-      <Menu.Item key={2}>
-        <Space size={"small"}>
-          <EyeFilled />
-          <div>Xem Chi Tiết</div>
-        </Space>
-      </Menu.Item>
-    </Menu>
-  );
 
   // Nếu ko có initModalProps tức đang gọi ở view meeting thì tạo modal props như sau:
   useEffect(() => {
@@ -85,7 +69,8 @@ export default function ({ initModalProps, organizations, executors, assessors, 
   }
 
   const handleChangeRoute = () => {
-    history.push({ pathname: `${location.pathname}/${props.id}`, state: { ...props } });
+    history.push({ pathname: `${location.pathname}/${props.id}`, state: { ...props.direct } });
+    dispatch(setCurrentViewDirectDetail(props.direct));
   };
 
   const renderOrgAvataGroup = (orgs) => {
@@ -107,6 +92,23 @@ export default function ({ initModalProps, organizations, executors, assessors, 
       setAvatarGroup(avatarGroup);
     }
   }, [organizations, executors]);
+
+  const directMenu = (
+    <Menu>
+      <Menu.Item key={1} onClick={handleOpenModal}>
+        <Space size={"small"}>
+          <EditOutlined />
+          <div>Sửa Thông Tin</div>
+        </Space>
+      </Menu.Item>
+      <Menu.Item key={2} onClick={handleChangeRoute}>
+        <Space size={"small"}>
+          <EyeFilled />
+          <div>Xem Chi Tiết</div>
+        </Space>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <>

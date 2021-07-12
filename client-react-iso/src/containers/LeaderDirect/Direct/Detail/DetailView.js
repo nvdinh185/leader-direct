@@ -10,10 +10,13 @@ import DetailInfo from "./DetailInfo";
 import basicStyle from "@assets/styles/constants";
 
 import { getDirectByIds } from "@redux/directs/actions";
+import DirectHistory from "@containers/LeaderDirect/Direct/DirectHistory/DirectHistory";
 
 export default function DetailView() {
   const history = useHistory();
   const direct = useLocation().state;
+
+  console.log(direct);
 
   const token = useSelector((state) => state.Auth.idToken);
   const currentDirect = useSelector((state) => state.directs.currentDirect);
@@ -24,33 +27,25 @@ export default function DetailView() {
 
   // Khi current direct trong store thay đổi thì gọi hàm lấy direct org
   useEffect(() => {
-    if (Object.keys(currentDirect).length === 0) {
-      dispatch(getDirectByIds(token, { uuidArr: JSON.stringify([direct.uuid]) }));
+    if (!currentDirect || Object.keys(currentDirect).length === 0) {
+      dispatch(getDirectByIds(token, { uuidArr: JSON.stringify([direct.uuid]) }, "CURRENT_DIRECT"));
       return;
     }
-    // if (currentMeeting.directs) {
-    //   dispatch(getDirectByIds(token, { uuidArr: currentMeeting.directs }));
-    // }
   }, [currentDirect]);
-
-  // Khi thoát khỏi view này thì clear current direct đi
-  useEffect(() => {
-    return () => {
-      // dispatch(clearCurrentMeetingDetail());
-    };
-  }, []);
 
   return (
     <LayoutWrapper>
       <PageHeader>
         <LeftCircleOutlined style={{ fontSize: "30px", paddingRight: "10px" }} onClick={() => history.goBack()} />
-        {direct?.name}
+        {"Chi Tiết Chỉ Đạo"}
       </PageHeader>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Card>
             <CardDetailsWrapper>
               <DetailInfo direct={direct}></DetailInfo>
+              <Divider />
+              <DirectHistory></DirectHistory>
               <Divider />
               <LeftCircleOutlined
                 style={{ fontSize: "35px", paddingRight: "10px", color: "grey" }}

@@ -10,6 +10,13 @@ export const clearCurrentMeetingDirectIds = () => {
     type: directTypes.CLEAR_CURRENT_MEETING_DIRECT_IDS,
   };
 };
+
+export const setCurrentViewDirectDetail = (direct) => {
+  return {
+    type: directTypes.SET_CURRENT_VIEW_DIRECT_DETAIL,
+    payload: direct,
+  };
+};
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
@@ -54,14 +61,17 @@ export const getAllDirectFail = (error) => {
 
 // ---------------------------------------------------------------------------------------------------
 // 1' - GET DIRECT BY IDS
-export const getDirectByIds = (token, data) => {
+export const getDirectByIds = (token, data, mode = "MEETING_IDS") => {
   return (dispatch) => {
     dispatch(getDirectByIdsStart());
     directApi
       .getDirectByIds(token, data)
       .then((data) => {
         if (data.status === 200) {
-          dispatch(getDirectByIdsSuccess(data.data));
+          if (mode === "MEETING_IDS") {
+            dispatch(getDirectByIdsSuccess(data.data));
+          }
+          dispatch(setCurrentViewDirectDetail(...data.data));
         } else {
           dispatch(getDirectByIdsFail(data));
         }

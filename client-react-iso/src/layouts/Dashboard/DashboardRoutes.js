@@ -44,11 +44,11 @@ const routes = [
   },
   {
     path: "leader-direct-history",
-    component: lazy(() => import("@containers/LeaderDirect/DirectHistory/DirectHistory")),
+    component: lazy(() => import("@containers/LeaderDirect/Direct/DirectHistory/DirectHistory")),
   },
   {
     path: "leader-direct-organization",
-    component: lazy(() => import("@containers/LeaderDirect/OrgDirect/OrgDirect")),
+    component: lazy(() => import("@containers/LeaderDirect/OrgDirectRoutes")),
   },
   {
     path: "scrum-board",
