@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import { Route, useRouteMatch, Switch } from "react-router-dom";
 import Loader from "@components/utility/loader";
+import DrawerRoot from "@components/DrawerRoot";
+import ModalRoot from "@components/ModalRoot";
 
 const routes = [
   {
@@ -25,7 +27,7 @@ const routes = [
     component: lazy(() => import("@containers/Admin/AdminUser/AdminUser")),
   },
   {
-    path: "admin-group-user",
+    path: "admin-group",
     component: lazy(() => import("@containers/Admin/AdminGroup/AdminGroup")),
   },
   {
@@ -38,7 +40,7 @@ const routes = [
   },
   {
     path: "leader-direct-mng",
-    component: lazy(() => import("@containers/LeaderDirect/Direct/Direct")),
+    component: lazy(() => import("@containers/LeaderDirect/DirectRoutes")),
   },
   {
     path: "leader-direct-history",
@@ -69,6 +71,8 @@ export default function AppRouter(props) {
           </Route>
         ))}
       </Switch>
+      <DrawerRoot></DrawerRoot>
+      <ModalRoot></ModalRoot>
     </Suspense>
   );
 }

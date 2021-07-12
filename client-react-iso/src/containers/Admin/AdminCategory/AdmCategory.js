@@ -68,6 +68,10 @@ export default function AdminCategory() {
     }
   }, [editMenu]);
 
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
+
   return (
     <LayoutWrapper>
       <PageHeader>{<IntlMessages id="admin.adminCategory" />}</PageHeader>
@@ -98,27 +102,29 @@ export default function AdminCategory() {
                     </Col>
                   </Row>
                   <br />
-                  <Table
-                    // loading={loading}
-                    columns={cols}
-                    rowClassName={() => "editable-row"}
-                    dataSource={categories && categories.length !== 0 ? categories : null}
-                    scroll={{ y: 400 }}
-                    pagination={{
-                      pageSize: 30,
-                      showSizeChanger: true,
-                      pageSizeOptions: ["10", "20", "30", "50", "100"],
-                    }}
-                    rowKey="_id"
-                    components={{
-                      body: {
-                        row: EditableRow,
-                        cell: EditableCell,
-                      },
-                    }}
-                    sticky
-                    scroll={{ x: size.width, y: size.height * 0.5 }}
-                  />
+                  {categories?.length > 0 ? (
+                    <Table
+                      // loading={loading}
+                      columns={cols}
+                      rowClassName={() => "editable-row"}
+                      dataSource={categories && categories.length !== 0 ? categories : []}
+                      scroll={{ y: 400 }}
+                      pagination={{
+                        pageSize: 30,
+                        showSizeChanger: true,
+                        pageSizeOptions: ["10", "20", "30", "50", "100"],
+                      }}
+                      rowKey="_id"
+                      components={{
+                        body: {
+                          row: EditableRow,
+                          cell: EditableCell,
+                        },
+                      }}
+                      sticky
+                      scroll={{ x: size.width, y: size.height * 0.5 }}
+                    />
+                  ) : null}
                 </Card>
               </Col>
             </Row>

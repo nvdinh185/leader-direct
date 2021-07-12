@@ -19,12 +19,19 @@ export default function filterDataReducer(state = defaultFilter, action) {
       };
     case filterTypes.GET_CATEGORY_LIST_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
+      let leaderTypes = action.payload.filter((cat) => cat.parent_id === 6);
+      let directTypes = action.payload.filter((cat) => cat.parent_id === 3);
+      let meetingTypes = action.payload.filter((cat) => cat.parent_id === 4);
       return {
         ...state,
         categories: action.payload,
+        leaderTypes: leaderTypes,
+        directTypes: directTypes,
+        meetingTypes: meetingTypes,
         loading: false,
+        err: "",
       };
 
     case filterTypes.GET_CATEGORY_LIST_FAIL:

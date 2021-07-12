@@ -5,13 +5,17 @@ import { callAPI, callAPIForm, baseURL } from "./config/index";
 // --------------------------------------------------------------------------------
 
 export const getDirectsAll = (token) => {
-  return callAPI("post", baseURL + "/get-directs", null, token);
+  return callAPI("post", baseURL + "/get-direct", null, token);
+};
+
+export const getDirectByIds = (token, data) => {
+  return callAPI("post", baseURL + "/get-direct-by-ids", data, token);
 };
 
 export const createDirect = (token, data) => {
-  return callAPIForm(baseURL + "/create-direct", data, token);
+  return callAPI("post", baseURL + "/create-direct", data, token);
 };
 
 export const updateDirect = (token, data) => {
-  return callAPIForm(baseURL + "/update-direct", data, token);
+  return callAPI("post", baseURL + "/update-direct", data, token);
 };

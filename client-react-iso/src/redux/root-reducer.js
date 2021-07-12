@@ -7,7 +7,7 @@ import scrumBoard from "@redux/scrumBoard/reducer";
 import drawer from "@redux/drawer/reducer";
 import modal from "@redux/modal/reducer";
 import adminUserReducer from "@redux/adminUsers/reducer";
-import directMeetingReducer from "@redux/meetings/reducer";
+import meetingReducer from "@redux/meetings/reducer";
 import directReducer from "@redux/directs/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
 
@@ -15,7 +15,7 @@ export default combineReducers({
   Auth,
   App,
   adminUser: adminUserReducer,
-  directMeeting: directMeetingReducer,
+  meetings: meetingReducer,
   directs: directReducer,
   filterData: filterDataReducer,
   ThemeSwitcher,
