@@ -24,12 +24,14 @@ export default function filterDataReducer(state = defaultFilter, action) {
       let leaderTypes = action.payload.filter((cat) => cat.parent_id === 6);
       let directTypes = action.payload.filter((cat) => cat.parent_id === 3);
       let meetingTypes = action.payload.filter((cat) => cat.parent_id === 4);
+      let backgrounds = action.payload.filter((cat) => cat.parent_id === 7);
       return {
         ...state,
         categories: action.payload,
         leaderTypes: leaderTypes,
         directTypes: directTypes,
         meetingTypes: meetingTypes,
+        backgrounds: backgrounds,
         loading: false,
         err: "",
       };

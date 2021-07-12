@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import * as COMMON from "@constants/common";
 import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import { Link } from "react-router-dom";
@@ -43,6 +45,9 @@ const ASSIGNEES = [
 ];
 
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => {
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
+  const [backgroundUrl, setBackgroundUrl] = useState();
+
   const menu = (
     <Menu>
       <Menu.Item>
@@ -75,17 +80,29 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
       </Menu.Item>
     </Menu>
   );
+
+  // Khi có backgrounds trong store thì set riêng giá trị background
+  useEffect(() => {
+    if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_DIRECT_ORG);
+      if (bg.status == 1) {
+        setBackgroundUrl(bg);
+        return;
+      }
+    }
+  }, [backgrounds]);
+
   return (
     <>
       <Layout
         style={{
           backgroundColor: `${variables.WHITE_COLOR}`,
-          background: `url(https://images.unsplash.com/photo-1546669689-5b43ad2bba60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2242&q=80)`,
+          backgroundImage: backgroundUrl?.description ? backgroundUrl?.description : "",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
       >
-        <PageHeader style={{ marginBottom: "10px" }} titleColor={"white"}>
+        <PageHeader style={{ marginBottom: "10px" }} titleColor={backgroundUrl?.text_color ? backgroundUrl.text_color : null}>
           {"Chỉ Đạo Của Đơn Vị"}
         </PageHeader>
         <HeaderSecondary>

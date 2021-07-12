@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import * as COMMON from "@constants/common";
+
 import { useDispatch, useSelector } from "react-redux";
 import { getMeetingList } from "@redux/meetings/actions";
 import { getCategoryList } from "@redux/filterData/actions";
@@ -22,6 +24,7 @@ export default function () {
   const meetings = useSelector((state) => state.meetings.meetings);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const token = useSelector((state) => state.Auth.idToken);
   const App = useSelector((state) => state.App);
 
@@ -30,6 +33,7 @@ export default function () {
   const [meetingList, setMeetingList] = useState([]);
   const [meetingTypes, setMeetingTypes] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
+  const [backgroundUrl, setBackgroundUrl] = useState();
 
   const size = useWindowSize();
 
@@ -155,15 +159,26 @@ export default function () {
     }
   }, [state.view]);
 
+  // Khi có backgrounds trong store thì set riêng giá trị background
+  useEffect(() => {
+    if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_MEETING);
+      if (bg.status == 1) {
+        setBackgroundUrl(bg);
+        return;
+      }
+    }
+  }, [backgrounds]);
+
   return (
     <Layout
       style={{
-        background: `url(https://images.unsplash.com/photo-1548625149-720134d51a3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60)`,
+        backgroundImage: backgroundUrl?.description ? backgroundUrl?.description : "",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
     >
-      <PageHeader style={{ marginBottom: "10px" }} titleColor="white">
+      <PageHeader style={{ marginBottom: "10px" }} titleColor={backgroundUrl?.text_color ? backgroundUrl.text_color : null}>
         {<IntlMessages id="sidebar.leaderMeeting" />}
       </PageHeader>
       <Row>

@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import moment from "moment";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { Space, Avatar, Row, Col, Divider, Tag, Dropdown, Menu } from "antd";
+import { Space, Avatar, Row, Col, Divider, Tag, Dropdown, Menu, Tooltip } from "antd";
 import { CalendarFilled, SettingOutlined, MessageOutlined, TagOutlined, EditOutlined, EyeFilled } from "@ant-design/icons";
 import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.style";
-import Tooltip from "@components/uielements/tooltip";
 import useWindowSize from "@lib/hooks/useWindowSize";
 import { setCurrentViewDirectDetail } from "@redux/directs/actions";
 
 export default function ({ initModalProps, organizations, executors, assessors, directTypes, leaderTypes, ...props }) {
-  console.log(directTypes);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -27,7 +25,6 @@ export default function ({ initModalProps, organizations, executors, assessors, 
   // Nếu ko có initModalProps tức đang gọi ở view meeting thì tạo modal props như sau:
   useEffect(() => {
     if (!initModalProps && leaderTypes?.[0] && directTypes?.[0] && organizations?.[0]) {
-      console.log("Called Set INIt MODAL props");
       setInitModalPropsState({
         modalType: "DIRECT_ADD_EDIT_MODAL",
         modalProps: {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as COMMON from "@constants/common";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryList } from "@redux/filterData/actions";
@@ -20,6 +21,7 @@ export default function () {
   const directs = useSelector((state) => state.directs.directs);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const directTypes = useSelector((state) => state.filterData.directTypes);
   const leaderTypes = useSelector((state) => state.filterData.leaderTypes);
   const token = useSelector((state) => state.Auth.idToken);
@@ -29,6 +31,7 @@ export default function () {
 
   const [directList, setDirectList] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
+  const [backgroundUrl, setBackgroundUrl] = useState();
 
   const size = useWindowSize();
 
@@ -66,7 +69,7 @@ export default function () {
     // TODO: Logic to traverse through the meeting and render direct list accordingly
     return directs.map((direct, i) => {
       // let width = state.view === "grid" ? 8 : 24;
-      let directCat = categories.find((cat) => {
+      let directCat = directTypes.find((cat) => {
         return direct.category === cat.id;
       });
       let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
@@ -140,20 +143,31 @@ export default function () {
   }, [directs, categories, initModalProps]);
 
   useEffect(() => {
-    if (directs?.[0]) {
+    if (directs?.[0] && categories?.[0]) {
       setDirectList(renderDirects());
     }
-  }, [state.view]);
+  }, [state.view, directs, categories]);
+
+  // Khi có backgrounds trong store thì set riêng giá trị background
+  useEffect(() => {
+    if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_DIRECT);
+      if (bg.status == 1) {
+        setBackgroundUrl(bg);
+        return;
+      }
+    }
+  }, [backgrounds]);
 
   return (
     <Layout
       style={{
-        background: `url(https://images.unsplash.com/photo-1547531455-c20b677ded4b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60)`,
+        backgroundImage: backgroundUrl?.description ? backgroundUrl?.description : "",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
     >
-      <PageHeader style={{ marginBottom: "10px" }} titleColor={"white"}>
+      <PageHeader style={{ marginBottom: "10px" }} titleColor={backgroundUrl?.text_color ? backgroundUrl.text_color : null}>
         {<IntlMessages id="sidebar.leaderDirectMng" />}
       </PageHeader>
       <Row>
