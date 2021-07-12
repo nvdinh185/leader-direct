@@ -21,10 +21,10 @@ export default function filterDataReducer(state = defaultFilter, action) {
       if (action.payload.length === 0) {
         return { ...state, loading: false, err: "" };
       }
-      let leaderTypes = action.payload.filter((cat) => cat.parent_id === 6);
+      let leaderTypes = action.payload.filter((cat) => cat.parent_id === 7);
       let directTypes = action.payload.filter((cat) => cat.parent_id === 3);
       let meetingTypes = action.payload.filter((cat) => cat.parent_id === 4);
-      let backgrounds = action.payload.filter((cat) => cat.parent_id === 7);
+      let backgrounds = action.payload.filter((cat) => cat.parent_id === 8);
       return {
         ...state,
         categories: action.payload,
