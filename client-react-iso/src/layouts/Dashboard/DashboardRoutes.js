@@ -51,10 +51,6 @@ const routes = [
     component: lazy(() => import("@containers/LeaderDirect/OrgDirectRoutes")),
   },
   {
-    path: "scrum-board",
-    component: lazy(() => import("@containers/ScrumBoard")),
-  },
-  {
     path: "blank-page",
     component: lazy(() => import("@containers/BlankPage")),
   },

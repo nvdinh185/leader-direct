@@ -16,6 +16,7 @@ import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Meeting/MeetingGLItem";
 import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
+import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const meetings = useSelector((state) => state.meetings.meetings);
@@ -155,8 +156,16 @@ export default function () {
   }, [state.view]);
 
   return (
-    <>
-      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
+    <Layout
+      style={{
+        background: `url(https://images.unsplash.com/photo-1548625149-720134d51a3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <PageHeader style={{ marginBottom: "10px" }} titleColor="white">
+        {<IntlMessages id="sidebar.leaderMeeting" />}
+      </PageHeader>
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
@@ -221,6 +230,6 @@ export default function () {
           </Col>
         ) : null}
       </Row>
-    </>
+    </Layout>
   );
 }

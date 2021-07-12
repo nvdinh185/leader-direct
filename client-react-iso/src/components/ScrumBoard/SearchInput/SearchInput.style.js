@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const SearchWrapper = styled.div`
   width: 400px;
@@ -31,11 +31,12 @@ export const Input = styled.input`
     outline: none;
   }
   &::placeholder {
-    color: #788195;
+    color: ${(props) => (props.searchColor ? props.searchColor : "#788195")};
   }
 `;
 
 export const SearchIcon = styled.img`
+  color: ${(props) => (props.searchColor ? props.searchColor : "none")};
   width: 20px;
   margin-right: 1rem;
 `;

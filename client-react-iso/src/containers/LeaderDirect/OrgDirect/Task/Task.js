@@ -8,7 +8,6 @@ import TaskCard from "@containers/LeaderDirect/OrgDirect/Task/TaskCard/TaskCard"
 class TaskItem extends React.PureComponent {
   render() {
     const { task, isDragging, isGroupedOver, provided, columnId, deleteTaskWatcher, openDrawer, closeDrawer } = this.props;
-
     return (
       <Container
         isDragging={isDragging}

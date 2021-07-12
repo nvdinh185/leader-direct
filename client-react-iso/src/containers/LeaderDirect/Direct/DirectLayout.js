@@ -14,6 +14,7 @@ import { SortableCardWrapper } from "@components/GridListLayout/GridList.style";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
 import Sidebar from "@containers/LeaderDirect/Direct/SideBar/SideBar";
+import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const directs = useSelector((state) => state.directs.directs);
@@ -145,8 +146,16 @@ export default function () {
   }, [state.view]);
 
   return (
-    <>
-      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderDirectMng" />}</PageHeader>
+    <Layout
+      style={{
+        background: `url(https://images.unsplash.com/photo-1547531455-c20b677ded4b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <PageHeader style={{ marginBottom: "10px" }} titleColor={"white"}>
+        {<IntlMessages id="sidebar.leaderDirectMng" />}
+      </PageHeader>
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
@@ -199,6 +208,6 @@ export default function () {
           </Col>
         ) : null}
       </Row>
-    </>
+    </Layout>
   );
 }

@@ -5,10 +5,11 @@ export const Container = styled.div`
   box-sizing: border-box;
   margin: ${grid}px;
   display: flex;
-  width: 350px;
+  width: 280px;
   border-radius: 5px;
   overflow: hidden;
-  background-color: #f3f5fd;
+  background-color: rgba(242, 245, 253, 0.1);
+  /* background-color: #f3f5fd; */
   flex-direction: column;
   &:last-child {
     margin-right: 0;
@@ -28,13 +29,15 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 18px;
+  padding: 8px 18px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  background-color: ${({ isDragging }) => (isDragging ? "#e6eaf8" : "transparent")};
   transition: background-color 0.1s ease;
+  /* background-color: ${({ isDragging }) => (isDragging ? "#e6eaf8" : "transparent")}; */
+  background-color: #e6eaf8;
+
   &:hover {
-    background-color: #e6eaf8;
+    background-color: #d6e1ff;
   }
 `;
 

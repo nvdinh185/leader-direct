@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
-import TaskItem from '../Task';
-import { DropZone, Wrapper } from './TaskList.style';
-import { Scrollbars } from 'react-custom-scrollbars';
+import React, { Component } from "react";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+import TaskItem from "../Task";
+import { DropZone, Wrapper } from "./TaskList.style";
+import { Scrollbars } from "react-custom-scrollbars";
 
 class InnerTaskList extends Component {
   shouldComponentUpdate(nextProps) {
@@ -12,7 +12,9 @@ class InnerTaskList extends Component {
 
     return false;
   }
-
+  // ---------------------------------------------------------------------------------
+  // TODO: Write task to render task base on list task of columns
+  // ---------------------------------------------------------------------------------
   render() {
     return this.props.tasks.map((task, index) => (
       <Draggable key={task.id} draggableId={task.id} index={index}>
@@ -70,19 +72,9 @@ const TaskList = ({
           {...dropProvided.droppableProps}
         >
           {internalScroll ? (
-            <InnerList
-              tasks={tasks}
-              title={title}
-              columnId={column.id}
-              dropProvided={dropProvided}
-            />
+            <InnerList tasks={tasks} title={title} columnId={column.id} dropProvided={dropProvided} />
           ) : (
-            <InnerList
-              title={title}
-              tasks={tasks}
-              columnId={column.id}
-              dropProvided={dropProvided}
-            />
+            <InnerList title={title} tasks={tasks} columnId={column.id} dropProvided={dropProvided} />
           )}
         </Wrapper>
       )}
@@ -91,6 +83,6 @@ const TaskList = ({
 };
 
 TaskList.defaultProps = {
-  listId: 'LIST',
+  listId: "LIST",
 };
 export default TaskList;

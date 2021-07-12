@@ -7,7 +7,7 @@ export const ParentContainer = styled.div`
 
 /* like display:flex but will allow bleeding over the window width */
 export const Container = styled.div`
-  min-height: 500px;
+  min-height: 650px;
   min-width: 100%;
   display: inline-flex;
   justify-content: space-around;

@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { CaretDownOutlined, DownOutlined } from "@ant-design/icons";
-import { Layout, Menu, Dropdown, Popover, Checkbox, Tooltip } from "antd";
-import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
-import { IconSvg } from "@components/ScrumBoard/IconSvg/IconSvg";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
+import { Link } from "react-router-dom";
+
+import { Layout, Menu, Dropdown, Popover, Checkbox } from "antd";
+import { CaretDownOutlined, DownOutlined } from "@ant-design/icons";
+import PageHeader from "@components/utility/pageHeader";
+import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
 import { variables } from "@assets/styles/variables";
 import AvatarIcon from "@assets/images/icon/08-icon.svg";
-import PlusIcon from "@assets/images/icon/24.svg";
 import { Scrollbars } from "react-custom-scrollbars";
 
 import {
@@ -18,8 +18,6 @@ import {
   Category,
   Title,
   InfoWrapper,
-  AssigneeWrapper,
-  Assignee,
   DropdownHeader,
   ViewAll,
   CreateProject,
@@ -78,66 +76,65 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
     </Menu>
   );
   return (
-    <Layout
-      style={{
-        backgroundColor: `${variables.WHITE_COLOR}`,
-      }}
-    >
-      <Header>
-        <AssigneeWrapper>
-          <Assignee>Assigned By: </Assignee>
-          <Tooltip title="Please Implements Your Own Assigne Methods" placement="bottomRight">
-            <IconSvg src={PlusIcon} padding={8} radius={"10% 30% 25%"} mr={0} />
-          </Tooltip>
-        </AssigneeWrapper>
-      </Header>
-
-      <HeaderSecondary>
-        <SearchInput onChange={(value) => setSearchText(value)} />
-
-        <Filters>
-          <Popover
-            placement="bottom"
-            overlayClassName="scrum-popover"
-            content={<Checkbox.Group options={LABELS} onChange={(value) => setSearchText(...value)} />}
-            trigger="click"
-          >
-            <div>
-              Labels <CaretDownOutlined />
-            </div>
-          </Popover>
-
-          <Popover
-            placement="bottom"
-            overlayClassName="scrum-popover"
-            content={<Checkbox.Group options={ASSIGNEES} onChange={(value) => setSearchText(...value)} />}
-            trigger="click"
-          >
-            <div>
-              Assignee
-              <CaretDownOutlined />
-            </div>
-          </Popover>
-        </Filters>
-      </HeaderSecondary>
-
-      <Content
+    <>
+      <Layout
         style={{
-          padding: "0 24px",
-          width: "100%",
+          backgroundColor: `${variables.WHITE_COLOR}`,
+          background: `url(https://images.unsplash.com/photo-1546669689-5b43ad2bba60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2242&q=80)`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
         }}
       >
-        <Scrollbars
+        <PageHeader style={{ marginBottom: "10px" }} titleColor={"white"}>
+          {"Chỉ Đạo Của Đơn Vị"}
+        </PageHeader>
+        <HeaderSecondary>
+          <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
+
+          <Filters>
+            <Popover
+              placement="bottom"
+              overlayClassName="scrum-popover"
+              content={<Checkbox.Group options={LABELS} onChange={(value) => setSearchText(...value)} />}
+              trigger="click"
+            >
+              <div>
+                Labels <CaretDownOutlined />
+              </div>
+            </Popover>
+
+            <Popover
+              placement="bottom"
+              overlayClassName="scrum-popover"
+              content={<Checkbox.Group options={ASSIGNEES} onChange={(value) => setSearchText(...value)} />}
+              trigger="click"
+            >
+              <div>
+                Assignee
+                <CaretDownOutlined />
+              </div>
+            </Popover>
+          </Filters>
+        </HeaderSecondary>
+
+        <Content
           style={{
+            padding: "0 24px",
             width: "100%",
-            height: "calc(100vh - 200px)",
           }}
-          autoHide
         >
-          {children}
-        </Scrollbars>
-      </Content>
-    </Layout>
+          <Scrollbars
+            style={{
+              width: "100%",
+              height: "calc(100vh - 200px)",
+            }}
+            autoHide
+          >
+            {children}
+          </Scrollbars>
+        </Content>
+      </Layout>
+    </>
   );
 };
 
