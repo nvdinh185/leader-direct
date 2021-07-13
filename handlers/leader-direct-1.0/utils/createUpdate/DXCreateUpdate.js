@@ -40,8 +40,8 @@ function createDirectExeHelper(dataInput) {
         let result = await leaderDirectModels.direct_executes.insertOneRecord(dataToInsert);
         resolve({ dxUUID, result });
       } catch (err) {
-        reject(err);
         console.log(err);
+        reject(err);
       }
     }
   });

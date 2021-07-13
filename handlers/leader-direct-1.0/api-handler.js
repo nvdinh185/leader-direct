@@ -382,7 +382,6 @@ class ApiHandler {
       directArr = JSON.parse(meetingData.directs);
     }
     directArr.push(req.json_data.uuid);
-    console.log(directArr);
     leaderDirectModels.meetings
       .updateOneRecord(
         {
