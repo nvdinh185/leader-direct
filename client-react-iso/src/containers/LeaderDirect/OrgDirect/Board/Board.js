@@ -88,9 +88,8 @@ function Board({
       {(provided) => (
         <Container ref={provided.innerRef} {...provided.droppableProps}>
           {/* // ---------------------------------------------------------------------------------  */}
-          {/* CODE to render columned base on order in board status */}
+          {/* TODO: CODE to render columned base on order in board status */}
           {/* // ---------------------------------------------------------------------------------  */}
-
           {ordered &&
             ordered.map((columnId, index) => {
               const column = columns[columnId];
