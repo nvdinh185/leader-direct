@@ -58,11 +58,11 @@ async function updateDirectOrgHelper(jsonData, defaultDataInput, directOrgMode =
   let newDOrgToInsert = newDOrgsArr.filter((newOrg) => !oldDOrgArr.includes(newOrg));
   let oldDOrgToUpdate = oldDOrgArr.filter((oldOrg) => !newDOrgsArr.includes(oldOrg));
   // Nếu có dữ liệu cần thêm vào thì chạy code này
-  if (newDOrgToInsert?.[0]) {
+  if (newDOrgToInsert && newDOrgToInsert.length > 0) {
     updateDOCreateNew(newDOrgToInsert, jsonData, defaultDataInput, directOrgMode);
   }
   // Nếu có dữ liệu cần xoá thì chạy code này (không xoá hẳn, chỉ chuyển status)
-  if (oldDOrgToUpdate?.[0]) {
+  if (oldDOrgToUpdate && oldDOrgToUpdate.length > 0) {
     updateDOUpdateOld(oldDOrgToUpdate, jsonData, defaultDataInput);
   }
 }
