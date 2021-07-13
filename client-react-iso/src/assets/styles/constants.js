@@ -19,7 +19,7 @@ export const colors = {
   purple: "rebeccapurple",
   orange: "#FF991F",
 };
-export const grid = 8;
+export const grid = 4;
 
 export const borderRadius = 2;
 const rowStyle = {

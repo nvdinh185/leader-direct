@@ -10,18 +10,21 @@ import DescriptionIcon from "@assets/images/icon/06-icon.svg";
 import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
 
 export default function (props) {
-  console.log(props);
   const categories = useSelector((state) => state.filterData.categories);
+  const currentDirect = useSelector((state) => state.directs.currentDirect);
 
   const [categoryDisplay, setCatgoryDisplay] = useState();
 
+  // Trường hợp refresh lại page thì chỉ có
+
   useEffect(() => {
-    if (categories?.[0] && props.direct) {
-      let directCat = categories.find((cat) => cat.id === props.direct.category);
+    if (categories?.[0] && currentDirect) {
+      let directCat = categories.find((cat) => cat.id === currentDirect.category);
+      console.log(directCat);
       let bgColorCat = returnHexColor(directCat.bg_color);
       setCatgoryDisplay({ name: directCat.name, bgColor: bgColorCat });
     }
-  }, [categories, props.direct]);
+  }, [categories, currentDirect]);
 
   return (
     <>
@@ -36,12 +39,12 @@ export default function (props) {
         <Col span={8}>
           <HeadingWithIcon heading="Ngày Tạo" />
           <ClockIcon src={Clock} />
-          {moment(props.direct.created_time).format("DD/MM/YYYY HH:mm")}
+          {moment(currentDirect?.created_time).format("DD/MM/YYYY HH:mm")}
         </Col>
       </Row>
       <div style={{ clear: "both", paddingTop: "10px" }}>
         <HeadingWithIcon heading="Mô Tả" iconSrc={DescriptionIcon} />
-        <TaskDescription>{props.directCat.description}</TaskDescription>
+        <TaskDescription>{currentDirect?.description}</TaskDescription>
       </div>
     </>
   );

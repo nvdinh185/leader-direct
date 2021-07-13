@@ -7,7 +7,7 @@ import { SearchOutlined } from "@ant-design/icons";
 
 export default function SideBar({ categories }) {
   return (
-    <div style={{ position: "sticky", top: "75px" }}>
+    <div style={{ position: "sticky", overflowY: "scroll", height: "calc(100vh - 140px)", top: "75px", marginBottom: "8px" }}>
       <Card size="small" style={{ background: "none" }}>
         <Input size="large" placeholder="Tìm Kiếm" prefix={<SearchOutlined />} />
       </Card>

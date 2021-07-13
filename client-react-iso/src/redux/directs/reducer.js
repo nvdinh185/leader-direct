@@ -14,6 +14,11 @@ export default function directReducer(state = defaultDirects, action) {
         ...state,
         directIds: [],
       };
+    case directTypes.SET_CURRENT_VIEW_DIRECT_DETAIL:
+      return {
+        ...state,
+        currentDirect: action.payload,
+      };
     // ---------------------------------------------------------------------------------
     // 1 - MENU SECTION
     // ---------------------------------------------------------------------------------

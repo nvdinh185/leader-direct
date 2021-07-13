@@ -4,7 +4,7 @@ import WithDirection from "@lib/helpers/rtl";
 const WDComponentTitleWrapper = styled.h1`
   font-size: 19px;
   font-weight: 500;
-  color: ${palette("secondary", 2)};
+  color: ${(props) => (props.titleColor ? props.titleColor : palette("secondary", 2))};
   width: 100%;
   margin: 15px 17px 10px 10px;
   display: flex;

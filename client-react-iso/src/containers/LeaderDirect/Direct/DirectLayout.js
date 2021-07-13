@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as COMMON from "@constants/common";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryList } from "@redux/filterData/actions";
@@ -14,11 +15,13 @@ import { SortableCardWrapper } from "@components/GridListLayout/GridList.style";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
 import Sidebar from "@containers/LeaderDirect/Direct/SideBar/SideBar";
+import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const directs = useSelector((state) => state.directs.directs);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const directTypes = useSelector((state) => state.filterData.directTypes);
   const leaderTypes = useSelector((state) => state.filterData.leaderTypes);
   const token = useSelector((state) => state.Auth.idToken);
@@ -28,6 +31,7 @@ export default function () {
 
   const [directList, setDirectList] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
+  const [backgroundUrl, setBackgroundUrl] = useState();
 
   const size = useWindowSize();
 
@@ -65,7 +69,7 @@ export default function () {
     // TODO: Logic to traverse through the meeting and render direct list accordingly
     return directs.map((direct, i) => {
       // let width = state.view === "grid" ? 8 : 24;
-      let directCat = categories.find((cat) => {
+      let directCat = directTypes.find((cat) => {
         return direct.category === cat.id;
       });
       let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
@@ -139,14 +143,33 @@ export default function () {
   }, [directs, categories, initModalProps]);
 
   useEffect(() => {
-    if (directs?.[0]) {
+    if (directs?.[0] && categories?.[0]) {
       setDirectList(renderDirects());
     }
-  }, [state.view]);
+  }, [state.view, directs, categories]);
+
+  // Khi có backgrounds trong store thì set riêng giá trị background
+  useEffect(() => {
+    if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_DIRECT);
+      if (bg.status == 1) {
+        setBackgroundUrl(bg);
+        return;
+      }
+    }
+  }, [backgrounds]);
 
   return (
-    <>
-      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderDirectMng" />}</PageHeader>
+    <Layout
+      style={{
+        backgroundImage: backgroundUrl?.description ? backgroundUrl?.description : "",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <PageHeader style={{ marginBottom: "10px" }} titleColor={backgroundUrl?.text_color ? backgroundUrl.text_color : null}>
+        {<IntlMessages id="sidebar.leaderDirectMng" />}
+      </PageHeader>
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
@@ -199,6 +222,6 @@ export default function () {
           </Col>
         ) : null}
       </Row>
-    </>
+    </Layout>
   );
 }

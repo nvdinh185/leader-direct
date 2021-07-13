@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Layout } from "antd";
+import { Layout, Menu } from "antd";
 import { createNestedFromDb } from "@lib/utils/tree-helper";
 import Scrollbars from "@components/utility/customScrollBar";
-import Menu from "@components/uielements/menu";
 import appActions from "@redux/app/actions";
 import Logo from "@components/utility/logo";
 import SidebarWrapper from "./Sidebar.styles";

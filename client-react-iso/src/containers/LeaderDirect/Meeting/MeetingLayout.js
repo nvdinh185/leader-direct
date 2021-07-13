@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import * as COMMON from "@constants/common";
+
 import { useDispatch, useSelector } from "react-redux";
 import { getMeetingList } from "@redux/meetings/actions";
 import { getCategoryList } from "@redux/filterData/actions";
@@ -16,11 +18,13 @@ import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Meeting/MeetingGLItem";
 import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
+import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const meetings = useSelector((state) => state.meetings.meetings);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const token = useSelector((state) => state.Auth.idToken);
   const App = useSelector((state) => state.App);
 
@@ -29,6 +33,7 @@ export default function () {
   const [meetingList, setMeetingList] = useState([]);
   const [meetingTypes, setMeetingTypes] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
+  const [backgroundUrl, setBackgroundUrl] = useState();
 
   const size = useWindowSize();
 
@@ -154,9 +159,28 @@ export default function () {
     }
   }, [state.view]);
 
+  // Khi có backgrounds trong store thì set riêng giá trị background
+  useEffect(() => {
+    if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_MEETING);
+      if (bg.status == 1) {
+        setBackgroundUrl(bg);
+        return;
+      }
+    }
+  }, [backgrounds]);
+
   return (
-    <>
-      <PageHeader style={{ marginBottom: "10px" }}>{<IntlMessages id="sidebar.leaderMeeting" />}</PageHeader>
+    <Layout
+      style={{
+        backgroundImage: backgroundUrl?.description ? backgroundUrl?.description : "",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <PageHeader style={{ marginBottom: "10px" }} titleColor={backgroundUrl?.text_color ? backgroundUrl.text_color : null}>
+        {<IntlMessages id="sidebar.leaderMeeting" />}
+      </PageHeader>
       <Row>
         <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
           {state.view === "table" ? (
@@ -221,6 +245,6 @@ export default function () {
           </Col>
         ) : null}
       </Row>
-    </>
+    </Layout>
   );
 }
