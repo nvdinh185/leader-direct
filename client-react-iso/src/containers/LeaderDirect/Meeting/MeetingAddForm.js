@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Form, Select, Upload, message } from "antd";
+import { Button, Input, Form, Select, Upload, message, Row, Col, Divider } from "antd";
 import { TagOutlined, MenuOutlined, FileTextOutlined, InboxOutlined } from "@ant-design/icons";
 import { createMeeting, updateMeeting } from "@redux/meetings/actions";
 import { useDispatch, useSelector } from "react-redux";
+import modalActions from "@redux/modal/actions";
 import * as COMMON from "@constants/fileTypes";
 
 const { Option } = Select;
@@ -12,15 +13,14 @@ export default function MeetingAddForm({
   organizations,
   meetings,
   modalMode,
+  okText,
   initialValues,
   handleCancel,
-  isModalVisible,
-  setIsModalVisible,
   ...props
 }) {
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
-  const status = useSelector((state) => state.directMeeting.loading);
+  const status = useSelector((state) => state.meetings.loading);
 
   const dispatch = useDispatch();
 
@@ -62,7 +62,6 @@ export default function MeetingAddForm({
     try {
       const values = await form.validateFields();
       console.log("Success:", values);
-      // TODO: Send dữ liệu về server và thông báo kết quả
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
       let newData = new FormData();
       for (let key of Object.keys(values)) {
@@ -81,11 +80,11 @@ export default function MeetingAddForm({
       if (initialValues && modalMode === "EDIT") {
         newData.append("id", initialValues.id);
         dispatch(updateMeeting(token, newData));
-        setIsModalVisible(false);
+        dispatch(modalActions.closeModal());
         return;
       }
       dispatch(createMeeting(token, newData));
-      setIsModalVisible(false);
+      dispatch(modalActions.closeModal());
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);
     }
@@ -110,15 +109,7 @@ export default function MeetingAddForm({
   }, [fileList]);
 
   return (
-    <Modal
-      {...props}
-      // cancelButtonProps={{ block: true }}
-      okButtonProps={{ loading: status }}
-      visible={isModalVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      getContainer={false}
-    >
+    <>
       <Form {...formItemLayout} form={form}>
         <Form.Item
           label="Tên Cuộc Họp"
@@ -150,7 +141,7 @@ export default function MeetingAddForm({
           >
             {meetingTypes?.[0]
               ? meetingTypes.map((cat) => (
-                <Option key={cat.id} svalue={cat.id}>
+                <Option key={cat.id} value={cat.id}>
                   {cat.name}
                 </Option>
               ))
@@ -212,7 +203,21 @@ export default function MeetingAddForm({
         <p style={{ fontSize: 10, color: "grey" }}>
           <span style={{ color: "red" }}>*</span> Trường bắt buộc nhập liệu
         </p>
+        {/* // --------------------------------------------------------------------------------- */}
+        <Divider></Divider>
+        <Row>
+          <Col span={12}>
+            <Button size={"large"} block type="default" onClick={handleCancel}>
+              Bỏ Qua
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button loading={status} size={"large"} block type="primary" onClick={handleOk}>
+              {okText}
+            </Button>
+          </Col>
+        </Row>
       </Form>
-    </Modal>
+    </>
   );
 }

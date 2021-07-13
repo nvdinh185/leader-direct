@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import Menu from "@components/uielements/menu";
+import { Menu } from "antd";
 const SubMenu = Menu.SubMenu;
 
 const stripTrailingSlash = (str) => {

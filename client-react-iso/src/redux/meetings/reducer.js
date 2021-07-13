@@ -3,14 +3,34 @@ import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultMeetings = {
   meetings: [],
+  currentMeeting: {},
   loading: false,
   err: "",
 };
 
-export default function directMeetingReducer(state = defaultMeetings, action) {
+export default function meetingReducer(state = defaultMeetings, action) {
   switch (action.type) {
     // ---------------------------------------------------------------------------------
-    // 1 - MENU SECTION
+    // I. NON API DISPATCH SECTION
+    // ---------------------------------------------------------------------------------
+
+    case meetingTypes.SET_CURRENT_MEETING_DETAIL:
+      return {
+        ...state,
+        currentMeeting: action.payload,
+      };
+
+    case meetingTypes.CLEAR_CURRENT_MEETING_DETAIL:
+      return {
+        ...state,
+        currentMeeting: {},
+      };
+    // ---------------------------------------------------------------------------------
+    // II. API DISPATCH SECTION
+    // ---------------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------------
+    // 1 - MEETING SECTION
     // ---------------------------------------------------------------------------------
     case meetingTypes.GET_MEETING_LIST_START:
       return {
@@ -19,7 +39,7 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       };
     case meetingTypes.GET_MEETING_LIST_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -28,6 +48,28 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       };
 
     case meetingTypes.GET_MEETING_LIST_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    case meetingTypes.GET_MEETING_BY_ID_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case meetingTypes.GET_MEETING_BY_ID_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false, err: "" };
+      }
+      return {
+        ...state,
+        currentMeeting: action.payload,
+        loading: false,
+      };
+
+    case meetingTypes.GET_MEETING_BY_ID_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -85,7 +127,7 @@ export default function directMeetingReducer(state = defaultMeetings, action) {
       };
     case meetingTypes.GET_ATTACHMENT_BY_IDS_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,

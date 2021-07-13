@@ -63,13 +63,7 @@ module.exports =  {
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   menu_apis: {
-    id: {
-      type: 'INTEGER',
-      notNull: 1,
-      primaryKey: 1,
-      isUnique: 1,
-      autoIncrement: 1
-    },
+    id: { type: 'INTEGER', notNull: 1, primaryKey: 1, isUnique: 1 },
     parent_id: { type: 'INTEGER' },
     tag_id: { type: 'STRING', length: 30 },
     tag_children_id: { type: 'STRING', length: 30 },
@@ -96,12 +90,21 @@ module.exports =  {
     code: { type: 'STRING', length: 50 },
     users: { type: 'STRING', length: 2000 },
     parent_id: { type: 'INTEGER' },
+    bg_color: { type: 'STRING', length: 100 },
+    text_color: { type: 'STRING', length: 50 },
     created_time: { type: 'DATETIME' },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   column_name_maps: {
+    id: {
+      type: 'INTEGER',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      autoIncrement: 1
+    },
     field: {
       type: 'STRING',
       notNull: 1,
@@ -112,5 +115,6 @@ module.exports =  {
     display_name: { type: 'STRING', length: 200 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 }
-  }
+  },
+  '': { '': {} }
 }

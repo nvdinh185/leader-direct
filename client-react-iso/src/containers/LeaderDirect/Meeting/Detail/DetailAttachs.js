@@ -15,7 +15,7 @@ export default function DetailAttachs({ meeting, ...props }) {
   let attachArr = returnAttchArr(meeting.attachments);
 
   const token = useSelector((state) => state.Auth.idToken);
-  const attachments = useSelector((state) => state.directMeeting.attachments);
+  const attachments = useSelector((state) => state.meetings.attachments);
   const dispatch = useDispatch();
 
   const [attchmentInfos, setAttchmentInfos] = useState([]);
@@ -44,7 +44,6 @@ export default function DetailAttachs({ meeting, ...props }) {
           color: fileType ? fileType.color : "",
         };
       });
-      console.log(newAttchs);
       setAttchmentInfos(newAttchs);
     }
   }, [attachments]);
@@ -81,19 +80,19 @@ export default function DetailAttachs({ meeting, ...props }) {
       </AttachmentWrapper>
       {attchmentInfos.length > 0
         ? attchmentInfos.map((attch, idx) => (
-            <BadgeAttach
-              key={idx}
-              uuid={attch.uuid}
-              fileType={attch.fileType}
-              fileName={attch.fileName}
-              color={attch.color}
-              url={attch.url}
-              handleDeleteAttachMent={handleDeleteAttachMent}
-              handleDownloadAttachment={handleDownloadAttachment}
-            >
-              {attch.fileTypeIcon ? <attch.fileTypeIcon /> : null}
-            </BadgeAttach>
-          ))
+          <BadgeAttach
+            key={idx}
+            uuid={attch.uuid}
+            fileType={attch.fileType}
+            fileName={attch.fileName}
+            color={attch.color}
+            url={attch.url}
+            handleDeleteAttachMent={handleDeleteAttachMent}
+            handleDownloadAttachment={handleDownloadAttachment}
+          >
+            {attch.fileTypeIcon ? <attch.fileTypeIcon /> : null}
+          </BadgeAttach>
+        ))
         : null}
     </>
   );

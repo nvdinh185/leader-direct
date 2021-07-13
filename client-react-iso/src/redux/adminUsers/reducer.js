@@ -21,7 +21,7 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
     case userTypes.GET_MENU_API_ALL_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -87,7 +87,7 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
     case userTypes.GET_GRANTED_USER_LIST_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -152,7 +152,7 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
     case userTypes.GET_GRANTED_GROUP_ALL_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -219,7 +219,7 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
     case userTypes.GET_ALL_FUNCTION_API_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
@@ -242,7 +242,7 @@ export default function adminUserReducer(state = defaultUser, action) {
       };
     case userTypes.GET_ALL_ORGANIZATION_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logOut } from "@redux/auth/actions";
-import Popover from "@components/uielements/popover";
+import { Popover } from "antd";
 import IntlMessages from "@components/utility/intlMessages";
 import userpic from "@assets/images/user1.png";
 import TopbarDropdownWrapper from "./TopbarDropdown.styles";

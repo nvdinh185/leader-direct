@@ -1,7 +1,6 @@
-import React from 'react';
-import { Button } from 'antd';
-import Popover from './uielements/popover';
-import ColorChooserDropdown from './ColorChooser.style';
+import React from "react";
+import { Button, Popover } from "antd";
+import ColorChooserDropdown from "./ColorChooser.style";
 
 export default function ({ colors, seectedColor, changeColor }) {
   const [visible, setVisibility] = React.useState(false);
@@ -27,16 +26,8 @@ export default function ({ colors, seectedColor, changeColor }) {
     </ColorChooserDropdown>
   );
   return (
-    <Popover
-      content={content()}
-      trigger="click"
-      visible={visible}
-      onVisibleChange={handleVisibleChange}
-    >
-      <Button
-        style={{ backgroundColor: colors[seectedColor] }}
-        className="isoColorChooser"
-      />
+    <Popover content={content()} trigger="click" visible={visible} onVisibleChange={handleVisibleChange}>
+      <Button style={{ backgroundColor: colors[seectedColor] }} className="isoColorChooser" />
     </Popover>
   );
 }

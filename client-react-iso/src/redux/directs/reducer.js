@@ -2,13 +2,23 @@ import * as directTypes from "@redux/directs/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultDirects = {
-  categories: [],
+  directs: [],
   loading: false,
   err: "",
 };
 
 export default function directReducer(state = defaultDirects, action) {
   switch (action.type) {
+    case directTypes.CLEAR_CURRENT_MEETING_DIRECT_IDS:
+      return {
+        ...state,
+        directIds: [],
+      };
+    case directTypes.SET_CURRENT_VIEW_DIRECT_DETAIL:
+      return {
+        ...state,
+        currentDirect: action.payload,
+      };
     // ---------------------------------------------------------------------------------
     // 1 - MENU SECTION
     // ---------------------------------------------------------------------------------
@@ -19,15 +29,40 @@ export default function directReducer(state = defaultDirects, action) {
       };
     case directTypes.GET_ALL_DIRECTS_SUCCESS:
       if (action.payload.length === 0) {
-        return state;
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
-        categories: action.payload,
+        err: "",
+        directs: action.payload,
         loading: false,
       };
 
     case directTypes.GET_ALL_DIRECTS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    case directTypes.GET_DIRECT_BY_IDS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directTypes.GET_DIRECT_BY_IDS_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false };
+      }
+      return {
+        ...state,
+        err: "",
+        directIds: action.payload,
+        loading: false,
+      };
+
+    case directTypes.GET_DIRECT_BY_IDS_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -44,6 +79,7 @@ export default function directReducer(state = defaultDirects, action) {
       successAlert("Thành Công", "Bạn đã thêm mới chỉ đạo thành công");
       return {
         ...state,
+        err: "",
         createDirect: action.payload,
         loading: false,
       };
@@ -64,6 +100,7 @@ export default function directReducer(state = defaultDirects, action) {
       successAlert("Thành Công", "Bạn đã sửa thông tin chỉ đạo thành công");
       return {
         ...state,
+        err: "",
         updateDirect: action.payload,
         loading: false,
       };
