@@ -65,6 +65,32 @@ async function updateDirectOrgHelper(jsonData, defaultDataInput, directOrgMode =
   if (oldDOrgToUpdate && oldDOrgToUpdate.length > 0) {
     updateDOUpdateOld(oldDOrgToUpdate, jsonData, defaultDataInput);
   }
+  // Nếu nằm ngoài 2 trường hợp trên tức update thông tin description từ jsonData thì gọi hàm này
+  if ((!oldDOrgToUpdate || oldDOrgToUpdate.length === 0) && (!newDOrgToInsert || newDOrgToInsert.length === 0)) {
+    updateDOInfoOnly(jsonData, defaultDataInput);
+  }
+}
+
+async function updateDOInfoOnly(jsonData, defaultDataInput) {
+  // Lấy các direct_orgs rồi update thông tin
+  let dOrgArr = await leaderDirectModels.direct_orgs.getAllData({ direct_uuid: jsonData.uuid });
+  if (dOrgArr && dOrgArr.length > 0) {
+    dOrgArr.forEach(async (dOrg) => {
+      try {
+        await leaderDirectModels.direct_orgs.updateOneRecord(
+          {
+            ...dOrg,
+            description: jsonData.description,
+            updated_time: new Date().getTime(),
+            updated_user: defaultDataInput.updated_user,
+          },
+          { uuid: dOrg.uuid }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  }
 }
 
 const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOrgMode) => {
@@ -81,6 +107,7 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
       await leaderDirectModels.direct_orgs.updateOneRecord(
         {
           ...oldDirectOrg,
+          description: jsonData.description,
           status: 1,
           updated_time: new Date().getTime(),
           updated_user: defaultDataInput.updated_user,
@@ -105,6 +132,7 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
         await leaderDirectModels.direct_orgs.insertOneRecord({
           uuid: doUUID,
           ...defaultDataInput,
+          description: jsonData.description,
           histories: JSON.stringify([result.dxUUID]),
           exec_status: 11,
           direct_uuid: jsonData.uuid,
@@ -129,6 +157,7 @@ const updateDOUpdateOld = (oldDOrgToUpdate, jsonData, defaultDataInput) => {
       await leaderDirectModels.direct_orgs.updateOneRecord(
         {
           ...oldDirectOrg,
+          description: jsonData.description,
           status: 0,
           updated_time: new Date().getTime(),
           updated_user: defaultDataInput.updated_user,

@@ -434,6 +434,7 @@ class ApiHandler {
         };
         let defaultDataInput = {
           status: 1,
+          description: jsonData.description,
           meeting_id: jsonData.meeting_id,
           direct_uuid: jsonData.uuid,
           created_time: new Date().getTime(),
