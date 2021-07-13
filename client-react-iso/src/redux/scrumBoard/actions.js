@@ -47,9 +47,9 @@ const scrumBoardActions = {
 
   // Load Data Actions
 
-  boardRenderWatcher: (boardId) => ({
+  boardRenderWatcher: (data) => ({
     type: scrumBoardActions.LOAD_CURRENT_BOARD_DATA_SAGA,
-    payload: boardId,
+    payload: data,
   }),
 
   setBoardData: (boardData) => ({

@@ -420,6 +420,7 @@ class ApiHandler {
           orgIdArr.forEach(async (exe) => {
             await leaderDirectModels.direct_orgs.insertOneRecord({
               ...defaultDataInput,
+              exect_status: 11,
               organization_id: parseInt(exe),
               organization_role: directOrgMode === "executors" ? 22 : 21,
             });
@@ -502,6 +503,7 @@ class ApiHandler {
   createDirect(req, res, next) {
     let jsonData = {
       ...req.json_data,
+
       uuid: generateUUID(),
       created_time: new Date().getTime(),
       updated_time: new Date().getTime(),
@@ -676,12 +678,19 @@ class ApiHandler {
       return;
     }
 
-    let jsonData = req.json_data;
-    jsonData.created_time = new Date().getTime();
+    let jsonData = {
+      ...req.json_data,
+      created_time: new Date(),
+      updated_time: new Date(),
+      created_user: req.user.username,
+      updated_user: req.user.username,
+      status: 1,
+      exec_status: 11,
+    };
 
     // chèn một bảng ghi vào csdl
     leaderDirectModels.direct_orgs
-      .insertOneRecord(jsonData)
+      .insertOneRecord({ ...jsonData })
       //  trả kết quả truy vấn cho api trực tiếp bằng cách sau
       .then((data) => {
         req.finalJson = data;
@@ -705,8 +714,11 @@ class ApiHandler {
       next();
       return;
     }
-    let jsonData = req.json_data;
-    jsonData.updated_time = new Date().getTime();
+    let jsonData = {
+      ...req.json_data,
+      updated_time: new Date(),
+      updated_user: req.user.username,
+    };
 
     leaderDirectModels.direct_orgs
       .updateOneRecord(jsonData, { id: jsonData.id })

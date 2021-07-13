@@ -34,9 +34,6 @@ const TaskCard = ({ task, showDrawer }) => {
         <TaskCardTopMostDiv></TaskCardTopMostDiv>
         <CardBody onClick={showDrawer}>
           <CardTitle>{task.title}</CardTitle>
-          {task.labels.map((label) => (
-            <Badge key={label} status={label} />
-          ))}
         </CardBody>
         <div style={{ display: "flex", alignItems: "center", marginLeft: "15px", color: "grey" }}>
           <CardIcon src={ClockIcon} alt="Clock Icon" mr={10} />

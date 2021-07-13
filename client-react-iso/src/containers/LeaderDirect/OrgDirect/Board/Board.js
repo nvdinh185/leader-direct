@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { useSelector, connect } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 
@@ -25,10 +25,15 @@ function Board({
   withScrollableColumns = true,
   boardRenderWatcher,
 }) {
+  const statuses = useSelector((state) => state.filterData.statuses);
+  const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
+
   useEffect(() => {
     // boardRenderWatcher(match.params.id);
-    boardRenderWatcher("status");
-  }, [boardRenderWatcher, match.params.id]);
+    if (boardRenderWatcher && statuses?.[0]) {
+      boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
+    }
+  }, [boardRenderWatcher, statuses]);
 
   const onDragEnd = ({ source, destination, type, draggableId }) => {
     // source= {

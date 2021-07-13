@@ -21,7 +21,7 @@ export default function filterDataReducer(state = defaultFilter, action) {
       if (action.payload.length === 0) {
         return { ...state, loading: false, err: "" };
       }
-      let status = action.payload.filter((cat) => cat.parent_id === 1);
+      let statuses = action.payload.filter((cat) => cat.parent_id === 1);
       let orgRoles = action.payload.filter((cat) => cat.parent_id === 2);
       let directTypes = action.payload.filter((cat) => cat.parent_id === 3);
       let meetingTypes = action.payload.filter((cat) => cat.parent_id === 4);
@@ -32,7 +32,7 @@ export default function filterDataReducer(state = defaultFilter, action) {
       return {
         ...state,
         categories: action.payload,
-        status: status,
+        statuses: statuses,
         orgRoles: orgRoles,
         directTypes: directTypes,
         meetingTypes: meetingTypes,

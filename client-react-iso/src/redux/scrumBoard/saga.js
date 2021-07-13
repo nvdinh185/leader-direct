@@ -3,6 +3,7 @@ import { all, takeEvery, put, select } from "redux-saga/effects";
 import scrumBoardActions from "./actions";
 import DemoData from "./data";
 import { loadState, saveState } from "@lib/helpers/localStorage";
+import { generateColumnDnd } from "@lib/utils/dnd";
 
 const getScrumBoards = (state) => state.scrumBoard;
 
@@ -12,16 +13,12 @@ function* boardRenderEffectSaga({ payload }) {
   let columns;
   let tasks;
   // TODO: render board base on data from server instead of localStorage
-  if (localStorage.hasOwnProperty("scrum_boards")) {
-    scrum_boards = loadState("scrum_boards");
-    boards = scrum_boards.boards;
-    columns = scrum_boards.columns;
-    tasks = scrum_boards.tasks;
-  } else {
-    scrum_boards = DemoData;
-    boards = DemoData.boards;
-    columns = DemoData.columns;
-    tasks = DemoData.tasks;
+  if (payload) {
+    const [boardNCols, boardData] = generateColumnDnd(payload.statuses, payload.data, payload.field);
+    boards = boardNCols.board;
+    columns = boardNCols.columns;
+    tasks = boardData ? boardData : [];
+    console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
   }
 
   yield put(
