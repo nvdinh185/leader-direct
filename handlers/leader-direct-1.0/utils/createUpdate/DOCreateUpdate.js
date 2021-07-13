@@ -1,4 +1,6 @@
-const leaderDirectModels = require("../../../midlewares/leader-direct/models");
+const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
+const { generateUUID } = require("./GeneralHelper");
+const { createDirectExeHelper } = require("./DXCreateUpdate");
 
 // ---------------------------------------------------------------------------------
 // 0 - CREATE AND UPDATE DIRECT ORG WITH UUID
@@ -11,17 +13,33 @@ const leaderDirectModels = require("../../../midlewares/leader-direct/models");
  * @param {*} orgIdArrStr Mảng chứa các id của đơn vị (assessor hay executor)
  * @param {*} mode Mode để chạy hàm này (assessors hay executors) -> Số nhiều
  */
-async function createDirectOrgHelper(jsonData, defaultDataInput, orgIdArrStr, directOrgMode = "executors") {
-  console.log(jsonData);
+function createDirectOrgHelper(jsonData, defaultDataInput, orgIdArrStr, directOrgMode = "executors") {
   if (orgIdArrStr && defaultDataInput && jsonData) {
+    let doUUID = generateUUID();
     let orgIdArrStr = jsonData[directOrgMode].slice(1, jsonData[directOrgMode].length - 1).split(",");
-    orgIdArrStr.forEach(async (exe) => {
-      await leaderDirectModels.direct_orgs.insertOneRecord({
-        ...defaultDataInput,
-        exect_status: 11,
-        organization_id: parseInt(exe),
-        organization_role: directOrgMode === "executors" ? 22 : 21,
-      });
+    orgIdArrStr.forEach((exe) => {
+      try {
+        // Tạo mới cho bảng direct_executes trước để lấy uuid bỏ vào direct_orgs
+        createDirectExeHelper({
+          direct_uuid: jsonData.uuid,
+          direct_org_uuid: doUUID,
+          organization_id: parseInt(exe),
+          organization_role: directOrgMode === "executors" ? 22 : 21,
+          created_user: defaultDataInput.created_user,
+        }).then(async (result) => {
+          // Tạo mới trong bảng direct_orgs với uuid direct_executes tạo mới
+          await leaderDirectModels.direct_orgs.insertOneRecord({
+            uuid: doUUID,
+            ...defaultDataInput,
+            histories: JSON.stringify([result.dxUUID]),
+            exec_status: 11,
+            organization_id: parseInt(exe),
+            organization_role: directOrgMode === "executors" ? 22 : 21,
+          });
+        });
+      } catch (err) {
+        console.log(err);
+      }
     });
   }
 }
@@ -40,7 +58,6 @@ async function updateDirectOrgHelper(jsonData, defaultDataInput, directOrgMode =
   let newDOrgToInsert = newDOrgsArr.filter((newOrg) => !oldDOrgArr.includes(newOrg));
   let oldDOrgToUpdate = oldDOrgArr.filter((oldOrg) => !newDOrgsArr.includes(oldOrg));
   // Nếu có dữ liệu cần thêm vào thì chạy code này
-  console.log("------------------------------------------------------------- ", newDOrgToInsert, oldDOrgToUpdate);
   if (newDOrgToInsert?.[0]) {
     updateDOCreateNew(newDOrgToInsert, jsonData, defaultDataInput, directOrgMode);
   }
@@ -52,6 +69,7 @@ async function updateDirectOrgHelper(jsonData, defaultDataInput, directOrgMode =
 
 const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOrgMode) => {
   newDOrgToInsert.forEach(async (org) => {
+    //--------------------------------
     // Kiểm tra đã có dữ liệu này trạng thái 0 trong csdl chưa (có rồi thì đổi status lại là 1)
     let oldDirectOrg = await leaderDirectModels.direct_orgs.getFirstRecord({
       direct_uuid: jsonData.uuid,
@@ -69,15 +87,34 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
         },
         { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
       );
+      //--------------------------------
       return;
     }
     // Chưa có thì insert thêm bản ghi mới
-    await leaderDirectModels.direct_orgs.insertOneRecord({
-      ...defaultDataInput,
-      direct_uuid: jsonData.uuid,
-      organization_id: parseInt(org),
-      organization_role: directOrgMode === "executors" ? 22 : 21,
-    });
+    // Đồng thời insert thêm cho bảng direct_executes
+    //--------------------------------
+    let doUUID = generateUUID();
+    try {
+      createDirectExeHelper({
+        direct_uuid: jsonData.uuid,
+        direct_org_uuid: doUUID,
+        organization_id: parseInt(org),
+        organization_role: directOrgMode === "executors" ? 22 : 21,
+        created_user: defaultDataInput.created_user,
+      }).then(async (result) => {
+        await leaderDirectModels.direct_orgs.insertOneRecord({
+          uuid: doUUID,
+          ...defaultDataInput,
+          histories: JSON.stringify([result.dxUUID]),
+          exec_status: 11,
+          direct_uuid: jsonData.uuid,
+          organization_id: parseInt(org),
+          organization_role: directOrgMode === "executors" ? 22 : 21,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
 };
 
@@ -88,16 +125,19 @@ const updateDOUpdateOld = (oldDOrgToUpdate, jsonData, defaultDataInput) => {
       organization_id: parseInt(org),
       status: 1,
     });
-    console.log("------------------------------------------------------------- ", jsonData);
-    await leaderDirectModels.direct_orgs.updateOneRecord(
-      {
-        ...oldDirectOrg,
-        status: 0,
-        updated_time: new Date().getTime(),
-        updated_user: defaultDataInput.updated_user,
-      },
-      { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
-    );
+    try {
+      await leaderDirectModels.direct_orgs.updateOneRecord(
+        {
+          ...oldDirectOrg,
+          status: 0,
+          updated_time: new Date().getTime(),
+          updated_user: defaultDataInput.updated_user,
+        },
+        { direct_uuid: jsonData.uuid, organization_id: parseInt(org) }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   });
 };
 

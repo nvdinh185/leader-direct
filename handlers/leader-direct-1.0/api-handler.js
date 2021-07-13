@@ -12,7 +12,7 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const { generateUUID, createDirectOrgHelper, updateDirectOrgHelper } = require("./utils/index");
+const { general, doHelper, dxHelper } = require("./utils/index");
 const fs = require("fs");
 const mime = require("mime-types");
 const path = require("path");
@@ -41,7 +41,7 @@ class ApiHandler {
     let arData = [];
     for (let file in req.form_data.files) {
       let jsonData = req.form_data.files[file];
-      jsonData.uuid = generateUUID();
+      jsonData.uuid = general.generateUUID();
       req.ids.push(jsonData.uuid);
       jsonData.created_time = new Date().getTime();
       arData.push(jsonData);
@@ -76,7 +76,7 @@ class ApiHandler {
     let arData = [];
     for (let file in req.form_data.files) {
       let jsonData = req.form_data.files[file];
-      jsonData.uuid = generateUUID();
+      jsonData.uuid = general.generateUUID();
       req.ids.push(jsonData.uuid);
       jsonData.updated_time = new Date().getTime();
       arData.push(jsonData);
@@ -382,7 +382,7 @@ class ApiHandler {
       directArr = JSON.parse(meetingData.directs);
     }
     directArr.push(req.json_data.uuid);
-
+    console.log(directArr);
     leaderDirectModels.meetings
       .updateOneRecord(
         {
@@ -413,14 +413,13 @@ class ApiHandler {
   createDirect(req, res, next) {
     let jsonData = {
       ...req.json_data,
-      uuid: generateUUID(),
+      uuid: general.generateUUID(),
       created_time: new Date().getTime(),
       updated_time: new Date().getTime(),
       updated_user: req.user.username,
       created_user: req.user.username,
       status: 1,
     };
-    console.log(jsonData);
 
     leaderDirectModels.directs
       .insertOneRecord(jsonData)
@@ -441,11 +440,11 @@ class ApiHandler {
           created_user: req.user.username,
         };
         if (jsonData.executors) {
-          createDirectOrgHelper(jsonData, defaultDataInput, jsonData.executors, "executors");
+          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.executors, "executors");
           defaultDataLoops.executors = jsonData.executors;
         }
         if (jsonData.assessors) {
-          createDirectOrgHelper(jsonData, defaultDataInput, jsonData.assessors, "assessors");
+          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.assessors, "assessors");
           defaultDataLoops.assessors = jsonData.assessors;
         }
 
@@ -492,10 +491,10 @@ class ApiHandler {
       .updateOneRecord(jsonData, { uuid: jsonData.uuid })
       .then(async (data) => {
         if (jsonData.executors) {
-          updateDirectOrgHelper(jsonData, defaultDataInput, "executors", oldDirect);
+          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "executors", oldDirect);
         }
         if (jsonData.assessors) {
-          updateDirectOrgHelper(jsonData, defaultDataInput, "assessors", oldDirect);
+          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "assessors", oldDirect);
         }
         req.finalJson = data;
         next();
@@ -676,7 +675,6 @@ class ApiHandler {
     let jsonData = req.form_data.params;
     jsonData.attachments = "[ " + req.ids[0] + " ]";
     jsonData.created_time = new Date().getTime();
-    console.log(jsonData);
 
     leaderDirectModels.direct_executes
       .insertOneRecord(jsonData)
