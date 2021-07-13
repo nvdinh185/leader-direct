@@ -21,16 +21,24 @@ export default function filterDataReducer(state = defaultFilter, action) {
       if (action.payload.length === 0) {
         return { ...state, loading: false, err: "" };
       }
-      let leaderTypes = action.payload.filter((cat) => cat.parent_id === 7);
+      let status = action.payload.filter((cat) => cat.parent_id === 1);
+      let orgRoles = action.payload.filter((cat) => cat.parent_id === 2);
       let directTypes = action.payload.filter((cat) => cat.parent_id === 3);
       let meetingTypes = action.payload.filter((cat) => cat.parent_id === 4);
+      let exeTypes = action.payload.filter((cat) => cat.parent_id === 5);
+      let assTypes = action.payload.filter((cat) => cat.parent_id === 6);
+      let leaderTypes = action.payload.filter((cat) => cat.parent_id === 7);
       let backgrounds = action.payload.filter((cat) => cat.parent_id === 8);
       return {
         ...state,
         categories: action.payload,
-        leaderTypes: leaderTypes,
+        status: status,
+        orgRoles: orgRoles,
         directTypes: directTypes,
         meetingTypes: meetingTypes,
+        exeTypes: exeTypes,
+        assTypes: assTypes,
+        leaderTypes: leaderTypes,
         backgrounds: backgrounds,
         loading: false,
         err: "",

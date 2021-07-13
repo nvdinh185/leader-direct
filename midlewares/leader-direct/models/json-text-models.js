@@ -115,8 +115,8 @@ module.exports =  {
       foreignKey: 'FOREIGN KEY (exec_status) REFERENCES categories(id)'
     },
     percent_complete: { type: 'STRING', length: 255 },
-    delay_reason: { type: 'STRING', length: 1000 },
-    expired_date: { type: 'DATETIME' },
+    delay_reason: { type: 'STRING', length: 2000 },
+    due_date: { type: 'DATETIME' },
     histories: { type: 'STRING', length: 255 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 255 },

@@ -78,7 +78,13 @@ function Board({
   };
 
   const board = (
-    <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping={Boolean(containerHeight)}>
+    <Droppable
+      // isDropDisabled={true}
+      droppableId="board"
+      type="COLUMN"
+      direction="horizontal"
+      ignoreContainerClipping={Boolean(containerHeight)}
+    >
       {(provided) => (
         <Container ref={provided.innerRef} {...provided.droppableProps}>
           {/* // ---------------------------------------------------------------------------------  */}
