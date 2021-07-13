@@ -1,3 +1,5 @@
+const { createDirectOrgHelper, updateDirectOrgHelper } = require("./createUpdate");
+
 /**
  * Hàm tạo mã uuid v4 duy nhất dùng để trả về id cho các hàm cần
  * @returns {string} uuid -> Trả về mã uuid v4
@@ -21,4 +23,4 @@ const generateUUID = () => {
   });
 };
 
-module.exports = { generateUUID };
+module.exports = { generateUUID, createDirectOrgHelper, updateDirectOrgHelper };

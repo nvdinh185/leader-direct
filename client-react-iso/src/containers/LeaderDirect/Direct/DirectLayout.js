@@ -72,7 +72,8 @@ export default function () {
       let directCat = directTypes.find((cat) => {
         return direct.category === cat.id;
       });
-      let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
+      let leaderCat = leaderTypes.find((cat) => cat.id === parseInt(direct.leader));
+      console.log(leaderCat);
       return (
         <Col key={direct.id} {...returnListItemColSpan()}>
           <ListItem
