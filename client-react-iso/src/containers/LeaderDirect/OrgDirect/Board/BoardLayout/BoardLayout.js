@@ -6,7 +6,7 @@ import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import { Link } from "react-router-dom";
 
-import { Layout, Menu, Dropdown, Popover, Checkbox } from "antd";
+import { Layout, Menu, Dropdown, Popover, Checkbox, Button } from "antd";
 import { CaretDownOutlined, DownOutlined } from "@ant-design/icons";
 import PageHeader from "@components/utility/pageHeader";
 import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
@@ -27,11 +27,16 @@ import {
   Header,
   HeaderSecondary,
 } from "./BoardLayout.style";
+import { ButtonAdd } from "@components/Admin/ButtonAdd";
+import { updateDirectOrgExecStatus } from "@apis/directOrgs";
 
 const { Content } = Layout;
 
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => {
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
+  const token = useSelector((state) => state.Auth.idToken);
+  const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
+  const boardDOs = useSelector((state) => state.scrumBoard.tasks);
   const [backgroundUrl, setBackgroundUrl] = useState();
 
   const menu = (
@@ -67,6 +72,21 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
     </Menu>
   );
 
+  function handleUpdateDOStatus() {
+    // TODO: find the changed direct_orgs and create obj format: [{uuid: 'asdf312-231', status: 11}]
+    let updateArr = directOrgs.reduce((agg, directOrg) => {
+      let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
+      if (boardItemStt !== directOrg.exec_status) {
+        console.log(boardItemStt);
+        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt }];
+      }
+      return agg;
+    }, []);
+    console.log(updateArr);
+    // TODO: Call api to update the change arr
+    updateDirectOrgExecStatus(token, { update_arr: updateArr });
+  }
+
   // Khi có backgrounds trong store thì set riêng giá trị background
   useEffect(() => {
     if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
@@ -93,7 +113,9 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
         </PageHeader>
         <HeaderSecondary>
           <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
-
+          <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
+            Cập Nhập Dữ Liệu
+          </ButtonAdd>
           {/* // --------------------------------------------------------------------------------- 
           // TODO: RENDER YOUR OWN FILTER HERE
           // ---------------------------------------------------------------------------------  */}

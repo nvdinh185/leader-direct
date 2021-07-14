@@ -33,11 +33,13 @@ const TaskCard = ({ task, showDrawer }) => {
       >
         <TaskCardTopMostDiv></TaskCardTopMostDiv>
         <CardBody onClick={showDrawer}>
-          <CardTitle>{task.title}</CardTitle>
+          <Tooltip title={task.title}>
+            <CardTitle>{task.title}</CardTitle>
+          </Tooltip>
         </CardBody>
         <div style={{ display: "flex", alignItems: "center", marginLeft: "15px", color: "grey" }}>
           <CardIcon src={ClockIcon} alt="Clock Icon" mr={10} />
-          {moment(task.created_at).format("ddd d")}
+          <p style={{ fontSize: "11px" }}>{moment(task.created_at).format("DD/MM/YYYY")}</p>
         </div>
         <HrBar />
         <CardFooter>

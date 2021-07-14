@@ -1,5 +1,5 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID } = require("./GeneralHelper");
+const { generateUUID, DO_DX_STT_MAP } = require("./GeneralHelper");
 
 const EXE_TYPES = {
   CREATE_DIRECT: 51,
@@ -30,9 +30,8 @@ function createDirectExeHelper(dataInput) {
     if (dataInput) {
       let dxUUID = generateUUID();
       let dataToInsert = {
-        uuid: dxUUID,
         ...dataInput,
-        category: EXE_TYPES.CREATE_DIRECT,
+        uuid: dxUUID,
         created_time: new Date().getTime(),
         status: 1,
       };
@@ -49,32 +48,72 @@ function createDirectExeHelper(dataInput) {
 
 /**
  * Hàm tạo direct_org theo các giá trị truyền vào (để rút gọn bớt mấy cái hàm lặp lại)
- * @param {*} dataInput Build datainput gồm các field: direct_org_uuid, org_id, org_role, cat, status, created_user
+ * @param {[object]} req mảng chứa thông tin cần update của direct org [{uuid: '123dsfas', exec_status: 12}]
  */
-// async function updateDirectExeHelper({ directOrgUuid, status, updated_user }) {
-//   // Đầu tiên lấy các bản ghi của thằng direct_org đó ra đã
-//   console.log("DEBUG ------------------------------------------------------------- \n", directOrgUuid);
-//   let dxArr = await leaderDirectModels.direct_executes.getAllData({ direct_org_uuid: directOrgUuid, status: !status });
+function createOrUpdateDXOnDOChanged(req) {
+  return new Promise(async (resolve, reject) => {
+    const { insertUUIDs, updateInfoArr, insertNewArr } = await returnDXAddOrUpdateArr(req);
+    let resultInsert = "";
+    let resultUpdate = "";
+    try {
+      if (updateInfoArr && updateInfoArr.length > 0) {
+        let uuidUpdates = updateInfoArr.map((item) => item.uuid);
+        resultUpdate = await leaderDirectModels.direct_executes.updateRows(updateInfoArr, { uuid: { $in: uuidUpdates } });
+      }
+      if (insertNewArr && insertNewArr.length > 0) {
+        resultInsert = await leaderDirectModels.direct_executes.importRows(insertNewArr);
+      }
+      resolve({ insertUUIDs, resultUpdate, resultInsert });
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+}
 
-//   // Sau đó duyệt qua từng phần tử rồi cập nhập trạng thái cho nó theo trạng thái truyền vào
-//   if (dxArr) {
-//     dxArr.forEach(async (dx) => {
-//       // console.log("DEBUG ------------------------------------------------------------- \n", dx);
-//       try {
-//         await leaderDirectModels.direct_executes.updateOneRecord(
-//           {
-//             ...dx,
-//             status: status,
-//             updated_time: new Date().getTime(),
-//             updated_user: updated_user,
-//           },
-//           { uuid: dx.uuid }
-//         );
-//       } catch (err) {
-//         console.log(err);
-//       }
-//     });
-//   }
-// }
+function returnDXAddOrUpdateArr(req) {
+  // Step 1: Tìm các bản ghi directOrgEx đã có giá trị exec_status này rồi tách ra làm 2 case -> create new & update info only
+  return new Promise(async (res, rej) => {
+    let uuidArr = req.json_data.update_arr.map((item) => item.uuid);
+    let oldDXArr = await leaderDirectModels.direct_executes.getAllData({ direct_org_uuid: { $in: uuidArr } });
+    let genUUIDs = [];
+    // So sánh status cũ với mới và tách ra 2 object
+    let dXAddOrUpdateArr = req.json_data.update_arr.reduce(
+      (agg, item) => {
+        const reqDxCat = DO_DX_STT_MAP[item.exec_status].DX;
+        const oldUuidDx = oldDXArr.find((old) => old.direct_org_uuid === item.uuid && old.category === reqDxCat);
+        // Nếu tìm ra uuidDx thì update
+        if (oldUuidDx) {
+          return {
+            ...agg,
+            updateInfoArr: [...agg.updateInfoArr, { ...oldUuidDx, description: item.description, category: reqDxCat }],
+          };
+        }
+        // Nếu khác thì thêm mới DX vào
+        // Lấy 1 đối tượng có direct org tương đương ở oldDXArr để có thông tin của nó
+        let sampleOldDXArr = oldDXArr.find((old) => old.direct_org_uuid === item.uuid);
+        let newUUID = generateUUID();
+        genUUIDs.push({ doUUID: item.uuid, dxUUID: newUUID });
+        return {
+          ...agg,
+          insertNewArr: [
+            ...agg.insertNewArr,
+            {
+              ...sampleOldDXArr,
+              uuid: newUUID,
+              description: item.description,
+              category: reqDxCat,
+              created_time: new Date().getTime(),
+              created_user: req.user.username,
+              status: 1,
+            },
+          ],
+        };
+      },
+      { updateInfoArr: [], insertNewArr: [] }
+    );
+    res({ ...dXAddOrUpdateArr, insertUUIDs: genUUIDs });
+  });
+}
 
-module.exports = { createDirectExeHelper };
+module.exports = { createDirectExeHelper, createOrUpdateDXOnDOChanged };

@@ -453,6 +453,20 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.getMeetingById,
     ],
+
+    /**
+     * (131) POST /leader-direct/api/update-direct-org-exec-status
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS: {execStatus: 52, status: 12}
+     */
+
+    "/update-direct-org-exec-status": [
+      expHandlers.setRequestParameter("/update-direct-org-exec-status", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.updateDirectOrgExecStatus,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

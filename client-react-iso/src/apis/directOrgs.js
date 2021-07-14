@@ -16,6 +16,6 @@ export const getDirectOrgAll = (token) => {
 //   return callAPI("post", baseURL + "/create-direct", data, token);
 // };
 
-// export const updateDirect = (token, data) => {
-//   return callAPI("post", baseURL + "/update-direct", data, token);
-// };
+export const updateDirectOrgExecStatus = (token, data) => {
+  return callAPI("post", baseURL + "/update-direct-org-exec-status", data, token);
+};

@@ -16,6 +16,7 @@ const { general, doHelper, dxHelper } = require("./utils/index");
 const fs = require("fs");
 const mime = require("mime-types");
 const path = require("path");
+const { DO_DX_STT_MAP } = require("./utils/createUpdate/GeneralHelper");
 
 class ApiHandler {
   constructor() {
@@ -1019,6 +1020,50 @@ class ApiHandler {
         req.error = err;
         next();
       });
+  }
+
+  /**
+   * (131) POST /leader-direct/api/update-direct-org-exec-status
+   *  Post dữ liệu direct_org (uuid) lên kèm theo status (DO_STATUS) muốn thay đổi
+   *  - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS: {uuid: 'asdfas-asdf1123', status: 51}
+   */
+  async updateDirectOrgExecStatus(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let uuidArr = req.json_data.update_arr.map((uuid) => uuid.uuid);
+    // Lấy các bản ghi cũ của mảng uuid này trong db
+    let oldDirectOrgArr = await leaderDirectModels.direct_orgs.getAllData({ uuid: { $in: uuidArr } });
+    // Tạo ra đối tượng mới dựa trên các bản ghi cũ này
+    try {
+      // Tạo mới các dx trước để lấy ra mảng uuids dx
+      let { insertUUIDs, resultUpdate, resultInsert } = await dxHelper.createOrUpdateDXOnDOChanged(req);
+      let updateDOArr = oldDirectOrgArr.map((odo) => {
+        let newDO = req.json_data.update_arr.find((ua) => ua.uuid === odo.uuid);
+        let newDXUUIDs = insertUUIDs.filter((insertUUID) => insertUUID.doUUID === odo.uuid).map((item) => item.dxUUID);
+        let newHistories = [...JSON.parse(odo.histories), ...newDXUUIDs];
+        return {
+          ...odo,
+          ...newDO,
+          histories: JSON.stringify(newHistories),
+          exec_status: parseInt(newDO.exec_status),
+          updated_time: new Date().getTime(),
+          updated_user: req.user.username,
+        };
+      });
+      // Đối với direct org thì update status và bổ sung thêm trường histories (nếu có insert mới)
+      let result = await leaderDirectModels.direct_orgs.updateRows(updateDOArr, { uuid: { $in: uuidArr } });
+      req.finalJson = { result, resultDx: { resultUpdate, resultInsert } };
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
   }
 }
 

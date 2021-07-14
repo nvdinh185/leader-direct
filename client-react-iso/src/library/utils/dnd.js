@@ -34,12 +34,11 @@ const createBoardColsInfo = (colInfos, data) => {
   let colMapData = data.reduce((agg, item) => {
     // Nếu đã có thì push vào
     if (Object.keys(agg).includes("" + item.exec_status)) {
-      return { ...agg, [item.exec_status]: [...agg[item.exec_status], "do-" + item.organization_id + item.id] };
+      return { ...agg, [item.exec_status]: [...agg[item.exec_status], item.uuid] };
     }
     // CHưa có thì tạo mới
-    return { ...agg, [item.exec_status]: ["do-" + item.organization_id + item.id] };
+    return { ...agg, [item.exec_status]: [item.uuid] };
   }, {});
-  console.log("DEBUG CREATE BOARD COLS ------------------------------------------------------------- \n", colMapData);
   let boardColInfos = colInfos.reduce((agg, status) => {
     return {
       ...agg,
@@ -60,16 +59,17 @@ const createBoardColsData = (data, field) => {
     let boardData = data.reduce((agg, item) => {
       return {
         ...agg,
-        ["do-" + item.organization_id + item.id]: {
-          id: "do-" + item.organization_id + item.id,
+        [item.uuid]: {
+          id: item.uuid,
           column_id: "col-" + item[field],
           title: item.description,
           description: item.description,
           due_date: item.due_date ? item.due_date : new Date(),
           attachments: item.attachments ? item.attachments : [],
-          comments: [],
+          comments: item.histories ? item.histories : [],
           created_at: item.created_time,
           updated_at: item.updated_time,
+          direct_uuid: item.direct_uuid,
         },
       };
     }, {});

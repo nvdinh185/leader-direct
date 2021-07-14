@@ -1,7 +1,6 @@
 // saga.js
 import { all, takeEvery, put, select } from "redux-saga/effects";
 import scrumBoardActions from "./actions";
-import DemoData from "./data";
 import { loadState, saveState } from "@lib/helpers/localStorage";
 import { generateColumnDnd } from "@lib/utils/dnd";
 

@@ -118,4 +118,16 @@ export const HeaderSecondary = styled.div`
   padding: 0 24px;
   margin-top: 10px;
   margin-bottom: 10px;
+
+  .btnUpdateDOStatus {
+    background: linear-gradient(135deg, #303395 0%, #27efef 100%);
+    font-weight: "bold";
+    font-size: "16px";
+    border-radius: "8px";
+  }
+
+  &.hover {
+    background: linear-gradient(135deg, #303395 0%, #27efef 100%) !important;
+    border-radius: "8px";
+  }
 `;

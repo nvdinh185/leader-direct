@@ -27,8 +27,9 @@ export default function DetailDirects({ meeting, directs, ...props }) {
     return _directs
       ? _directs.map((direct, i) => {
           let directCat = categories.find((cat) => {
-            return direct.category === cat.id;
+            return parseInt(direct.category) === cat.id;
           });
+          console.log(directCat);
           let leaderCat = categories.find((cat) => cat.id === parseInt(direct.leader));
 
           return (

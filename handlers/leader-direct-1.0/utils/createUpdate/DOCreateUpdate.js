@@ -1,5 +1,5 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID, ORG_ROLE } = require("./GeneralHelper");
+const { generateUUID, ORG_ROLE, DX_STATUS } = require("./GeneralHelper");
 const { createDirectExeHelper } = require("./DXCreateUpdate");
 
 // ---------------------------------------------------------------------------------
@@ -26,11 +26,12 @@ function createDirectOrgHelper(jsonData, defaultDataInput, orgIdArrStr, directOr
           organization_id: parseInt(exe),
           organization_role: directOrgMode === "executors" ? ORG_ROLE.EXECUTOR : ORG_ROLE.ASSESSOR,
           created_user: defaultDataInput.created_user,
+          category: DX_STATUS.CREATE_DIRECT,
         }).then(async (result) => {
           // Tạo mới trong bảng direct_orgs với uuid direct_executes tạo mới
           await leaderDirectModels.direct_orgs.insertOneRecord({
-            uuid: doUUID,
             ...defaultDataInput,
+            uuid: doUUID,
             histories: JSON.stringify([result.dxUUID]),
             exec_status: 11,
             organization_id: parseInt(exe),
@@ -134,10 +135,11 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
         organization_id: parseInt(org),
         organization_role: directOrgMode === "executors" ? ORG_ROLE.EXECUTOR : ORG_ROLE.ASSESSOR,
         created_user: defaultDataInput.created_user,
+        category: DX_STATUS.CREATE_DIRECT,
       }).then(async (result) => {
         await leaderDirectModels.direct_orgs.insertOneRecord({
-          uuid: doUUID,
           ...defaultDataInput,
+          uuid: doUUID,
           description: jsonData.description,
           histories: JSON.stringify([result.dxUUID]),
           exec_status: 11,
