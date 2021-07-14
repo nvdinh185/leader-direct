@@ -3,26 +3,9 @@ import { all, takeEvery, put, select } from "redux-saga/effects";
 import scrumBoardActions from "./actions";
 import DemoData from "./data";
 import { loadState, saveState } from "@lib/helpers/localStorage";
+import { generateColumnDnd } from "@lib/utils/dnd";
 
 const getScrumBoards = (state) => state.scrumBoard;
-
-function* boardsRenderEffectSaga() {
-  let boards;
-  let columns;
-  let tasks;
-  if (localStorage.hasOwnProperty("scrum_boards")) {
-    const scrum_boards = loadState("scrum_boards");
-    boards = scrum_boards.boards;
-    columns = scrum_boards.columns;
-    tasks = scrum_boards.tasks;
-  } else {
-    boards = DemoData.boards;
-    columns = DemoData.columns;
-    tasks = DemoData.tasks;
-  }
-  saveState("scrum_boards", { boards, columns, tasks });
-  yield put(scrumBoardActions.setBoardsData({ boards, columns, tasks }));
-}
 
 function* boardRenderEffectSaga({ payload }) {
   let scrum_boards;
@@ -30,16 +13,12 @@ function* boardRenderEffectSaga({ payload }) {
   let columns;
   let tasks;
   // TODO: render board base on data from server instead of localStorage
-  if (localStorage.hasOwnProperty("scrum_boards")) {
-    scrum_boards = loadState("scrum_boards");
-    boards = scrum_boards.boards;
-    columns = scrum_boards.columns;
-    tasks = scrum_boards.tasks;
-  } else {
-    scrum_boards = DemoData;
-    boards = DemoData.boards;
-    columns = DemoData.columns;
-    tasks = DemoData.tasks;
+  if (payload) {
+    const [boardNCols, boardData] = generateColumnDnd(payload.statuses, payload.data, payload.field);
+    boards = boardNCols.board;
+    columns = boardNCols.columns;
+    tasks = boardData ? boardData : [];
+    console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
   }
 
   yield put(
@@ -109,7 +88,6 @@ function* moveTaskEffectSaga({ payload: { tasks, columns } }) {
 
 export default function* scrumBoardSaga() {
   yield all([
-    takeEvery(scrumBoardActions.LOAD_BOARDS_DATA_SAGA, boardsRenderEffectSaga),
     takeEvery(scrumBoardActions.LOAD_CURRENT_BOARD_DATA_SAGA, boardRenderEffectSaga),
     takeEvery(scrumBoardActions.MOVE_COLUMN_WATCHER, moveColumnEffectSaga),
     takeEvery(scrumBoardActions.CREATE_OR_UPDATE_TASK_WATCHER, createOrUpdateTaskEffectSaga),
