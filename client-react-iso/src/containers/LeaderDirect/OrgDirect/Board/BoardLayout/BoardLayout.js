@@ -30,20 +30,6 @@ import {
 
 const { Content } = Layout;
 
-const LABELS = [
-  { label: "success", value: "success" },
-  { label: "error", value: "error" },
-  { label: "processing", value: "processing" },
-  { label: "warning", value: "warning" },
-  { label: "default", value: "default" },
-];
-
-const ASSIGNEES = [
-  { label: "Mark", value: "Mark" },
-  { label: "Bob", value: "Bob" },
-  { label: "Anthony", value: "Anthony" },
-];
-
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => {
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const [backgroundUrl, setBackgroundUrl] = useState();
@@ -108,7 +94,10 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
         <HeaderSecondary>
           <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
 
-          <Filters>
+          {/* // --------------------------------------------------------------------------------- 
+          // TODO: RENDER YOUR OWN FILTER HERE
+          // ---------------------------------------------------------------------------------  */}
+          {/* <Filters>
             <Popover
               placement="bottom"
               overlayClassName="scrum-popover"
@@ -131,7 +120,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
                 <CaretDownOutlined />
               </div>
             </Popover>
-          </Filters>
+          </Filters> */}
         </HeaderSecondary>
 
         <Content

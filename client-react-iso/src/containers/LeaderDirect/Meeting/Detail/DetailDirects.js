@@ -15,11 +15,11 @@ export default function DetailDirects({ meeting, directs, ...props }) {
   const token = useSelector((state) => state.Auth.idToken);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const leaderTypes = useSelector((state) => state.filterData.leaderTypes);
+  const directTypes = useSelector((state) => state.filterData.directTypes);
   const dispatch = useDispatch();
 
   const [directComps, setDirectComps] = useState();
-  const [leaderTypes, setLeaderTypes] = useState([]);
-  const [directTypes, setDirectTypes] = useState([]);
 
   const size = useWindowSize();
 
@@ -65,14 +65,6 @@ export default function DetailDirects({ meeting, directs, ...props }) {
       setDirectComps(renderDirects(directs));
     }
   }, [directs, categories]);
-
-  // Sau khi có categories thì tạo 2 state directTypes và leaderTypes
-  useEffect(() => {
-    if (categories?.[0]) {
-      setLeaderTypes(categories.filter((cat) => cat.parent_id === 6));
-      setDirectTypes(categories.filter((cat) => cat.parent_id === 3));
-    }
-  }, [categories]);
 
   const handleAddDirect = () => {
     dispatch(

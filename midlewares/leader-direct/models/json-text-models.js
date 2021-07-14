@@ -10,38 +10,34 @@ module.exports = {
       isUnique: 1,
       autoIncrement: 1
     },
-    name: { type: 'STRING', length: 2000 },
-    description: { type: 'STRING', length: 2000 },
+    name: { type: 'STRING', length: 200 },
+    description: { type: 'STRING', length: 500 },
     category: { type: 'INTEGER' },
     img_url: { type: 'STRING', length: 255 },
     attachments: { type: 'STRING', length: 1000 },
-    directs: { type: 'STRING', length: 2000 },
+    directs: { type: 'STRING', length: 1000 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 255 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 255 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  directs:
-  {
-    id:
-    {
-      type: 'INTEGER',
-      notNull: 1,
-      primaryKey: 1,
-      isUnique: 1,
-      autoIncrement: 1
-    },
-    meeting_id:
-    {
+  directs: {
+    id: { type: 'INTEGER', notNull: 1, isUnique: 1, autoIncrement: 1 },
+    meeting_id: {
       type: 'INTEGER',
       notNull: 1,
       foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
     },
-    uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
-    description: { type: 'STRING', length: 2000 },
-    category:
-    {
+    uuid: {
+      type: 'STRING',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      length: 50
+    },
+    description: { type: 'STRING', length: 500 },
+    category: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
@@ -51,11 +47,10 @@ module.exports = {
       foreignKey: 'FOREIGN KEY (leader) REFERENCES categories(id)',
       length: 255
     },
-    executors: { type: 'STRING', length: 500 },
-    assessors: { type: 'STRING', length: 2000 },
+    executors: { type: 'STRING', length: 200 },
+    assessors: { type: 'STRING', length: 200 },
     img_url: { type: 'STRING', length: 255 },
-    attachments: { type: 'STRING', length: 1000 },
-    expired_date: { type: 'DATETIME' },
+    due_date: { type: 'DATETIME' },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 255 },
     updated_time: { type: 'DATETIME' },
@@ -92,19 +87,16 @@ module.exports = {
     updated_user: { type: 'STRING', length: 255 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  direct_orgs:
-  {
-    id:
-    {
-      type: 'INTEGER',
+  direct_orgs: {
+    id: { type: 'INTEGER', notNull: 1, autoIncrement: 1 },
+    uuid: {
+      type: 'STRING',
       notNull: 1,
       primaryKey: 1,
       isUnique: 1,
-      autoIncrement: 1
+      length: 50
     },
-    uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
-    meeting_id:
-    {
+    meeting_id: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
     },
@@ -125,44 +117,42 @@ module.exports = {
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
     organization_role: { type: 'INTEGER' },
-    attachments: { type: 'STRING', length: 2000 },
-    exec_status:
-    {
+    description: { type: 'STRING', length: 500 },
+    attachments: { type: 'STRING', length: 1000 },
+    exec_status: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (exec_status) REFERENCES categories(id)'
     },
     percent_complete: { type: 'STRING', length: 255 },
-    delay_reason: { type: 'STRING', length: 2000 },
-    expired_date: { type: 'DATETIME' },
-    histories: { type: 'STRING', length: 255 },
+    delay_reason: { type: 'STRING', length: 1000 },
+    due_date: { type: 'DATETIME' },
+    histories: { type: 'STRING', length: 1000 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 255 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 255 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  direct_executes:
-  {
-    id:
-    {
-      type: 'INTEGER',
+  direct_executes: {
+    id: { type: 'INTEGER', notNull: 1, autoIncrement: 1 },
+    uuid: {
+      type: 'STRING',
       notNull: 1,
       primaryKey: 1,
       isUnique: 1,
-      autoIncrement: 1
+      length: 50
     },
-    uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
-    direct_uuid:
-    {
+    direct_uuid: {
       type: 'STRING',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
       length: 50
     },
-    direct_org_id:
-    {
-      type: 'INTEGER',
+    direct_org_uuid: {
+      type: 'STRING',
       notNull: 1,
-      foreignKey: 'FOREIGN KEY (direct_org_id) REFERENCES direct_orgs(id)'
+      foreignKey: 'FOREIGN KEY (direct_org_id) REFERENCES direct_orgs(id)',
+      length: 50
     },
     organization_id:
     {
@@ -171,32 +161,28 @@ module.exports = {
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
     organization_role: { type: 'STRING', length: 255 },
-    description: { type: 'STRING', length: 2000 },
-    category:
-    {
+    description: { type: 'STRING', length: 1000 },
+    category: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
-    attachments: { type: 'STRING', length: 2000 },
+    attachments: { type: 'STRING', length: 500 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 50 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 255 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  attachments:
-  {
-    id:
-    {
-      type: 'INTEGER',
+  attachments: {
+    id: { type: 'INTEGER', notNull: 1, isUnique: 1, autoIncrement: 1 },
+    uuid: {
+      type: 'STRING',
       notNull: 1,
       primaryKey: 1,
       isUnique: 1,
-      autoIncrement: 1
+      length: 50
     },
-    uuid: { type: 'STRING', notNull: 1, isUnique: 1, length: 50 },
-    category:
-    {
+    category: {
       type: 'INTEGER',
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
@@ -214,7 +200,7 @@ module.exports = {
   {
     id: { type: 'INTEGER', notNull: 1, primaryKey: 1, isUnique: 1 },
     parent_id: { type: 'INTEGER', notNull: 1 },
-    children: { type: 'STRING', length: 2000 },
+    children: { type: 'STRING', length: 500 },
     code: { type: 'STRING', notNull: 1, length: 50 },
     name: { type: 'STRING', length: 50 },
     description: { type: 'STRING', length: 255 },
