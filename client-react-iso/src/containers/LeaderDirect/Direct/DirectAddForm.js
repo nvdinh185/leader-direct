@@ -18,7 +18,6 @@ export default function DirectAddForm({
   handleCancel,
   ...props
 }) {
-  console.log(meeting);
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.directs.loading);

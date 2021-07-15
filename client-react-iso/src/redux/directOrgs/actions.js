@@ -1,6 +1,7 @@
 import * as directOrgTypes from "@redux/directOrgs/types";
 import * as directOrgApi from "@apis/directOrgs";
-import { getMeetingById } from "@redux/meetings/actions";
+import * as attchmentApi from "@apis/attachments";
+import modalActions from "@redux/modal/actions";
 
 // ---------------------------------------------------------------------------------
 // I. NON API DISPATCH SECTION
@@ -28,7 +29,10 @@ export const getDirectOrgAll = (token) => {
       .getDirectOrgAll(token)
       .then((data) => {
         if (data.status === 200) {
+          let uuidArr = data.data.map((data) => data.uuid);
           dispatch(getDirectOrgAllSuccess(data.data));
+          dispatch(getDirectExeByDOs(token, { uuidArr }));
+          dispatch(modalActions.closeModal());
         } else {
           dispatch(getDirectOrgAllFail(data));
         }
@@ -61,40 +65,124 @@ export const getDirectOrgAllFail = (error) => {
 
 // ---------------------------------------------------------------------------------
 // 2 - GET DIRECT EXE BY DIRECT ORGS UUID
-export const getDirectOrgsByDos = (token, data) => {
+// data có định dạng là {uuidArr: []}
+export const getDirectExeByDOs = (token, data) => {
   return (dispatch) => {
-    dispatch(getDirectOrgsByDosStart());
+    dispatch(getDirectExeByDOsStart());
     directOrgApi
-      .getDirectOrgsByDos(token, data)
+      .getDirectExeByDOs(token, data)
       .then((data) => {
         if (data.status === 200) {
-          dispatch(getDirectOrgsByDosSuccess(data.data));
+          dispatch(getDirectExeByDOsSuccess(data.data));
         } else {
-          dispatch(getDirectOrgsByDosFail(data));
+          dispatch(getDirectExeByDOsFail(data));
         }
       })
       .catch((err) => {
-        dispatch(getDirectOrgsByDosFail(err.reponse ? err.response.data : err));
+        dispatch(getDirectExeByDOsFail(err.reponse ? err.response.data : err));
       });
   };
 };
 
-export const getDirectOrgsByDosStart = () => {
+export const getDirectExeByDOsStart = () => {
   return {
     type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_START,
   };
 };
 
-export const getDirectOrgsByDosSuccess = (data) => {
+export const getDirectExeByDOsSuccess = (data) => {
   return {
     type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_SUCCESS,
     payload: data,
   };
 };
 
-export const getDirectOrgsByDosFail = (error) => {
+export const getDirectExeByDOsFail = (error) => {
   return {
     type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// 3 - GET ATTACHMENTS BY IDS
+export const getAttachmentByIds = (token, form) => {
+  return (dispatch) => {
+    dispatch(getAttachmentByIdsStart());
+    attchmentApi
+      .getAttachmentByIds(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getAttachmentByIdsSuccess(data.data));
+        } else {
+          dispatch(getAttachmentByIdsFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getAttachmentByIdsFail(err.response ? err.response.data : err));
+      });
+  };
+};
+
+export const getAttachmentByIdsStart = () => {
+  return {
+    type: directOrgTypes.GET_DO_ATTACHMENTS_START,
+  };
+};
+
+export const getAttachmentByIdsSuccess = (data) => {
+  return {
+    type: directOrgTypes.GET_DO_ATTACHMENTS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getAttachmentByIdsFail = (error) => {
+  return {
+    type: directOrgTypes.GET_DO_ATTACHMENTS_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------------------------
+// 3 - UPDATE DIRECT EXECUTES AND DO
+export const updateDirectOrgExecStatus = (token, form) => {
+  return (dispatch) => {
+    dispatch(updateDirectOrgExecStatusStart());
+    directOrgApi
+      .updateDirectOrgExecStatus(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(updateDirectOrgExecStatusSuccess(data.data));
+          // Sau khi update thành công thì gọi luôn cái hàm để get tất cả về
+          dispatch(getDirectOrgAll(token));
+        } else {
+          dispatch(updateDirectOrgExecStatusFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(updateDirectOrgExecStatusFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
+
+export const updateDirectOrgExecStatusStart = () => {
+  return {
+    type: directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_START,
+  };
+};
+
+export const updateDirectOrgExecStatusSuccess = (data) => {
+  console.log(data);
+  return {
+    type: directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_SUCCESS,
+    payload: data,
+  };
+};
+
+export const updateDirectOrgExecStatusFail = (error) => {
+  return {
+    type: directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_FAIL,
     payload: error,
   };
 };

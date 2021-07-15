@@ -1,44 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import TimeLine from "@components/uielements/timeline";
-import { TimelineItem } from "@components/uielements/timeline";
-import { ClockCircleOutlined, DownOutlined } from "@ant-design/icons";
+import * as COMMON from "@constants/common";
+import moment from "moment";
+import { Col, Divider, Row, Space, Timeline } from "antd";
+import {
+  PlayCircleOutlined,
+  CaretRightOutlined,
+  ClockCircleOutlined,
+  FastForwardOutlined,
+  CheckCircleFilled,
+} from "@ant-design/icons";
+import Clock from "@assets/images/icon/18.svg";
+import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import ContentHolder from "@components/utility/contentHolder";
+import basicStyle from "@assets/styles/constants";
 
-const HistoryItem = ({ histories }) => {
-  return <TimelineItem></TimelineItem>;
+const HistoryItem = ({ exeTypes, history }) => {
+  let catIcon = "";
+  let tlColor = "";
+  let hisCat = exeTypes.find((exe) => exe.id === history.category);
+  switch (history.category) {
+    case COMMON.EXE_TYPE_MAP.CREATE:
+      catIcon = <PlayCircleOutlined></PlayCircleOutlined>;
+      break;
+    case COMMON.EXE_TYPE_MAP.ONGOING:
+      catIcon = <FastForwardOutlined></FastForwardOutlined>;
+      break;
+    case COMMON.EXE_TYPE_MAP.COMPLETE:
+      catIcon = <CheckCircleFilled style={{ color: "lightgreen" }}></CheckCircleFilled>;
+      tlColor = "green";
+      break;
+    case COMMON.EXE_TYPE_MAP.COMPLETE_PRCT:
+      catIcon = <CaretRightOutlined style={{ color: "orange" }}></CaretRightOutlined>;
+      tlColor = "orange";
+      break;
+    case COMMON.EXE_TYPE_MAP.REQ_EXT1:
+      catIcon = <ClockCircleOutlined style={{ color: "red" }}></ClockCircleOutlined>;
+      tlColor = "magenta";
+      break;
+    default:
+      break;
+  }
+
+  return (
+    <Timeline.Item dot={catIcon} color={history.bg_color}>
+      <p>{`${moment(history.created_at).format("DD/MM/YYYY")} - ${hisCat.name}`}</p>
+      <p style={{ fontSize: "11px", color: "grey" }}>{`${
+        history.description ? `(${history.created_user?.toUpperCase()}) - ` : ""
+      } ${history.description}`}</p>
+    </Timeline.Item>
+  );
 };
 
-export default function TaskHistory({ task }) {
-  //   console.log(task);
-  const histories = useSelector((state) => state.directOrgs.directExeDos);
-  const exeTypes = useSelector((state) => state.filterData.exeTypes);
-
-  const [taskHistory, setTaskHistory] = useState();
-
-  // Effect để lấy ra thông tin history của task này
-  useEffect(() => {
-    if (histories?.[0]) {
-      let taskHis = histories.filter((his) => his.direct_org_uuid === task.task.id);
-      console.log(taskHis);
-      setTaskHistory(taskHistory);
-    }
-  }, [histories]);
+export default function TaskHistory({ exeTypes, task, histories }) {
+  const { rowStyle, colStyle, gutter } = basicStyle;
 
   return (
     <>
-      <div>Task History</div>
-      <TimeLine>
-        <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-        <TimelineItem color="green">Solve initial network problems 2015-09-01</TimelineItem>
-        <TimelineItem dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}>
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-          eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-        </TimelineItem>
-        <TimelineItem color="red">Network problems being solved 2015-09-01</TimelineItem>
-        <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-        <TimelineItem dot={<ClockCircleOutlined style={{ fontSize: "16px" }} />}>Technical testing 2015-09-01</TimelineItem>
-      </TimeLine>
-      ,
+      <HeadingWithIcon heading={"Lịch Sử Xử Lý"} iconSrc={Clock} />
+      <br></br>
+      <Row style={{ ...rowStyle, marginBottom: "20px" }} gutter={gutter} justify="start">
+        <Col span={24}>
+          <ContentHolder>
+            <Timeline>
+              {histories
+                ? histories.map((history) => <HistoryItem exeTypes={exeTypes} key={history.uuid} history={history}></HistoryItem>)
+                : null}
+            </Timeline>
+          </ContentHolder>
+        </Col>
+      </Row>
     </>
   );
 }
