@@ -504,23 +504,26 @@ class ApiHandler {
   }
 
   /**
-   * (108) POST /leader-direct/api/get-direct-org
+   * (108) POST /leader-direct/api/get-direct-exe-by-dos
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    *
    * SAMPLE INPUTS:
    */
-  getDirectOrg(req, res, next) {
-    let jsonData = req.json_data;
-    leaderDirectModels.direct_orgs
-      .getFirstRecord({ id: jsonData.id })
-      .then((data) => {
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        req.error = err;
-        next();
-      });
+  async getDirectExesByDOs(req, res, next) {
+    if (!req.json_data && !req.json_data.uuidArr) {
+      req.error = "Không có dữ liệu theo yêu cầu";
+      next();
+      return;
+    }
+    try {
+      let resultDXs = await leaderDirectModels.direct_executes.getAllData({ direct_org_uuid: { $in: req.json_data.uuidArr } });
+      req.finalJson = resultDXs;
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
   }
 
   /**

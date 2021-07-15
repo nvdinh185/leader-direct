@@ -1,4 +1,5 @@
 import React from "react";
+import * as COMMON from "@constants/common";
 import { connect } from "react-redux";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import drawerActions from "@redux/drawer/actions";
@@ -20,7 +21,7 @@ class TaskItem extends React.PureComponent {
           task={task}
           showDrawer={() =>
             openDrawer({
-              drawerType: "CARD_DETAILS",
+              drawerType: COMMON.DRAWER_TASK_DETAIL,
               drawerProps: {
                 task: task,
                 columnId: columnId,

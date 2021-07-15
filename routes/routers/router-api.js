@@ -176,11 +176,11 @@ const funcPaths = {
      *
      * SAMPLE INPUTS:
      */
-    "/get-direct-org": [
-      expHandlers.setRequestParameter("/get-direct-org", "functionCode"),
+    "/get-direct-exe-by-dos": [
+      expHandlers.setRequestParameter("/get-direct-exe-by-dos", "functionCode"),
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
-      apiHandler.getDirectOrg,
+      apiHandler.getDirectExesByDOs,
     ],
 
     /**

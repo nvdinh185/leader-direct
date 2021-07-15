@@ -1,28 +1,17 @@
-import React, { Fragment } from 'react';
-import {
-  CalendarOutlined,
-  DeleteOutlined,
-  MehOutlined,
-  PaperClipOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { Card, Avatar, Badge, Popconfirm } from 'antd';
-import { CardBodyContent, HrBar, CardFooter, CardBody } from './style';
+import React, { Fragment } from "react";
+import { CalendarOutlined, DeleteOutlined, MehOutlined, PaperClipOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, Avatar, Badge, Popconfirm } from "antd";
+import { CardBodyContent, HrBar, CardFooter, CardBody } from "./style";
 
 const TaskCard = ({ task, showDrawer, onDelete }) => (
   <Card
-    style={{ width: '100%' }}
+    style={{ width: "100%" }}
     bodyStyle={{ padding: 0 }}
-    headStyle={{ borderBottom: 'none' }}
+    headStyle={{ borderBottom: "none" }}
     title={task.title}
     extra={
-      <Popconfirm
-        title="Are you sure delete this task?"
-        okText="Yes"
-        cancelText="No"
-        onConfirm={onDelete}
-      >
-        <DeleteOutlined style={{ cursor: 'pointer' }} />
+      <Popconfirm title="Are you sure delete this task?" okText="Yes" cancelText="No" onConfirm={onDelete}>
+        <DeleteOutlined style={{ cursor: "pointer" }} />
       </Popconfirm>
     }
   >
@@ -34,11 +23,7 @@ const TaskCard = ({ task, showDrawer, onDelete }) => (
         <div>
           <CalendarOutlined /> {task.created_at} - {task.due_date}
         </div>
-        <small>
-          {(Date.parse(task.due_date) - Date.parse(task.created_at)) /
-            (60 * 60 * 1000)}{' '}
-          Hrs
-        </small>
+        <small>{(Date.parse(task.due_date) - Date.parse(task.created_at)) / (60 * 60 * 1000)} Hrs</small>
       </CardBodyContent>
     </CardBody>
     <HrBar />

@@ -58,3 +58,43 @@ export const getDirectOrgAllFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------
+// 2 - GET DIRECT EXE BY DIRECT ORGS UUID
+export const getDirectOrgsByDos = (token, data) => {
+  return (dispatch) => {
+    dispatch(getDirectOrgsByDosStart());
+    directOrgApi
+      .getDirectOrgsByDos(token, data)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getDirectOrgsByDosSuccess(data.data));
+        } else {
+          dispatch(getDirectOrgsByDosFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getDirectOrgsByDosFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
+
+export const getDirectOrgsByDosStart = () => {
+  return {
+    type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_START,
+  };
+};
+
+export const getDirectOrgsByDosSuccess = (data) => {
+  return {
+    type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getDirectOrgsByDosFail = (error) => {
+  return {
+    type: directOrgTypes.GET_DIRECT_EXE_BY_DOS_FAIL,
+    payload: error,
+  };
+};
