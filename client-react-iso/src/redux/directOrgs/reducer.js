@@ -1,5 +1,5 @@
 import * as directOrgTypes from "@redux/directOrgs/types";
-import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
+import { successAlert, errorAlert, warningAlert } from "@components/AlertModal/ModalInfo";
 
 let defaultDirectOrgs = {
   directOrgs: [],
@@ -108,6 +108,53 @@ export default function directReducer(state = defaultDirectOrgs, action) {
         err: action.payload,
         loading: false,
       };
+    // ---------------------------------------------------------------------------------
+    case directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_SUCCESS:
+      successAlert("Thành Công", "Bạn đã cập nhập thông tin chỉ đạo của đơn vị thành công");
+      return {
+        ...state,
+        err: "",
+        updateDODX: action.payload,
+        loading: false,
+      };
+    case directOrgTypes.UPDATE_DIRECT_EXECUTES_DO_FAIL:
+      errorAlert("Lỗi", "Lỗi khi cập nhập thông tin chỉ đạo của đơn vị: " + action.payload.message);
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    // 3 - ATTACHMENTS SECTION
+    // ---------------------------------------------------------------------------------
+    case directOrgTypes.GET_DO_ATTACHMENTS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directOrgTypes.GET_DO_ATTACHMENTS_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false, err: "" };
+      }
+      return {
+        ...state,
+        attachments: action.payload,
+        loading: false,
+      };
+
+    case directOrgTypes.GET_DO_ATTACHMENTS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
     default:
       return state;
   }

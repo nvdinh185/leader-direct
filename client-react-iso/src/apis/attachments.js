@@ -8,6 +8,10 @@ export const getAttachmentById = (token) => {
   return callAPI("post", baseURL + "/get-attachment-by-id", null, token);
 };
 
+export const getAttachmentByIds = (token, data) => {
+  return callAPI("post", baseURL + "/get-attachment-by-ids", data, token);
+};
+
 export const deleteAttachment = (token, data) => {
   return callAPI("post", baseURL + "/delete-attachment", data, token);
 };

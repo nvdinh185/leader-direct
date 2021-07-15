@@ -8,7 +8,7 @@ export const getDirectOrgAll = (token) => {
   return callAPI("post", baseURL + "/get-direct-org-all", null, token);
 };
 
-export const getDirectOrgsByDos = (token, data) => {
+export const getDirectExeByDOs = (token, data) => {
   return callAPI("post", baseURL + "/get-direct-exe-by-dos", data, token);
 };
 

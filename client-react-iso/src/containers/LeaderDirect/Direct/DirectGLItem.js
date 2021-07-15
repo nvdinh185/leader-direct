@@ -7,8 +7,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Space, Avatar, Row, Col, Divider, Tag, Dropdown, Menu, Tooltip } from "antd";
 import { CalendarFilled, SettingOutlined, MessageOutlined, TagOutlined, EditOutlined, EyeFilled } from "@ant-design/icons";
 import { SingleCardWrapper } from "@containers/LeaderDirect/Direct/DirectGLItem.style";
-import useWindowSize from "@lib/hooks/useWindowSize";
 import { setCurrentViewDirectDetail } from "@redux/directs/actions";
+import useWindowSize from "@lib/hooks/useWindowSize";
 
 export default function ({ initModalProps, organizations, executors, assessors, directTypes, leaderTypes, ...props }) {
   const dispatch = useDispatch();
@@ -44,7 +44,6 @@ export default function ({ initModalProps, organizations, executors, assessors, 
   }, [initModalProps, directTypes, leaderTypes]);
 
   function handleOpenModal() {
-    console.log("Openn Modal");
     dispatch(
       modalActions.openModal({
         ...initModalPropsState,
