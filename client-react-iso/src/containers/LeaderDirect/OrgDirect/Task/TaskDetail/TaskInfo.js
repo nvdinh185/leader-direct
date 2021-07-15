@@ -9,8 +9,8 @@ import DescriptionIcon from "@assets/images/icon/06-icon.svg";
 export default function TaskInfo({ task, taskType }) {
   return (
     <>
-      <HeadingWithIcon heading={"Nội Dung"} iconSrc={DescriptionIcon} />
       <Row>
+        <HeadingWithIcon heading={"Nội Dung"} iconSrc={DescriptionIcon} />
         <Col span={24}>
           <p style={{ color: "grey" }}>{task.task.title}</p>
         </Col>

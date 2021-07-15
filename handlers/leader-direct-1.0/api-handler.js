@@ -12,7 +12,7 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const { general, doHelper, dxHelper } = require("./extds/index");
+const { general, doHelper, dxHelper, filterHelper } = require("./extds/index");
 const fs = require("fs");
 const mime = require("mime-types");
 class ApiHandler {
@@ -267,31 +267,12 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   getFilterDirect(req, res, next) {
-    const formatTime = (milisecond) => {
-      var date = new Date(milisecond);
-      var year = date.getFullYear();
-      var month = ("0" + (date.getMonth() + 1)).slice(-2);
-      var day = ("0" + date.getDate()).slice(-2);
-      return `${year}-${month}-${day}`;
-    };
-
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
     }
-
-    let jsonData = req.json_data;
-    // console.log(jsonData);
-    let jsonWhere = {};
-    if (jsonData.from && jsonData.to) {
-      let from = formatTime(jsonData.from);
-      let to = formatTime(jsonData.to);
-      jsonWhere.created_time = { $gte: from, $lte: to };
-    }
-    jsonData.cat ? (jsonWhere.category = jsonData.cat) : "";
-
-    // console.log(jsonWhere);
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
     leaderDirectModels.directs
       .getAllData(jsonWhere)
       .then((data) => {
@@ -1066,6 +1047,68 @@ class ApiHandler {
       req.error = err;
       next();
     }
+  }
+
+  /**
+   * (132) POST /leader-direct/api/get-filter-direct-org
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  getFilterDirectOrg(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    leaderDirectModels.direct_orgs
+      .getAllData(jsonWhere)
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        req.error = err;
+        next();
+      });
+  }
+
+  /**
+   * (133) POST /leader-direct/api/get-filter-meeting
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  getFilterMeeting(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    leaderDirectModels.meetings
+      .getAllData(jsonWhere)
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        req.error = err;
+        next();
+      });
   }
 }
 

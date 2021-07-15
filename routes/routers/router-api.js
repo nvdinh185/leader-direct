@@ -467,6 +467,32 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.updateDirectOrgExecStatus,
     ],
+
+    /**
+     * (132) POST /leader-direct/api/get-filter-direct-org
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-filter-direct-org": [
+      expHandlers.setRequestParameter("/get-filter-direct-org", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getFilterDirectOrg,
+    ],
+
+    /**
+     * (133) POST /leader-direct/api/get-filter-meeting
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-filter-meeting": [
+      expHandlers.setRequestParameter("/get-filter-meeting", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getFilterMeeting,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

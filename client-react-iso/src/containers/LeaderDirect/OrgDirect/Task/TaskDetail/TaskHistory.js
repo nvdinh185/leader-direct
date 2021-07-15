@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import _ from "lodash";
 import * as COMMON from "@constants/common";
 import moment from "moment";
 import { Col, Divider, Row, Space, Timeline } from "antd";
@@ -53,6 +54,15 @@ const HistoryItem = ({ exeTypes, history }) => {
 
 export default function TaskHistory({ exeTypes, task, histories }) {
   const { rowStyle, colStyle, gutter } = basicStyle;
+  const [sortHistories, setSortHistories] = useState();
+
+  useEffect(() => {
+    if (histories?.[0]) {
+      let sortArr = _.orderBy(histories, ["category"], ["asc"]);
+      console.log(sortArr);
+      setSortHistories(sortArr);
+    }
+  }, [histories]);
 
   return (
     <>
@@ -62,8 +72,10 @@ export default function TaskHistory({ exeTypes, task, histories }) {
         <Col span={24}>
           <ContentHolder>
             <Timeline>
-              {histories
-                ? histories.map((history) => <HistoryItem exeTypes={exeTypes} key={history.uuid} history={history}></HistoryItem>)
+              {sortHistories
+                ? sortHistories.map((history) => (
+                    <HistoryItem exeTypes={exeTypes} key={history.uuid} history={history}></HistoryItem>
+                  ))
                 : null}
             </Timeline>
           </ContentHolder>
