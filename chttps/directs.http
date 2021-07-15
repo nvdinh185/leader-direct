@@ -1,0 +1,16 @@
+@baseHost = localhost
+@basePort = 9232
+# @baseHost = 10.16.150.69
+@authToken = eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-filter-direct
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "category": [35],
+    "meeting_id": [1]
+}
