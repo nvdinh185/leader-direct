@@ -120,7 +120,7 @@ export const HeaderSecondary = styled.div`
   margin-bottom: 10px;
 
   .btnUpdateDOStatus {
-    background: linear-gradient(135deg, #303395 0%, #27efef 100%);
+    background: linear-gradient(135deg, #f38730 0%, #d8df16 100%);
     font-weight: "bold";
     font-size: "16px";
     border-radius: "8px";

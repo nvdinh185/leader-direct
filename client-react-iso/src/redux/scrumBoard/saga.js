@@ -17,7 +17,7 @@ function* boardRenderEffectSaga({ payload }) {
     boards = boardNCols.board;
     columns = boardNCols.columns;
     tasks = boardData ? boardData : [];
-    console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
+    // console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
   }
 
   yield put(

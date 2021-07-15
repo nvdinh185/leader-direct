@@ -66,7 +66,7 @@ const createBoardColsData = (data, field) => {
           description: item.description,
           due_date: item.due_date ? item.due_date : new Date(),
           attachments: item.attachments ? item.attachments : [],
-          comments: item.histories ? item.histories : [],
+          comments: item.histories ? JSON.parse(item.histories) : [],
           created_at: item.created_time,
           updated_at: item.updated_time,
           direct_uuid: item.direct_uuid,

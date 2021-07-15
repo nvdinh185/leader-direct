@@ -12,12 +12,9 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const { general, doHelper, dxHelper } = require("./utils/index");
+const { general, doHelper, dxHelper } = require("./extds/index");
 const fs = require("fs");
 const mime = require("mime-types");
-const path = require("path");
-const { DO_DX_STT_MAP } = require("./utils/createUpdate/GeneralHelper");
-
 class ApiHandler {
   constructor() {
     this.createDirect = this.createDirect.bind(this);
@@ -1042,12 +1039,13 @@ class ApiHandler {
     try {
       // Tạo mới các dx trước để lấy ra mảng uuids dx
       let { insertUUIDs, resultUpdate, resultInsert } = await dxHelper.createOrUpdateDXOnDOChanged(req);
-      let updateDOArr = oldDirectOrgArr.map((odo) => {
-        let newDO = req.json_data.update_arr.find((ua) => ua.uuid === odo.uuid);
-        let newDXUUIDs = insertUUIDs.filter((insertUUID) => insertUUID.doUUID === odo.uuid).map((item) => item.dxUUID);
-        let newHistories = [...JSON.parse(odo.histories), ...newDXUUIDs];
+      // Tạo lên mảng đối tượng DO để update bảng direct_orgs
+      let updateDOArr = oldDirectOrgArr.map((oldDO) => {
+        let newDO = req.json_data.update_arr.find((item) => item.uuid === oldDO.uuid);
+        let newDXUUIDs = insertUUIDs.filter((insertUUID) => insertUUID.doUUID === oldDO.uuid).map((item) => item.dxUUID);
+        let newHistories = [...JSON.parse(oldDO.histories), ...newDXUUIDs];
         return {
-          ...odo,
+          ...oldDO,
           ...newDO,
           histories: JSON.stringify(newHistories),
           exec_status: parseInt(newDO.exec_status),

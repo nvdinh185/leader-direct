@@ -45,10 +45,12 @@ const TaskCard = ({ task, showDrawer }) => {
         <CardFooter>
           <FooterLeft>
             <CardAttachment>
-              <CardIcon src={AttachmentIcon} mr={5} />0
+              <CardIcon src={AttachmentIcon} mr={5} />
+              {task.attachments.length}
             </CardAttachment>
             <CardComment>
-              <CardIcon src={CommentsIcon} mr={5} />0
+              <CardIcon src={CommentsIcon} mr={5} />
+              {task.comments.length}
             </CardComment>
           </FooterLeft>
           <span style={{ display: "flex" }}>

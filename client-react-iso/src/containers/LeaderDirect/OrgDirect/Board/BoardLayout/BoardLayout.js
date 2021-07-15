@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as COMMON from "@constants/common";
 import { connect } from "react-redux";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getDirectOrgAll } from "@redux/directOrgs/actions";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import { Link } from "react-router-dom";
@@ -38,6 +39,21 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
   const boardDOs = useSelector((state) => state.scrumBoard.tasks);
   const [backgroundUrl, setBackgroundUrl] = useState();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(boardDOs);
+    let updateArr = directOrgs.reduce((agg, directOrg) => {
+      let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
+      if (boardItemStt !== directOrg.exec_status) {
+        console.log(boardItemStt);
+        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt }];
+      }
+      return agg;
+    }, []);
+    console.log(updateArr);
+  }, [boardDOs]);
 
   const menu = (
     <Menu>
@@ -84,7 +100,9 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "" }) => 
     }, []);
     console.log(updateArr);
     // TODO: Call api to update the change arr
-    updateDirectOrgExecStatus(token, { update_arr: updateArr });
+    updateDirectOrgExecStatus(token, { update_arr: updateArr }).then(() => {
+      dispatch(getDirectOrgAll(token));
+    });
   }
 
   // Khi có backgrounds trong store thì set riêng giá trị background
