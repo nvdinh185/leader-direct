@@ -3,11 +3,11 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { returnHexColor } from "@lib/utils/string";
 import { Col, Row, Tag } from "antd";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
-import TitleIcon from "@assets/images/icon/05-icon.svg";
 import DescriptionIcon from "@assets/images/icon/06-icon.svg";
-import Clock from "@assets/images/icon/17.svg";
+import TitleIcon from "@assets/images/icon/05-icon.svg";
+import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
 import { TaskDescription, ClockIcon } from "@containers/LeaderDirect/Meeting/Meeting.style";
+import Clock from "@assets/images/icon/17.svg";
 
 export default function DetailInfo(props) {
   const categories = useSelector((state) => state.filterData.categories);

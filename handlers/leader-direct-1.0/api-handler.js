@@ -1050,6 +1050,7 @@ class ApiHandler {
         return {
           ...oldDO,
           ...newDO,
+          description: oldDO.description,
           histories: JSON.stringify(newHistories),
           exec_status: parseInt(newDO.exec_status),
           updated_time: new Date().getTime(),
