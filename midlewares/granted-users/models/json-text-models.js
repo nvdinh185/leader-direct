@@ -1,7 +1,9 @@
 // Model create by: ./db/excel/api-function-granted-users-cdld.xlsx
-module.exports =  {
-  function_apis: {
-    id: {
+module.exports = {
+  function_apis:
+  {
+    id:
+    {
       type: 'INTEGER',
       notNull: 1,
       primaryKey: 1,
@@ -11,7 +13,8 @@ module.exports =  {
     method: { type: 'STRING' },
     base_directory: { type: 'STRING', length: 255 },
     api_router: { type: 'STRING', length: 255 },
-    api_function: {
+    api_function:
+    {
       type: 'STRING',
       notNull: 1,
       uniqueKeyMulti: 'method, api_function',
@@ -27,8 +30,10 @@ module.exports =  {
     sample_data: { type: 'STRING' },
     sample_results: { type: 'STRING' }
   },
-  function_groups: {
-    id: {
+  function_groups:
+  {
+    id:
+    {
       type: 'INTEGER',
       notNull: 1,
       primaryKey: 1,
@@ -43,8 +48,10 @@ module.exports =  {
     updated_user: { type: 'STRING', length: 50 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  function_granted: {
-    username: {
+  function_granted:
+  {
+    username:
+    {
       type: 'STRING',
       notNull: 1,
       primaryKey: 1,
@@ -62,7 +69,8 @@ module.exports =  {
     updated_user: { type: 'STRING', length: 50 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  menu_apis: {
+  menu_apis:
+  {
     id: { type: 'INTEGER', notNull: 1, primaryKey: 1, isUnique: 1 },
     parent_id: { type: 'INTEGER' },
     tag_id: { type: 'STRING', length: 30 },
@@ -78,8 +86,10 @@ module.exports =  {
     updated_user: { type: 'STRING', length: 50 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  organizations: {
-    id: {
+  organizations:
+  {
+    id:
+    {
       type: 'INTEGER',
       notNull: 1,
       primaryKey: 1,
@@ -97,15 +107,18 @@ module.exports =  {
     updated_user: { type: 'STRING', length: 50 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
-  column_name_maps: {
-    id: {
+  column_name_maps:
+  {
+    id:
+    {
       type: 'INTEGER',
       notNull: 1,
       primaryKey: 1,
       isUnique: 1,
       autoIncrement: 1
     },
-    field: {
+    field:
+    {
       type: 'STRING',
       notNull: 1,
       primaryKey: 1,
@@ -115,6 +128,5 @@ module.exports =  {
     display_name: { type: 'STRING', length: 200 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 }
-  },
-  '': { '': {} }
+  }
 }
