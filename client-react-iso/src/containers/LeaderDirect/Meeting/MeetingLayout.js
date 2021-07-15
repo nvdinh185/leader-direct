@@ -72,7 +72,7 @@ export default function () {
       // let width = state.view === "grid" ? 8 : 24;
 
       let meetingCat = categories.find((cat) => {
-        return meeting.category === cat.id;
+        return parseInt(meeting.category) === cat.id;
       });
       return (
         <Col key={meeting.id} {...returnListItemColSpan()}>

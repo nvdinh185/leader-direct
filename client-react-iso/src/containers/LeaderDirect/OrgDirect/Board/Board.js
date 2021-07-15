@@ -30,10 +30,10 @@ function Board({
 
   useEffect(() => {
     // boardRenderWatcher(match.params.id);
-    if (boardRenderWatcher && statuses?.[0]) {
+    if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
       boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
     }
-  }, [boardRenderWatcher, statuses]);
+  }, [boardRenderWatcher, statuses, directOrgs]);
 
   const onDragEnd = ({ source, destination, type, draggableId }) => {
     // source= {
@@ -93,7 +93,7 @@ function Board({
       {(provided) => (
         <Container ref={provided.innerRef} {...provided.droppableProps}>
           {/* // ---------------------------------------------------------------------------------  */}
-          {/* TODO: CODE to render columned base on order in board status */}
+          {/* render columned base on order in board info (redux) */}
           {/* // ---------------------------------------------------------------------------------  */}
           {ordered &&
             ordered.map((columnId, index) => {

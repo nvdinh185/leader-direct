@@ -30,11 +30,25 @@ export const FooterLeft = styled.div`
   color: #788195;
 `;
 
-export const CardTitle = styled.h3`
-  font-size: 13px;
-  color: #2d3446;
+export const CardTitle = styled.p`
+  font-size: 12px;
+  /* color: #2d3446; */
+  color: black;
   margin-top: 10px;
   margin-bottom: 5px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: initial;
+
+  @supports (-webkit-line-clamp: 2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 `;
 
 export const CardIcon = styled.img`

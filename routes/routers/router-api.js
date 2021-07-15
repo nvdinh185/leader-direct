@@ -214,11 +214,11 @@ const funcPaths = {
      *
      * SAMPLE INPUTS:
      */
-    "/get-direct-org": [
-      expHandlers.setRequestParameter("/get-direct-org", "functionCode"),
+    "/get-direct-exe-by-dos": [
+      expHandlers.setRequestParameter("/get-direct-exe-by-dos", "functionCode"),
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
-      apiHandler.getDirectOrg,
+      apiHandler.getDirectExesByDOs,
     ],
 
     /**
@@ -490,6 +490,20 @@ const funcPaths = {
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.getMeetingById,
+    ],
+
+    /**
+     * (131) POST /leader-direct/api/update-direct-org-exec-status
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS: {execStatus: 52, status: 12}
+     */
+
+    "/update-direct-org-exec-status": [
+      expHandlers.setRequestParameter("/update-direct-org-exec-status", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.updateDirectOrgExecStatus,
     ],
   },
 };

@@ -1,0 +1,13 @@
+POST http://localhost:9232/leader-direct/api/get-direct
+Content-Type: application/json
+Authorization: eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNjMxODU3NDEwOCwiZXhwIjoxNjI2NDA0OTc0MTA4fQ==.WUs4c2hUTDBYbWtmcDZHY2JDbGRRbFdoNno2alZvVzZxVDlnQ3lxano4Ym9GWTBLd3hMWDZzaDFVNmN1aGo3RUVwbGNRUTQ5VkpSd2hQbkVQTmc2Unc9PQ==
+
+###
+
+POST http://localhost:9232/leader-direct/api/get-direct-by-cat
+Content-Type: application/json
+Authorization: eyJ1c2VybmFtZSI6ImRpbmgubmd1eWVudmFuLmN0diIsImRldmljZV9pZCI6MzEsImlhdCI6MTYyNjMxODU3NDEwOCwiZXhwIjoxNjI2NDA0OTc0MTA4fQ==.WUs4c2hUTDBYbWtmcDZHY2JDbGRRbFdoNno2alZvVzZxVDlnQ3lxano4Ym9GWTBLd3hMWDZzaDFVNmN1aGo3RUVwbGNRUTQ5VkpSd2hQbkVQTmc2Unc9PQ==
+
+{
+    "category": 35
+}

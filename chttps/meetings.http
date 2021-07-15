@@ -1,0 +1,2 @@
+POST http://10.16.150.69:9232/leader-direct/api/get-meeting
+Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==

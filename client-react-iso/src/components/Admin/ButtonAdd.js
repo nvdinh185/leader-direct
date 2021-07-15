@@ -5,17 +5,16 @@ import styled from "styled-components";
  * params {string} styledColor
  */
 export const ButtonAdd = styled(Button)`
-    background: ${(props) => (props.color ? props.color : "#87d068")};
+  background: ${(props) => (props.color ? props.color : props.className ? "" : "#87d068")};
+  color: white;
+  &:focus {
+    background: ${(props) => (props.color ? props.color : props.className ? "" : "#87d068")};
     color: white;
-    &:focus {
-        background ${(props) => (props.color ? props.color : "#87d068")};
-        color: white;
-        border: none;
-    }
-    &:hover {
-        background: ${(props) => (props.color ? props.color : "#87d06899")};
-        color: white;
-        border: none;
-
-    }
+    border: none;
+  }
+  &:hover {
+    background: ${(props) => (props.color ? props.color : props.className ? "" : "#87d06899")};
+    color: white;
+    border: none;
+  }
 `;

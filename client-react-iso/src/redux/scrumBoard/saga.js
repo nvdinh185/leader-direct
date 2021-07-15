@@ -1,7 +1,6 @@
 // saga.js
 import { all, takeEvery, put, select } from "redux-saga/effects";
 import scrumBoardActions from "./actions";
-import DemoData from "./data";
 import { loadState, saveState } from "@lib/helpers/localStorage";
 import { generateColumnDnd } from "@lib/utils/dnd";
 
@@ -18,7 +17,7 @@ function* boardRenderEffectSaga({ payload }) {
     boards = boardNCols.board;
     columns = boardNCols.columns;
     tasks = boardData ? boardData : [];
-    console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
+    // console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
   }
 
   yield put(
