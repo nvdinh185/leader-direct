@@ -326,7 +326,7 @@ class ApiHandler {
     let jsonData = req.json_data;
     // lấy 1 bảng ghi đầu tiên hợp lệ theo mệnh đề where
     leaderDirectModels.directs
-      .getFirstRecord({ categories: jsonData.categories })
+      .getFirstRecord({ category: jsonData.category })
       .then((data) => {
         req.finalJson = data;
         next();
