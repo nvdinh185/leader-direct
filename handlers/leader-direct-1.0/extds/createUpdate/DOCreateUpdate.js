@@ -1,6 +1,6 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID, ORG_ROLE } = require("./GeneralHelper");
-const { createDirectExeHelper } = require("./DXCreateUpdate");
+const { generateUUID, ORG_ROLE, DX_STATUS } = require("./GeneralHelper");
+const { createInitDirectExeHelper } = require("./DXCreateUpdate");
 
 // ---------------------------------------------------------------------------------
 // 0 - CREATE AND UPDATE DIRECT ORG WITH UUID
@@ -20,17 +20,19 @@ function createDirectOrgHelper(jsonData, defaultDataInput, orgIdArrStr, directOr
       let doUUID = generateUUID();
       try {
         // Tạo mới cho bảng direct_executes trước để lấy uuid bỏ vào direct_orgs
-        createDirectExeHelper({
+        createInitDirectExeHelper({
           direct_uuid: jsonData.uuid,
           direct_org_uuid: doUUID,
           organization_id: parseInt(exe),
           organization_role: directOrgMode === "executors" ? ORG_ROLE.EXECUTOR : ORG_ROLE.ASSESSOR,
           created_user: defaultDataInput.created_user,
+          category: DX_STATUS.CREATE_DIRECT,
+          description: "P.TH tạo mới chỉ đạo",
         }).then(async (result) => {
           // Tạo mới trong bảng direct_orgs với uuid direct_executes tạo mới
           await leaderDirectModels.direct_orgs.insertOneRecord({
-            uuid: doUUID,
             ...defaultDataInput,
+            uuid: doUUID,
             histories: JSON.stringify([result.dxUUID]),
             exec_status: 11,
             organization_id: parseInt(exe),
@@ -128,16 +130,18 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
     // Chưa có thì insert thêm bản ghi mới đồng thời insert thêm cho bảng direct_executes
     let doUUID = generateUUID();
     try {
-      createDirectExeHelper({
+      createInitDirectExeHelper({
         direct_uuid: jsonData.uuid,
         direct_org_uuid: doUUID,
         organization_id: parseInt(org),
         organization_role: directOrgMode === "executors" ? ORG_ROLE.EXECUTOR : ORG_ROLE.ASSESSOR,
         created_user: defaultDataInput.created_user,
+        category: DX_STATUS.CREATE_DIRECT,
+        description: "P.TH tạo mới chỉ đạo",
       }).then(async (result) => {
         await leaderDirectModels.direct_orgs.insertOneRecord({
-          uuid: doUUID,
           ...defaultDataInput,
+          uuid: doUUID,
           description: jsonData.description,
           histories: JSON.stringify([result.dxUUID]),
           exec_status: 11,

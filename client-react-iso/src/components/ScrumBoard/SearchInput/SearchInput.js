@@ -15,7 +15,7 @@ export default function SearchInput({ onChange = console.log, onFocus, onBlur, .
       <SearchIcon src={SearchSvg} {...props} />
       <Input
         type="search"
-        placeholder="Search ..."
+        placeholder="Tìm Kiếm ..."
         value={searchData}
         onChange={handleSearch}
         onFocus={onFocus}

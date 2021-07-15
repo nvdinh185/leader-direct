@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
-import { palette } from 'styled-theme';
+import styled, { createGlobalStyle } from "styled-components";
+import { palette } from "styled-theme";
 
 export const DashboardGlobalStyles = createGlobalStyle`
 body {
@@ -257,7 +257,7 @@ export const DashboardContainer = styled.div`
   }
 
   .trigger:hover {
-    color: ${palette('primary', 0)};
+    color: ${palette("primary", 0)};
   }
 
   .ant-layout-sider-collapsed .anticon {
@@ -269,7 +269,7 @@ export const DashboardContainer = styled.div`
   }
 
   .ant-layout {
-    background: ${palette('secondary', 1)};
+    background: ${palette("secondary", 1)};
 
     &.isoContentMainLayout {
       overflow: auto;
@@ -290,7 +290,7 @@ export const DashboardContainer = styled.div`
     width: 100%;
     padding: 35px;
     background-color: #ffffff;
-    border: 1px solid ${palette('border', 0)};
+    border: 1px solid ${palette("border", 0)};
     height: 100%;
   }
 
@@ -314,9 +314,14 @@ export const DashboardContainer = styled.div`
     @media (max-width: 767px) {
       padding: 10px 20px;
     }
+    @media (min-width: 768px) {
+      padding: 15px 50px;
+    }
   }
 
-  ${'' /* button {
+  ${
+    "" /* button {
     border-radius: 0;
-  } */};
+  } */
+  };
 `;

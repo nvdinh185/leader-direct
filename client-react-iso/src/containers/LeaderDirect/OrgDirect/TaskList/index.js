@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
-import TaskItem from '../Task';
-import { DropZone, Wrapper, ScrollContainer } from './style';
+import React, { Component } from "react";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+import TaskItem from "@containers/LeaderDirect/OrgDirect/Task/Task";
+import { DropZone, Wrapper, ScrollContainer } from "./style";
 
 class InnerTaskList extends Component {
   shouldComponentUpdate(nextProps) {
@@ -68,20 +68,10 @@ const TaskList = ({
         >
           {internalScroll ? (
             <ScrollContainer style={scrollContainerStyle}>
-              <InnerList
-                tasks={tasks}
-                title={title}
-                columnId={column.id}
-                dropProvided={dropProvided}
-              />
+              <InnerList tasks={tasks} title={title} columnId={column.id} dropProvided={dropProvided} />
             </ScrollContainer>
           ) : (
-            <InnerList
-              title={title}
-              tasks={tasks}
-              columnId={column.id}
-              dropProvided={dropProvided}
-            />
+            <InnerList title={title} tasks={tasks} columnId={column.id} dropProvided={dropProvided} />
           )}
         </Wrapper>
       )}
@@ -90,6 +80,6 @@ const TaskList = ({
 };
 
 TaskList.defaultProps = {
-  listId: 'LIST',
+  listId: "LIST",
 };
 export default TaskList;

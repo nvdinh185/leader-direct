@@ -6,3 +6,8 @@ export const DATETIME_COLUMNS = ["created_time", "updated_time"];
 export const BG_MEETING = "BG_MEETING";
 export const BG_DIRECT = "BG_DIRECT";
 export const BG_DIRECT_ORG = "BG_DI_ORG";
+
+export const ADMIN_USER_GROUP = [99];
+
+// ---------------------------------------------------------------------------------
+export const DRAWER_TASK_DETAIL = "DRAWER_TASK_DETAIL";

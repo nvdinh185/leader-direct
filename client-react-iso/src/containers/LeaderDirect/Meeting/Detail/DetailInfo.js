@@ -16,7 +16,7 @@ export default function DetailInfo(props) {
 
   useEffect(() => {
     if (categories?.[0] && props.meeting) {
-      let meetingCat = categories.find((cat) => cat.id === props.meeting.category);
+      let meetingCat = categories.find((cat) => cat.id === parseInt(props.meeting.category));
       let bgColorCat = returnHexColor(meetingCat.bg_color);
       setCatgoryDisplay({ name: meetingCat.name, bgColor: bgColorCat });
     }

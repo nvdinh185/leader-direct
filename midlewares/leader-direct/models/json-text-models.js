@@ -34,13 +34,15 @@ module.exports =  {
       isUnique: 1,
       length: 50
     },
-    description: { type: 'STRING', length: 500 },
+    description: { type: 'STRING', notNull: 1, length: 500 },
     category: {
       type: 'INTEGER',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
     leader: {
       type: 'STRING',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (leader) REFERENCES categories(id)',
       length: 255
     },
@@ -92,22 +94,26 @@ module.exports =  {
     },
     meeting_id: {
       type: 'INTEGER',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
     },
     direct_id: {
       type: 'INTEGER',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (direct_id) REFERENCES directs(id)'
     },
     direct_uuid: {
       type: 'STRING',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
       length: 50
     },
     organization_id: {
       type: 'INTEGER',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
-    organization_role: { type: 'INTEGER' },
+    organization_role: { type: 'INTEGER', notNull: 1 },
     description: { type: 'STRING', length: 500 },
     attachments: { type: 'STRING', length: 1000 },
     exec_status: {
@@ -150,17 +156,16 @@ module.exports =  {
       notNull: 1,
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
-    organization_role: { type: 'STRING', length: 255 },
+    organization_role: { type: 'INTEGER', notNull: 1 },
     description: { type: 'STRING', length: 1000 },
     category: {
       type: 'INTEGER',
+      notNull: 1,
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
     attachments: { type: 'STRING', length: 500 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 50 },
-    updated_time: { type: 'DATETIME' },
-    updated_user: { type: 'STRING', length: 255 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   attachments: {

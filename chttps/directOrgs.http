@@ -1,0 +1,8 @@
+POST http://localhost:9232/leader-direct/api/get-direct-exe-by-dos
+Content-Type: application/json
+Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+
+{
+    "uuidArr": ["3ed9faad-2024-49f1-8a5e-ca447510db3e"]
+}
+    

@@ -53,7 +53,7 @@ export default function ({ categories, organizations }) {
       <Card size="small" title="Chỉ Đạo Của" style={{ margin: "15px" }}>
         <Row>
           {categories
-            .filter((cat) => cat.parent_id === 6)
+            .filter((cat) => cat.parent_id === 7)
             .map((cat, idx) => (
               <Col key={idx} span={24}>
                 <Checkbox>{cat.name}</Checkbox>
