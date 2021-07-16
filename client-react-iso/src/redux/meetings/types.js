@@ -4,6 +4,7 @@
 export const SET_CURRENT_MEETING_DETAIL = "SET_CURRENT_MEETING_DETAIL";
 export const CLEAR_CURRENT_MEETING_DETAIL = "CLEAR_CURRENT_MEETING_DETAIL";
 export const FILTER_MEETING_INNER_REDUX = "FILTER_MEETING_INNER_REDUX";
+export const RESET_FILTER_MEETING_REDUX = "RESET_FILTER_MEETING_REDUX";
 
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION

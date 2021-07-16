@@ -11,7 +11,7 @@ Authorization: {{authToken}}
 ###
 POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-filter-meeting
 Content-Type: application/json
-Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+Authorization: {{authToken}}
 
 {
     "created_time": {"from": 1626189072000, "to": 1626354152767},
@@ -21,7 +21,7 @@ Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6M
 ###
 POST http://{{baseHost}}:{{basePort}}/leader-direct/api/create-meeting
 Content-Type: application/json
-Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+Authorization: {{authToken}}
 
 {
     "name": "Giao Ban Tháng 6",

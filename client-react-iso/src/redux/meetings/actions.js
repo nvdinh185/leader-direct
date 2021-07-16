@@ -24,6 +24,14 @@ export const filterMeetingListInnerRedux = (criteria) => {
   };
 };
 
+export const resetFilterMeetingRedux = () => {
+  return (dispatch) => {
+    dispatch({
+      type: meetingTypes.RESET_FILTER_MEETING_REDUX,
+    });
+  };
+};
+
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------

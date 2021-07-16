@@ -8,6 +8,7 @@ let defaultMeetings = {
   searchText: "",
   loading: false,
   err: "",
+  filterCriteria: "",
 };
 
 export default function meetingReducer(state = defaultMeetings, action) {
@@ -26,6 +27,14 @@ export default function meetingReducer(state = defaultMeetings, action) {
       return {
         ...state,
         currentMeeting: {},
+      };
+
+    case meetingTypes.RESET_FILTER_MEETING_REDUX:
+      return {
+        ...state,
+        filterInnerMeetings: [...state.defaultMeetings],
+        filterMeetings: [...state.defaultMeetings],
+        filterCriteria: "",
       };
 
     case meetingTypes.FILTER_MEETING_INNER_REDUX:

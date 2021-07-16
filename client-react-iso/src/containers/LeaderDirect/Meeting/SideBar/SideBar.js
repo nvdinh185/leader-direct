@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { filterMeetingListInnerRedux } from "@redux/meetings/actions";
+import { filterMeetingListInnerRedux, resetFilterMeetingRedux } from "@redux/meetings/actions";
 import moment from "moment";
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
-import { Row, Col, Card, Input, Checkbox, Radio, Space } from "antd";
+import { Form, Row, Col, Card, Input, Checkbox, Radio, Space, Button } from "antd";
+import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { DateRangepicker } from "@components/uielements/datePicker";
-import { SearchOutlined } from "@ant-design/icons";
 
 const SideBar = React.memo(({ categories }) => {
   const filterMeetings = useSelector((state) => state.meetings.filterMeetings);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   const [criteria, setCriteria] = useState();
 
@@ -55,46 +56,68 @@ const SideBar = React.memo(({ categories }) => {
     }
   };
 
+  const handleResetFilterCriteria = () => {
+    dispatch(resetFilterMeetingRedux());
+    form.resetFields();
+    setCriteria([]);
+  };
+
   return (
     <div style={{ position: "sticky", overflowY: "scroll", height: "calc(100vh - 140px)", top: "75px", marginBottom: "8px" }}>
-      <Card size="small" style={{ background: "none" }}>
-        <Input size="large" placeholder="Tìm Kiếm" prefix={<SearchOutlined />} />
-      </Card>
-      <Card size="small" title="Loại Cuộc Họp" style={{ margin: "15px" }}>
-        <Row>
-          {categories
-            .filter((cat) => cat.parent_id === 4)
-            .map((cat, idx) => (
-              <Col key={idx} span={24}>
-                <Checkbox name={cat.id} onChange={(e) => handleChangeFilter(e, "CAT")}>
-                  {cat.name}
-                </Checkbox>
+      <Form form={form}>
+        <Card size="small" style={{ background: "none" }}>
+          <Form.Item name="search">
+            <Input size="large" placeholder="Tìm Kiếm" prefix={<SearchOutlined />} />
+          </Form.Item>
+        </Card>
+        <Card size="small" style={{ background: "none", border: "none" }}>
+          <Button type="primary" size="large" block icon={<ClearOutlined />} onClick={handleResetFilterCriteria}>
+            Reset các giá trị filter
+          </Button>
+        </Card>
+        <Card size="small" title="Loại Cuộc Họp" style={{ margin: "15px" }}>
+          <Row>
+            <Form.Item name="category">
+              {categories
+                .filter((cat) => cat.parent_id === 4)
+                .map((cat, idx) => (
+                  <Col key={idx} span={24}>
+                    <Checkbox name={cat.id} onChange={(e) => handleChangeFilter(e, "CAT")}>
+                      {cat.name}
+                    </Checkbox>
+                  </Col>
+                ))}
+            </Form.Item>
+          </Row>
+        </Card>
+        <Card size="small" title="Thời Gian" style={{ margin: "15px" }}>
+          <Row>
+            <Space direction="vertical">
+              <Form.Item name="date_range">
+                <Col span={24}>
+                  <DateRangepicker
+                    onChange={(e) => handleChangeFilter(e, "DATE_RANGE")}
+                    locale={locale}
+                    format="DD/MM/YYYY"
+                    disabledDate={(date) => date > new Date()}
+                  ></DateRangepicker>
+                </Col>
+              </Form.Item>
+
+              <Col span={24}>
+                <Form.Item name="radio">
+                  <Radio.Group onChange={(e) => handleChangeFilter(e, "DATE_RADIO")}>
+                    <Space direction="vertical">
+                      <Radio value={"MONTH"}>Cuộc Họp Trong Tháng Này</Radio>
+                      <Radio value={"YEAR"}>Cuộc Họp Trong Năm Nay</Radio>
+                    </Space>
+                  </Radio.Group>
+                </Form.Item>
               </Col>
-            ))}
-        </Row>
-      </Card>
-      <Card size="small" title="Thời Gian" style={{ margin: "15px" }}>
-        <Row>
-          <Space direction="vertical">
-            <Col span={24}>
-              <DateRangepicker
-                onChange={(e) => handleChangeFilter(e, "DATE_RANGE")}
-                locale={locale}
-                format="DD/MM/YYYY"
-                disabledDate={(date) => date > new Date()}
-              ></DateRangepicker>
-            </Col>
-            <Col span={24}>
-              <Radio.Group onChange={(e) => handleChangeFilter(e, "DATE_RADIO")}>
-                <Space direction="vertical">
-                  <Radio value={"MONTH"}>Cuộc Họp Trong Tháng Này</Radio>
-                  <Radio value={"YEAR"}>Cuộc Họp Trong Năm Nay</Radio>
-                </Space>
-              </Radio.Group>
-            </Col>
-          </Space>
-        </Row>
-      </Card>
+            </Space>
+          </Row>
+        </Card>
+      </Form>
     </div>
   );
 });
