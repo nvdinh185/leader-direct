@@ -19,6 +19,7 @@ import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const directs = useSelector((state) => state.directs.directs);
+  const filterDirects = useSelector((state) => state.directs.filterInnerDirects);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
@@ -67,32 +68,33 @@ export default function () {
 
   function renderDirects() {
     // TODO: Logic to traverse through the meeting and render direct list accordingly
-    return directs.map((direct, i) => {
-      // let width = state.view === "grid" ? 8 : 24;
-      let directCat = directTypes.find((cat) => {
-        return direct.category === cat.id;
+    if (filterDirects?.[0]) {
+      return filterDirects.map((direct, i) => {
+        // let width = state.view === "grid" ? 8 : 24;
+        let directCat = directTypes.find((cat) => {
+          return direct.category === cat.id;
+        });
+        let leaderCat = leaderTypes.find((cat) => cat.id === parseInt(direct.leader));
+        return (
+          <Col key={direct.id} {...returnListItemColSpan()}>
+            <ListItem
+              index={i}
+              directTypes={directTypes}
+              leaderTypes={leaderTypes}
+              initModalProps={initModalProps}
+              code={directCat.code}
+              leaderCat={leaderCat}
+              categoryName={directCat.name}
+              bgColor={directCat?.bg_color}
+              view={state.view}
+              organizations={organizations}
+              direct={direct}
+              {...direct}
+            />
+          </Col>
+        );
       });
-      let leaderCat = leaderTypes.find((cat) => cat.id === parseInt(direct.leader));
-      console.log(leaderCat);
-      return (
-        <Col key={direct.id} {...returnListItemColSpan()}>
-          <ListItem
-            index={i}
-            directTypes={directTypes}
-            leaderTypes={leaderTypes}
-            initModalProps={initModalProps}
-            code={directCat.code}
-            leaderCat={leaderCat}
-            categoryName={directCat.name}
-            bgColor={directCat?.bg_color}
-            view={state.view}
-            organizations={organizations}
-            direct={direct}
-            {...direct}
-          />
-        </Col>
-      );
-    });
+    }
   }
 
   function returnListItemColSpan() {
@@ -102,7 +104,8 @@ export default function () {
     }
     return obj;
   }
-
+  // ---------------------------------------------------------------------------------
+  // NHÓM EFFECT ĐỂ LẤY DỮ LIỆU API
   // Effect để lấy các dữ liệu từ api
   useEffect(() => {
     if ((token && !directs) || directs.length === 0) {
@@ -119,7 +122,7 @@ export default function () {
 
   // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
   useEffect(() => {
-    if (organizations?.[0] && directs?.[0] && leaderTypes?.[0] && directTypes?.[0]) {
+    if (organizations?.[0] && filterDirects?.[0] && leaderTypes?.[0] && directTypes?.[0]) {
       setInitModalProps({
         modalType: "DIRECT_ADD_EDIT_MODAL",
         modalProps: {
@@ -136,12 +139,14 @@ export default function () {
     }
   }, [organizations, directTypes, leaderTypes, directs]);
 
+  // ---------------------------------------------------------------------------------
+  // NHÓM EFFECT SET GIAO DIỆN CHO LAYOUT
   // Khi direct hay categories hay initialProps thay đổi thi set lại DirectList
   useEffect(() => {
-    if (directs?.[0] && categories?.[0] && initModalProps) {
+    if (categories?.[0] && initModalProps) {
       setDirectList(renderDirects());
     }
-  }, [directs, categories, initModalProps]);
+  }, [filterDirects, categories, initModalProps]);
 
   useEffect(() => {
     if (directs?.[0] && categories?.[0]) {
@@ -214,7 +219,7 @@ export default function () {
         {state.view === "table" ? (
           <Col span={24}>
             <DirectView
-              directs={directs}
+              directs={filterDirects}
               categories={categories}
               organizations={organizations}
               size={size}

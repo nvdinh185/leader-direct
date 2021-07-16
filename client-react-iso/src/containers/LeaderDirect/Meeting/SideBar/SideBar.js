@@ -72,7 +72,7 @@ const SideBar = React.memo(({ categories }) => {
         </Card>
         <Card size="small" style={{ background: "none", border: "none" }}>
           <Button type="primary" size="large" block icon={<ClearOutlined />} onClick={handleResetFilterCriteria}>
-            Reset các giá trị filter
+            Reset bộ lọc
           </Button>
         </Card>
         <Card size="small" title="Loại Cuộc Họp" style={{ margin: "15px" }}>

@@ -17,6 +17,23 @@ export const setCurrentViewDirectDetail = (direct) => {
     payload: direct,
   };
 };
+
+export const filterDirectListInnerRedux = (criteria) => {
+  return (dispatch) => {
+    if (criteria) {
+      dispatch({
+        type: directTypes.FILTER_DIRECT_INNER_REDUX,
+        payload: criteria,
+      });
+    }
+  };
+};
+
+export const resetFilterDirectCriteria = (direct) => {
+  return {
+    type: directTypes.RESET_FILTER_DIRECT_CRITERIA,
+  };
+};
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------

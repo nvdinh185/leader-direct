@@ -6,7 +6,7 @@ import { createMeetingColsFn } from "@config/tables/MeetingCols";
 import drawerActions from "@redux/drawer/actions";
 import modalActions from "@redux/modal/actions";
 
-import { Row, Col, Table, Card } from "antd";
+import { Row, Col, Table, Card, Layout } from "antd";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
@@ -63,7 +63,7 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
   };
 
   return (
-    <div style={{ padding: "0 15px 0 15px" }}>
+    <Layout>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Card>
@@ -91,6 +91,6 @@ export default function MeetingTableView({ meetings, organizations, size, initMo
           </Card>
         </Col>
       </Row>
-    </div>
+    </Layout>
   );
 }

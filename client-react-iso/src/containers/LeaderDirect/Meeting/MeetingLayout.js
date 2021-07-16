@@ -8,7 +8,7 @@ import { getCategoryList } from "@redux/filterData/actions";
 import modalActions from "@redux/modal/actions";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
-import { Col, Row } from "antd";
+import { Col, Row, Layout } from "antd";
 import { BarsOutlined, AppstoreOutlined, TableOutlined } from "@ant-design/icons";
 import Toggle from "@components/GridListLayout/Toggle";
 import MeetingView from "@containers/LeaderDirect/Meeting/MeetingTableView";
@@ -18,7 +18,6 @@ import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import PageHeader from "@components/utility/pageHeader";
 import ListItem from "@containers/LeaderDirect/Meeting/MeetingGLItem";
 import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
-import Layout from "antd/lib/layout/layout";
 
 export default function () {
   const meetings = useSelector((state) => state.meetings.filterMeetings);

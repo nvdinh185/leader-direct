@@ -74,7 +74,10 @@ export const createMeetingColsFn = (fnHandleChange, fnCallDrawer, handleMeetingR
       render: (col, record) => {
         let meetingCat = categories.find((cat) => cat.id === col);
         let bgColorCat = returnHexColor(meetingCat.bg_color);
-        return <Tag color={bgColorCat}>{meetingCat.name}</Tag>;
+        if (bgColorCat) {
+          return <Tag color={bgColorCat}>{meetingCat.name}</Tag>;
+        }
+        return meetingCat.name;
       },
     },
     {

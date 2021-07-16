@@ -1,6 +1,6 @@
 import * as meetingTypes from "@redux/meetings/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
-import { filterMeetingInRedux } from "@lib/utils/array";
+import { filterListInRedux } from "@lib/utils/array";
 
 let defaultMeetings = {
   defaultMeetings: [],
@@ -38,7 +38,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
       };
 
     case meetingTypes.FILTER_MEETING_INNER_REDUX:
-      let filteredMeetingList = filterMeetingInRedux(action.payload, state.filterMeetings);
+      let filteredMeetingList = filterListInRedux(action.payload, state.filterMeetings);
       return {
         ...state,
         filterInnerMeetings: filteredMeetingList,
@@ -66,6 +66,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
         filterMeetings: action.payload,
         filterInnerMeetings: action.payload,
         loading: false,
+        err: "",
       };
 
     case meetingTypes.GET_MEETING_LIST_FAIL:

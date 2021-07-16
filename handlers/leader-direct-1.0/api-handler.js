@@ -222,6 +222,7 @@ class ApiHandler {
       ...req.form_data.params,
       updated_time: new Date().getTime(),
       updated_user: req.user.username,
+      category: parseInt(req.form_data.params.category),
       status: parseInt(req.form_data.params.status),
     };
     if (req.ids.length > 0) {

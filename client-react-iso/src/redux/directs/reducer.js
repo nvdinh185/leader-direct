@@ -1,10 +1,16 @@
 import * as directTypes from "@redux/directs/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
+import { filterListInRedux } from "@lib/utils/array";
 
 let defaultDirects = {
   directs: [],
+  defaultDirects: [],
+  filterDirects: [],
+  filterInnerDirects: [],
+  searchText: "",
   loading: false,
   err: "",
+  filterCriteria: "",
 };
 
 export default function directReducer(state = defaultDirects, action) {
@@ -18,6 +24,21 @@ export default function directReducer(state = defaultDirects, action) {
       return {
         ...state,
         currentDirect: action.payload,
+      };
+    case directTypes.RESET_FILTER_DIRECT_CRITERIA:
+      return {
+        ...state,
+        filterInnerDirects: [...state.defaultDirects],
+        filterDirects: [...state.defaultDirects],
+        filterCriteria: "",
+      };
+
+    case directTypes.FILTER_DIRECT_INNER_REDUX:
+      let filteredDirectList = filterListInRedux(action.payload, state.filterDirects);
+      return {
+        ...state,
+        filterInnerDirects: filteredDirectList,
+        filterCriteria: action.payload,
       };
     // ---------------------------------------------------------------------------------
     // 1 - MENU SECTION
@@ -33,12 +54,39 @@ export default function directReducer(state = defaultDirects, action) {
       }
       return {
         ...state,
-        err: "",
         directs: action.payload,
+        defaultDirects: action.payload,
+        filterDirects: action.payload,
+        filterInnerDirects: action.payload,
         loading: false,
+        err: "",
       };
 
     case directTypes.GET_ALL_DIRECTS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    case directTypes.GET_FILTER_DIRECT_LIST_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directTypes.GET_FILTER_DIRECT_LIST_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false, err: "" };
+      }
+      return {
+        ...state,
+        filterMeetings: action.payload.data,
+        filterCriteria: action.payload.criteria,
+        loading: false,
+      };
+
+    case directTypes.GET_FILTER_DIRECT_LIST_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -53,12 +101,14 @@ export default function directReducer(state = defaultDirects, action) {
       };
     case directTypes.GET_DIRECT_BY_IDS_SUCCESS:
       if (action.payload.length === 0) {
-        return { ...state, loading: false };
+        return { ...state, loading: false, err: "" };
       }
       return {
         ...state,
         err: "",
         directIds: action.payload,
+        filterDirects: action.payload.data,
+        filterCriteria: action.payload.criteria,
         loading: false,
       };
 

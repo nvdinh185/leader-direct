@@ -10,17 +10,14 @@ export const createObjectFromArrField = (arr, fieldToCreate) => {
  * @param {[obj]} filterList mảng cần filter
  * @returns
  */
-export const filterMeetingInRedux = (_criteria, _filterList) => {
+export const filterListInRedux = (_criteria, _filterList) => {
   let keyToChecks = Object.keys(_criteria);
-  console.log("DEBUG FILTER MEETING HELPER --------------------------------------\n", keyToChecks, _criteria);
+  console.log("DEBUG FILTER HELPER --------------------------------------\n", keyToChecks, _criteria);
   let filteredList = _filterList.reduce((agg, item) => {
     let oneHotArr = keyToChecks.map((key) => {
       if (key.includes("date") || key.includes("time")) {
         let dateMilliseconds = new Date(item[key]).getTime();
-        console.log(
-          "DEBUG MILLISECOND: ---------",
-          dateMilliseconds >= _criteria[key].from && dateMilliseconds <= _criteria[key].to
-        );
+        console.log(dateMilliseconds >= _criteria[key].from && dateMilliseconds <= _criteria[key].to);
         return dateMilliseconds >= _criteria[key].from && dateMilliseconds < _criteria[key].to;
       }
       let fieldData = _criteria[key];
@@ -32,6 +29,6 @@ export const filterMeetingInRedux = (_criteria, _filterList) => {
     }
     return [...agg, item];
   }, []);
-  console.log("DEBUG FILTER MEETING HELPER --------------------------------------\n", filteredList);
+  console.log("DEBUG FILTER HELPER --------------------------------------\n", filteredList);
   return filteredList;
 };

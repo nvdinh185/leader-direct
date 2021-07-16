@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------------------
+// 0 - NON API CALL TYPES
+export const FILTER_DIRECT_INNER_REDUX = "FILTER_DIRECT_INNER_REDUX";
+export const RESET_FILTER_DIRECT_CRITERIA = "RESET_FILTER_DIRECT_CRITERIA";
+
+// ---------------------------------------------------------------------------------
+// 1 - API CALL TYPES
 export const CLEAR_CURRENT_MEETING_DIRECT_IDS = "CLEAR_CURRENT_MEETING_DIRECT_IDS";
 export const SET_CURRENT_VIEW_DIRECT_DETAIL = "SET_CURRENT_VIEW_DIRECT_DETAIL";
 
@@ -16,3 +23,8 @@ export const CREATE_DIRECT_FAIL = "CREATE_DIRECT_FAIL";
 export const UPDATE_DIRECT_START = "UPDATE_DIRECT_START";
 export const UPDATE_DIRECT_SUCCESS = "UPDATE_DIRECT_SUCCESS";
 export const UPDATE_DIRECT_FAIL = "UPDATE_DIRECT_FAIL";
+
+// ---------------------------------------------------------------------------------
+export const GET_FILTER_DIRECT_LIST_START = "GET_FILTER_DIRECT_LIST_START";
+export const GET_FILTER_DIRECT_LIST_SUCCESS = "GET_FILTER_DIRECT_LIST_SUCCESS";
+export const GET_FILTER_DIRECT_LIST_FAIL = "GET_FILTER_DIRECT_LIST_FAIL";
