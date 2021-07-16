@@ -8,12 +8,72 @@ import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { filterDirectListInnerRedux, resetFilterDirectCriteria } from "@redux/directs/actions";
 
-export default function ({ categories, organizations }) {
+const CheckboxGroup = Checkbox.Group;
+
+export default function ({ categories }) {
   const filterDirects = useSelector((state) => state.directs.filterDirects);
+  const organizations = useSelector((state) => state.adminUser.organizations);
+  const directTypes = useSelector((state) => state.filterData.directTypes);
+  const leaderTypes = useSelector((state) => state.filterData.leaderTypes);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
+
   const [criteria, setCriteria] = useState();
 
-  const [form] = Form.useForm();
+  // STATE OF ORGANIZATION CHECK GROUP
+  const [checkedOrgList, setCheckedOrgList] = useState();
+  const [indeterminateOrg, setIndeterminateOrg] = useState(false);
+  const [checkOrgAll, setCheckOrgAll] = useState(false);
+  const [checkboxOrgOptions, setCheckboxOrgOptions] = useState();
+  // STATE OF CATEGORY CHECK GROUP
+  const [checkedCatList, setCheckedCatList] = useState();
+  const [indeterminateCat, setIndeterminateCat] = useState(false);
+  const [checkCatAll, setCheckCatAll] = useState(false);
+  const [checkboxCatOptions, setCheckboxCatOptions] = useState();
+  // STATE OF ORGANIZATION CHECK GROUP
+  const [checkedLeaderList, setCheckedLeaderList] = useState();
+  const [indeterminateLeader, setIndeterminateLeader] = useState(false);
+  const [checkLeaderAll, setCheckLeaderAll] = useState(false);
+  const [checkboxLeaderOptions, setCheckboxLeaderOptions] = useState();
+
+  const [general, setGeneral] = useState();
+
+  useEffect(() => {
+    if (organizations?.[0] && directTypes?.[0] && leaderTypes?.[0]) {
+      let mNameOrgArr = organizations.map((m) => m.name);
+      let mNameCatArr = directTypes.map((m) => m.name);
+      let mNameLeaArr = leaderTypes.map((m) => m.name);
+      setCheckboxOrgOptions(mNameOrgArr);
+      setCheckboxCatOptions(mNameCatArr);
+      setCheckboxLeaderOptions(mNameLeaArr);
+      setGeneral({
+        category: {
+          list: checkedCatList,
+          optionList: checkboxCatOptions,
+          reduxList: directTypes,
+          setListFunc: setCheckedCatList,
+          setCheckAllFunc: setCheckCatAll,
+          setInDeterFunc: setIndeterminateCat,
+        },
+        organization: {
+          list: checkedOrgList,
+          optionList: checkboxOrgOptions,
+          reduxList: organizations,
+          setListFunc: setCheckedOrgList,
+          setCheckAllFunc: setCheckOrgAll,
+          setInDeterFunc: setIndeterminateOrg,
+        },
+        leader: {
+          list: checkedLeaderList,
+          optionList: checkboxLeaderOptions,
+          reduxList: leaderTypes,
+          setListFunc: setCheckedLeaderList,
+          setCheckAllFunc: setCheckLeaderAll,
+          setInDeterFunc: setIndeterminateLeader,
+        },
+      });
+    }
+  }, [organizations, directTypes, leaderTypes]);
 
   const handleChangeFilter = (e, mode) => {
     switch (mode) {
@@ -25,21 +85,30 @@ export default function ({ categories, organizations }) {
         }
         // TODO: handle khi bỏ qua thời gian (lấy mặc định meetings trong tháng)
         break;
-      case "CAT":
-      case "ORG":
+      case "CATEGORY":
+      case "ORGANIZATION":
       case "LEADER":
-        let selectValue = e.target.select;
-        if (e.target.checked) {
-          if (!criteria || !criteria[e.target.name]) {
-            setCriteria({ ...criteria, [e.target.name]: [selectValue] });
-            return;
-          }
-          setCriteria({ ...criteria, [e.target.name]: [...criteria[e.target.name], selectValue] });
-          return;
+        let modeName = mode.toLowerCase();
+        console.log(general[modeName]);
+        let valueMap = e.map((value) => general[modeName].reduxList.find((cat) => cat.name === value).id);
+        setCriteria({ ...criteria, [modeName]: valueMap });
+        general[modeName].setListFunc(e);
+        general[modeName].setInDeterFunc(!!e.length && e.length < general[modeName].optionList.length);
+        general[modeName].setCheckAllFunc(e.length === general[modeName].optionList.length);
+        break;
+      case "ALL_CATEGORY":
+      case "ALL_ORGANIZATION":
+      case "ALL_LEADER":
+        let modeField = mode.split("_")[1].toLowerCase();
+        if (!e.target.checked) {
+          setCriteria({ ...criteria, [modeField]: [] });
+        } else {
+          let mIdArr = general[modeField].reduxList.map((m) => m.id);
+          setCriteria({ ...criteria, [modeField]: mIdArr });
         }
-        let removeCatIdx = criteria[e.target.name].indexOf(selectValue);
-        criteria[e.target.name].splice(removeCatIdx, 1);
-        setCriteria({ ...criteria, [e.target.name]: [...criteria[e.target.name]] });
+        general[modeField].setListFunc(e.target.checked ? general[modeField].optionList : []);
+        general[modeField].setCheckAllFunc(e.target.checked);
+        general[modeField].setInDeterFunc(false);
         break;
       case "DATE_RADIO":
         if (e.target.value === "MONTH") {
@@ -62,6 +131,12 @@ export default function ({ categories, organizations }) {
     dispatch(resetFilterDirectCriteria());
     form.resetFields();
     setCriteria([]);
+    const checkboxList = ["category", "organization", "leader"];
+    checkboxList.forEach((cb) => {
+      general[cb].setCheckAllFunc(false);
+      general[cb].setListFunc([]);
+      general[cb].setInDeterFunc(false);
+    });
   };
 
   return (
@@ -107,13 +182,20 @@ export default function ({ categories, organizations }) {
           <div style={{ overflow: "auto", height: "200px" }}>
             <Form.Item name="organization">
               <Row>
-                {organizations?.map((org, idx) => (
-                  <Col key={idx} span={24}>
-                    <Checkbox name="organization" select={org.id} onChange={(e) => handleChangeFilter(e, "ORG")}>
-                      {org.name}
-                    </Checkbox>
-                  </Col>
-                ))}
+                <Checkbox
+                  indeterminate={indeterminateOrg}
+                  onChange={(e) => handleChangeFilter(e, "ALL_ORGANIZATION")}
+                  checked={checkOrgAll}
+                >
+                  -- Chọn Tất Cả --
+                </Checkbox>
+                <CheckboxGroup
+                  value={checkedOrgList}
+                  options={checkboxOrgOptions}
+                  onChange={(v) => {
+                    handleChangeFilter(v, "ORGANIZATION");
+                  }}
+                />
               </Row>
             </Form.Item>
           </div>
@@ -121,30 +203,40 @@ export default function ({ categories, organizations }) {
         <Card size="small" title="Loại Chỉ Đạo" style={{ margin: "15px" }}>
           <Form.Item name="category">
             <Row>
-              {categories
-                .filter((cat) => cat.parent_id === 3)
-                .map((cat, idx) => (
-                  <Col key={idx} span={24}>
-                    <Checkbox name="category" select={cat.id} onChange={(e) => handleChangeFilter(e, "CAT")}>
-                      {cat.name}
-                    </Checkbox>
-                  </Col>
-                ))}
+              <Checkbox
+                indeterminate={indeterminateCat}
+                onChange={(e) => handleChangeFilter(e, "ALL_CATEGORY")}
+                checked={checkCatAll}
+              >
+                -- Chọn Tất Cả --
+              </Checkbox>
+              <CheckboxGroup
+                value={checkedCatList}
+                options={checkboxCatOptions}
+                onChange={(v) => {
+                  handleChangeFilter(v, "CATEGORY");
+                }}
+              />
             </Row>
           </Form.Item>
         </Card>
         <Card size="small" title="Chỉ Đạo Của" style={{ margin: "15px" }}>
           <Form.Item name="leader">
             <Row>
-              {categories
-                .filter((cat) => cat.parent_id === 7)
-                .map((cat, idx) => (
-                  <Col key={idx} span={24}>
-                    <Checkbox name="leader" select={cat.id} onChange={(e) => handleChangeFilter(e, "LEADER")}>
-                      {cat.name}
-                    </Checkbox>
-                  </Col>
-                ))}
+              <Checkbox
+                indeterminate={indeterminateLeader}
+                onChange={(e) => handleChangeFilter(e, "ALL_LEADER")}
+                checked={checkLeaderAll}
+              >
+                -- Chọn Tất Cả --
+              </Checkbox>
+              <CheckboxGroup
+                value={checkedLeaderList}
+                options={checkboxLeaderOptions}
+                onChange={(v) => {
+                  handleChangeFilter(v, "LEADER");
+                }}
+              />
             </Row>
           </Form.Item>
         </Card>

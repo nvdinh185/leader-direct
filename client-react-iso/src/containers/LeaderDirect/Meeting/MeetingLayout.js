@@ -181,13 +181,12 @@ export default function () {
         {<IntlMessages id="sidebar.leaderMeeting" />}
       </PageHeader>
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }}>
+        <Col sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 4 }}>
           {state.view === "table" ? (
             <>
               <ButtonAdd size="large" shape="round" onClick={handleOpenModal} style={{ margin: "15px" }}>
                 + Thêm Mới
               </ButtonAdd>
-              {/* TODO: Add horizontal filter bar here */}
             </>
           ) : (
             <>
@@ -195,7 +194,7 @@ export default function () {
             </>
           )}
         </Col>
-        <Col sm={{ span: 24 }} md={{ span: 18 }} lg={{ span: 19 }}>
+        <Col sm={{ span: 24 }} md={{ span: 19 }} lg={{ span: 20 }}>
           <SortableCardWrapper id="shuffle" className={`isomorphicSortableCardsHolder ${state.view}`}>
             <header className="isoControlBar">
               <div className="isoViewBtnGroup">

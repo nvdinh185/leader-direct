@@ -8,12 +8,27 @@ import { Form, Row, Col, Card, Input, Checkbox, Radio, Space, Button } from "ant
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { DateRangepicker } from "@components/uielements/datePicker";
 
+const CheckboxGroup = Checkbox.Group;
+
 const SideBar = React.memo(({ categories }) => {
   const filterMeetings = useSelector((state) => state.meetings.filterMeetings);
+  const meetingTypes = useSelector((state) => state.filterData.meetingTypes);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const [criteria, setCriteria] = useState();
+
+  const [checkedList, setCheckedList] = useState();
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [checkAll, setCheckAll] = useState(false);
+  const [checkboxOptions, setCheckboxOptions] = useState();
+
+  useEffect(() => {
+    if (meetingTypes?.[0]) {
+      let mNameArr = meetingTypes.map((m) => m.name);
+      setCheckboxOptions(mNameArr);
+    }
+  }, [meetingTypes]);
 
   useEffect(() => {
     if (criteria && filterMeetings?.[0]) {
@@ -33,18 +48,22 @@ const SideBar = React.memo(({ categories }) => {
         // TODO: handle khi bỏ qua thời gian (lấy mặc định meetings trong tháng)
         break;
       case "CAT":
-        let nameValue = e.target.name;
-        if (e.target.checked) {
-          if (!criteria?.category) {
-            setCriteria({ ...criteria, category: [nameValue] });
-            return;
-          }
-          setCriteria({ ...criteria, category: [...criteria.category, nameValue] });
-          return;
+        let valueMap = e.map((value) => meetingTypes.find((cat) => cat.name === value).id);
+        setCriteria({ ...criteria, category: valueMap });
+        setCheckedList(e);
+        setIndeterminate(!!e.length && e.length < checkboxOptions.length);
+        setCheckAll(e.length === checkboxOptions.length);
+        break;
+      case "ALL_CAT":
+        if (!e.target.checked) {
+          setCriteria({ ...criteria, category: [] });
+        } else {
+          let mIdArr = meetingTypes.map((m) => m.id);
+          setCriteria({ ...criteria, category: mIdArr });
         }
-        let removeCatIdx = criteria.category.indexOf(nameValue);
-        criteria.category.splice(removeCatIdx, 1);
-        setCriteria({ ...criteria, category: [...criteria.category] });
+        setCheckedList(e.target.checked ? checkboxOptions : []);
+        setCheckAll(e.target.checked);
+        setIndeterminate(false);
         break;
       case "DATE_RADIO":
         if (e.target.value === "MONTH") {
@@ -60,6 +79,9 @@ const SideBar = React.memo(({ categories }) => {
     dispatch(resetFilterMeetingRedux());
     form.resetFields();
     setCriteria([]);
+    setCheckAll(false);
+    setCheckedList([]);
+    setIndeterminate(false);
   };
 
   return (
@@ -75,18 +97,19 @@ const SideBar = React.memo(({ categories }) => {
             Reset bộ lọc
           </Button>
         </Card>
-        <Card size="small" title="Loại Cuộc Họp" style={{ margin: "15px" }}>
+        <Card size="small" title={"Loại Cuộc Họp"} style={{ margin: "15px" }}>
           <Row>
             <Form.Item name="category">
-              {categories
-                .filter((cat) => cat.parent_id === 4)
-                .map((cat, idx) => (
-                  <Col key={idx} span={24}>
-                    <Checkbox name={cat.id} onChange={(e) => handleChangeFilter(e, "CAT")}>
-                      {cat.name}
-                    </Checkbox>
-                  </Col>
-                ))}
+              <Checkbox indeterminate={indeterminate} onChange={(e) => handleChangeFilter(e, "ALL_CAT")} checked={checkAll}>
+                -- Chọn Tất Cả --
+              </Checkbox>
+              <CheckboxGroup
+                value={checkedList}
+                options={checkboxOptions}
+                onChange={(v) => {
+                  handleChangeFilter(v, "CAT");
+                }}
+              />
             </Form.Item>
           </Row>
         </Card>
