@@ -390,15 +390,18 @@ class ApiHandler {
    * SAMPLE INPUTS:
    */
   createDirect(req, res, next) {
+    // console.log(req.json_data);
     let jsonData = {
       ...req.json_data,
       uuid: general.generateUUID(),
+      leader: parseInt(req.json_data.leader),
       created_time: new Date().getTime(),
       updated_time: new Date().getTime(),
       updated_user: req.user.username,
       created_user: req.user.username,
       status: 1,
     };
+    console.log(req.json_data);
 
     leaderDirectModels.directs
       .insertOneRecord(jsonData)

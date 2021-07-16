@@ -82,7 +82,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
     let updateArr = _directOrgs.reduce((agg, directOrg) => {
       let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
       if (boardItemStt !== directOrg.exec_status) {
-        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt, title: directOrg.description }];
+        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt, description: directOrg.description }];
       }
       return agg;
     }, []);
@@ -150,36 +150,22 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
         </PageHeader>
         <HeaderSecondary>
           <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
-          <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
-            Cập Nhập Dữ Liệu
-          </ButtonAdd>
           {/* // --------------------------------------------------------------------------------- 
           // TODO: RENDER YOUR OWN FILTER HERE
           // ---------------------------------------------------------------------------------  */}
-          {/* <Filters>
-            <Popover
-              placement="bottom"
-              overlayClassName="scrum-popover"
-              content={<Checkbox.Group options={LABELS} onChange={(value) => setSearchText(...value)} />}
-              trigger="click"
-            >
-              <div>
-                Labels <CaretDownOutlined />
-              </div>
-            </Popover>
+          <Filters>
+            <div>
+              Labels <CaretDownOutlined />
+            </div>
 
-            <Popover
-              placement="bottom"
-              overlayClassName="scrum-popover"
-              content={<Checkbox.Group options={ASSIGNEES} onChange={(value) => setSearchText(...value)} />}
-              trigger="click"
-            >
-              <div>
-                Assignee
-                <CaretDownOutlined />
-              </div>
-            </Popover>
-          </Filters> */}
+            <div>
+              Assignee
+              <CaretDownOutlined />
+            </div>
+          </Filters>
+          <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
+            Cập Nhập Dữ Liệu
+          </ButtonAdd>
         </HeaderSecondary>
 
         <Content

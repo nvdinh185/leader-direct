@@ -14,3 +14,18 @@ Authorization: {{authToken}}
     "category": [35],
     "meeting_id": [1]
 }
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/create-direct
+User-Agent: rest-client
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "category": 35,
+    "meeting_id": 1,
+    "description": "Test Nhập Chỉ Đạo",
+    "leader": 71,
+    "executors": "[4,6,7]",
+    "assessors": "[2]"
+}

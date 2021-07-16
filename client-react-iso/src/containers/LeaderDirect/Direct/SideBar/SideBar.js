@@ -10,7 +10,7 @@ import { filterDirectListInnerRedux, resetFilterDirectCriteria } from "@redux/di
 
 const CheckboxGroup = Checkbox.Group;
 
-export default function ({ categories }) {
+export default function () {
   const filterDirects = useSelector((state) => state.directs.filterDirects);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const directTypes = useSelector((state) => state.filterData.directTypes);
@@ -24,17 +24,14 @@ export default function ({ categories }) {
   const [checkedOrgList, setCheckedOrgList] = useState();
   const [indeterminateOrg, setIndeterminateOrg] = useState(false);
   const [checkOrgAll, setCheckOrgAll] = useState(false);
-  const [checkboxOrgOptions, setCheckboxOrgOptions] = useState();
   // STATE OF CATEGORY CHECK GROUP
   const [checkedCatList, setCheckedCatList] = useState();
   const [indeterminateCat, setIndeterminateCat] = useState(false);
   const [checkCatAll, setCheckCatAll] = useState(false);
-  const [checkboxCatOptions, setCheckboxCatOptions] = useState();
   // STATE OF ORGANIZATION CHECK GROUP
   const [checkedLeaderList, setCheckedLeaderList] = useState();
   const [indeterminateLeader, setIndeterminateLeader] = useState(false);
   const [checkLeaderAll, setCheckLeaderAll] = useState(false);
-  const [checkboxLeaderOptions, setCheckboxLeaderOptions] = useState();
 
   const [general, setGeneral] = useState();
 
@@ -43,13 +40,10 @@ export default function ({ categories }) {
       let mNameOrgArr = organizations.map((m) => m.name);
       let mNameCatArr = directTypes.map((m) => m.name);
       let mNameLeaArr = leaderTypes.map((m) => m.name);
-      setCheckboxOrgOptions(mNameOrgArr);
-      setCheckboxCatOptions(mNameCatArr);
-      setCheckboxLeaderOptions(mNameLeaArr);
       setGeneral({
         category: {
           list: checkedCatList,
-          optionList: checkboxCatOptions,
+          optionList: mNameCatArr,
           reduxList: directTypes,
           setListFunc: setCheckedCatList,
           setCheckAllFunc: setCheckCatAll,
@@ -57,7 +51,7 @@ export default function ({ categories }) {
         },
         organization: {
           list: checkedOrgList,
-          optionList: checkboxOrgOptions,
+          optionList: mNameOrgArr,
           reduxList: organizations,
           setListFunc: setCheckedOrgList,
           setCheckAllFunc: setCheckOrgAll,
@@ -65,7 +59,7 @@ export default function ({ categories }) {
         },
         leader: {
           list: checkedLeaderList,
-          optionList: checkboxLeaderOptions,
+          optionList: mNameLeaArr,
           reduxList: leaderTypes,
           setListFunc: setCheckedLeaderList,
           setCheckAllFunc: setCheckLeaderAll,
@@ -191,7 +185,7 @@ export default function ({ categories }) {
                 </Checkbox>
                 <CheckboxGroup
                   value={checkedOrgList}
-                  options={checkboxOrgOptions}
+                  options={general.organization.list}
                   onChange={(v) => {
                     handleChangeFilter(v, "ORGANIZATION");
                   }}
@@ -212,7 +206,7 @@ export default function ({ categories }) {
               </Checkbox>
               <CheckboxGroup
                 value={checkedCatList}
-                options={checkboxCatOptions}
+                options={general.category.list}
                 onChange={(v) => {
                   handleChangeFilter(v, "CATEGORY");
                 }}
@@ -232,7 +226,7 @@ export default function ({ categories }) {
               </Checkbox>
               <CheckboxGroup
                 value={checkedLeaderList}
-                options={checkboxLeaderOptions}
+                options={general.leader.list}
                 onChange={(v) => {
                   handleChangeFilter(v, "LEADER");
                 }}

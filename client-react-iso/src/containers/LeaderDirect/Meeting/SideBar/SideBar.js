@@ -99,7 +99,7 @@ const SideBar = React.memo(({ categories }) => {
         </Card>
         <Card size="small" title={"Loại Cuộc Họp"} style={{ margin: "15px" }}>
           <Row>
-            <Form.Item name="category">
+            <Form.Item>
               <Checkbox indeterminate={indeterminate} onChange={(e) => handleChangeFilter(e, "ALL_CAT")} checked={checkAll}>
                 -- Chọn Tất Cả --
               </Checkbox>

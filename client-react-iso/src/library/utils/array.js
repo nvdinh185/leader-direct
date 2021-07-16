@@ -18,8 +18,10 @@ export const filterListInRedux = (_criteria, _filterList) => {
         let dateMilliseconds = new Date(item[key]).getTime();
         return dateMilliseconds >= _criteria[key].from && dateMilliseconds < _criteria[key].to;
       }
+      // Nếu kiểm tra trong organizations thì phải check cả assessors và executors
       let fieldData = _criteria[key];
-      return fieldData.includes(item[key]);
+
+      return fieldData.includes(parseInt(item[key]));
     });
     // Nếu có 1 điều kiện không thoả mãn thì bỏ item này khỏi mảng
     if (oneHotArr.includes(false)) {

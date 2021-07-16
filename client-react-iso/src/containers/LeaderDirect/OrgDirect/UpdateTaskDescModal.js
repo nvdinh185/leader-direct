@@ -46,7 +46,7 @@ export default function UpdateTaskDescModal(props) {
               return (
                 <Form.Item
                   key={idx}
-                  label={updateObj.title}
+                  label={updateObj.description}
                   name={updateObj.uuid}
                   rules={[
                     {
