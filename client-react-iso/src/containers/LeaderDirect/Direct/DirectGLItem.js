@@ -65,7 +65,7 @@ export default function ({ initModalProps, organizations, executors, assessors, 
   }
 
   const handleChangeRoute = () => {
-    history.push({ pathname: `${location.pathname}/${props.id}`, state: { ...props.direct } });
+    history.push({ pathname: `${"/app/leader-direct-mng"}/${props.id}`, state: { ...props.direct } });
     dispatch(setCurrentViewDirectDetail(props.direct));
   };
 

@@ -14,7 +14,7 @@ import DetailDirects from "./DetailDirects";
 // import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 
 export default function DetailDrawer(props) {
-  const meetings = useSelector((state) => state.meetings.meetings);
+  const meetings = useSelector((state) => state.meetings.filterMeetings);
   const meeting = useSelector((state) => state.drawer.drawerProps?.meeting);
   const dispatch = useDispatch();
 

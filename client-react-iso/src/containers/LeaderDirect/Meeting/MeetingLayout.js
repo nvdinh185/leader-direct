@@ -21,9 +21,11 @@ import Sidebar from "@containers/LeaderDirect/Meeting/SideBar/SideBar";
 import Layout from "antd/lib/layout/layout";
 
 export default function () {
-  const meetings = useSelector((state) => state.meetings.meetings);
+  const meetings = useSelector((state) => state.meetings.filterMeetings);
+  const filterMeetings = useSelector((state) => state.meetings.filterInnerMeetings);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const categories = useSelector((state) => state.filterData.categories);
+  const meetingTypes = useSelector((state) => state.filterData.meetingTypes);
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const token = useSelector((state) => state.Auth.idToken);
   const App = useSelector((state) => state.App);
@@ -31,7 +33,6 @@ export default function () {
   const dispatch = useDispatch();
 
   const [meetingList, setMeetingList] = useState([]);
-  const [meetingTypes, setMeetingTypes] = useState([]);
   const [initModalProps, setInitModalProps] = useState();
   const [backgroundUrl, setBackgroundUrl] = useState();
 
@@ -68,27 +69,28 @@ export default function () {
   }
 
   function renderMeetings() {
-    return meetings.map((meeting, i) => {
-      // let width = state.view === "grid" ? 8 : 24;
-
-      let meetingCat = categories.find((cat) => {
-        return parseInt(meeting.category) === cat.id;
+    if (filterMeetings?.[0]) {
+      return filterMeetings.map((meeting, i) => {
+        // let width = state.view === "grid" ? 8 : 24;
+        let meetingCat = categories.find((cat) => {
+          return parseInt(meeting.category) === cat.id;
+        });
+        return (
+          <Col key={meeting.id} {...returnListItemColSpan()}>
+            <ListItem
+              categoryName={meetingCat.name}
+              code={meetingCat.code}
+              key={meeting.id}
+              view={state.view}
+              index={i}
+              meeting={meeting}
+              {...meeting}
+              bgColor={meetingCat?.bg_color}
+            />
+          </Col>
+        );
       });
-      return (
-        <Col key={meeting.id} {...returnListItemColSpan()}>
-          <ListItem
-            categoryName={meetingCat.name}
-            code={meetingCat.code}
-            key={meeting.id}
-            view={state.view}
-            index={i}
-            meeting={meeting}
-            {...meeting}
-            bgColor={meetingCat?.bg_color}
-          />
-        </Col>
-      );
-    });
+    }
   }
 
   function handleOpenModal() {
@@ -108,14 +110,16 @@ export default function () {
     return obj;
   }
 
-  // Effect để lấy các dữ liệu từ api
+  // ---------------------------------------------------------------------------------
+  // NHÓM EFFECT ĐỂ LẤY DỮ LIỆU API
+  // Effect để lấy meeing mặc định trong tháng từ api
   useEffect(() => {
     if ((token && !meetings) || meetings.length === 0) {
       dispatch(getMeetingList(token));
     }
   }, [token, meetings]);
 
-  // Effect để lấy các dữ liệu từ api
+  // Effect để lấy các dữ liệu filter data từ api
   useEffect(() => {
     if (token && categories && categories.length === 0) {
       dispatch(getCategoryList(token));
@@ -124,12 +128,12 @@ export default function () {
 
   // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
   useEffect(() => {
-    if (organizations?.[0] && meetingTypes?.[0] && meetings?.[0]) {
+    if (organizations?.[0] && meetingTypes?.[0] && filterMeetings?.[0]) {
       setInitModalProps({
-        modalType: "MEETING_ADD_EDIT_MODAL",
+        modalType: COMMON.MEETING_ADD_EDIT_MODAL,
         modalProps: {
           organizations: organizations,
-          meetings: meetings,
+          meetings: filterMeetings,
           meetingTypes: meetingTypes,
           width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
           centered: true,
@@ -141,20 +145,16 @@ export default function () {
     }
   }, [organizations, meetingTypes, meetings]);
 
+  // ---------------------------------------------------------------------------------
+  // NHÓM EFFECT SET GIAO DIỆN CHO LAYOUT
   useEffect(() => {
-    if (categories.length > 0 && meetingTypes.length === 0) {
-      setMeetingTypes(categories.filter((cat) => cat.parent_id === 4));
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    if (meetings?.[0] && categories?.[0]) {
+    if (categories?.[0]) {
       setMeetingList(renderMeetings());
     }
-  }, [meetings, categories]);
+  }, [filterMeetings, categories]);
 
   useEffect(() => {
-    if (meetings?.[0]) {
+    if (filterMeetings?.[0]) {
       setMeetingList(renderMeetings());
     }
   }, [state.view]);
@@ -236,7 +236,7 @@ export default function () {
         {state.view === "table" ? (
           <Col span={24}>
             <MeetingView
-              meetings={meetings}
+              meetings={filterMeetings}
               categories={categories}
               organizations={organizations}
               size={size}

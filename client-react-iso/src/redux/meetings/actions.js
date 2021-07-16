@@ -13,6 +13,17 @@ export const clearCurrentMeetingDetail = () => {
   };
 };
 
+export const filterMeetingListInnerRedux = (criteria) => {
+  return (dispatch) => {
+    if (criteria) {
+      dispatch({
+        type: meetingTypes.FILTER_MEETING_INNER_REDUX,
+        payload: criteria,
+      });
+    }
+  };
+};
+
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
@@ -224,6 +235,46 @@ export const getMeetingByIdSuccess = (data) => {
 export const getMeetingByIdFail = (error) => {
   return {
     type: meetingTypes.GET_MEETING_BY_ID_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// 6 - GET FILTERED MEETING LIST
+export const getFilterMeetingList = (token, crit) => {
+  return (dispatch) => {
+    dispatch(getFilterMeetingListStart());
+    meetingApi
+      .getFilterMeetingList(token, crit)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFilterMeetingListSuccess(data.data, crit));
+        } else {
+          dispatch(getFilterMeetingListFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFilterMeetingListFail(err.response ? err.response.data : err));
+      });
+  };
+};
+
+export const getFilterMeetingListStart = () => {
+  return {
+    type: meetingTypes.GET_FILTER_MEETING_LIST_START,
+  };
+};
+
+export const getFilterMeetingListSuccess = (data, criteria) => {
+  return {
+    type: meetingTypes.GET_FILTER_MEETING_LIST_SUCCESS,
+    payload: { data, criteria },
+  };
+};
+
+export const getFilterMeetingListFail = (error) => {
+  return {
+    type: meetingTypes.GET_FILTER_MEETING_LIST_FAIL,
     payload: error,
   };
 };

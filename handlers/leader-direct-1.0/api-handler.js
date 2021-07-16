@@ -182,10 +182,10 @@ class ApiHandler {
       attachments: attachments,
       created_time: new Date().getTime(),
       created_user: req.user.username,
-      category: parseInt(jsonData.category),
+      category: parseInt(req.form_data.params.category),
       status: 1,
     };
-    // console.log(jsonData);
+    console.log(jsonData);
 
     leaderDirectModels.meetings
       .insertOneRecord(jsonData)

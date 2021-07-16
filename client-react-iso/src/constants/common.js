@@ -15,6 +15,7 @@ export const DRAWER_TASK_DETAIL = "DRAWER_TASK_DETAIL";
 // ---------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------
 export const UPDATE_TASK_DESC_MODAL = "UPDATE_TASK_DESC_MODAL";
+export const MEETING_ADD_EDIT_MODAL = "MEETING_ADD_EDIT_MODAL";
 
 // ---------------------------------------------------------------------------------
 export const EXE_TYPE_MAP = {

@@ -1,11 +1,60 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { filterMeetingListInnerRedux } from "@redux/meetings/actions";
+import moment from "moment";
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
 import { Row, Col, Card, Input, Checkbox, Radio, Space } from "antd";
 import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined } from "@ant-design/icons";
 
-export default function SideBar({ categories }) {
+const SideBar = React.memo(({ categories }) => {
+  const filterMeetings = useSelector((state) => state.meetings.filterMeetings);
+  const dispatch = useDispatch();
+
+  const [criteria, setCriteria] = useState();
+
+  useEffect(() => {
+    if (criteria && filterMeetings?.[0]) {
+      console.log(criteria);
+      dispatch(filterMeetingListInnerRedux(criteria));
+    }
+  }, [criteria]);
+
+  const handleChangeFilter = (e, mode) => {
+    switch (mode) {
+      case "DATE_RANGE":
+        console.log(e);
+        if (e) {
+          let critCreatedTime = { from: moment(e[0]).valueOf(), to: moment(e[1]).valueOf() + 43400000 };
+          setCriteria({ ...criteria, created_time: critCreatedTime });
+        }
+        // TODO: handle khi bỏ qua thời gian (lấy mặc định meetings trong tháng)
+        break;
+      case "CAT":
+        let nameValue = e.target.name;
+        if (e.target.checked) {
+          if (!criteria?.category) {
+            setCriteria({ ...criteria, category: [nameValue] });
+            return;
+          }
+          setCriteria({ ...criteria, category: [...criteria.category, nameValue] });
+          return;
+        }
+        let removeCatIdx = criteria.category.indexOf(nameValue);
+        criteria.category.splice(removeCatIdx, 1);
+        setCriteria({ ...criteria, category: [...criteria.category] });
+        break;
+      case "DATE_RADIO":
+        if (e.target.value === "MONTH") {
+        }
+        console.log(e);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div style={{ position: "sticky", overflowY: "scroll", height: "calc(100vh - 140px)", top: "75px", marginBottom: "8px" }}>
       <Card size="small" style={{ background: "none" }}>
@@ -17,7 +66,9 @@ export default function SideBar({ categories }) {
             .filter((cat) => cat.parent_id === 4)
             .map((cat, idx) => (
               <Col key={idx} span={24}>
-                <Checkbox>{cat.name}</Checkbox>
+                <Checkbox name={cat.id} onChange={(e) => handleChangeFilter(e, "CAT")}>
+                  {cat.name}
+                </Checkbox>
               </Col>
             ))}
         </Row>
@@ -26,13 +77,18 @@ export default function SideBar({ categories }) {
         <Row>
           <Space direction="vertical">
             <Col span={24}>
-              <DateRangepicker locale={locale} format="DD/MM/YYYY" disabledDate={(date) => date > new Date()}></DateRangepicker>
+              <DateRangepicker
+                onChange={(e) => handleChangeFilter(e, "DATE_RANGE")}
+                locale={locale}
+                format="DD/MM/YYYY"
+                disabledDate={(date) => date > new Date()}
+              ></DateRangepicker>
             </Col>
             <Col span={24}>
-              <Radio.Group>
+              <Radio.Group onChange={(e) => handleChangeFilter(e, "DATE_RADIO")}>
                 <Space direction="vertical">
-                  <Radio value={1}>Cuộc Họp Trong Tháng Này</Radio>
-                  <Radio value={3}>Cuộc Họp Trong Năm Nay</Radio>
+                  <Radio value={"MONTH"}>Cuộc Họp Trong Tháng Này</Radio>
+                  <Radio value={"YEAR"}>Cuộc Họp Trong Năm Nay</Radio>
                 </Space>
               </Radio.Group>
             </Col>
@@ -41,4 +97,6 @@ export default function SideBar({ categories }) {
       </Card>
     </div>
   );
-}
+});
+
+export default SideBar;

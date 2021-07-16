@@ -1,9 +1,11 @@
 import * as meetingTypes from "@redux/meetings/types";
 import { successAlert, errorAlert } from "@components/AlertModal/ModalInfo";
+import { filterMeetingInRedux } from "@lib/utils/array";
 
 let defaultMeetings = {
-  meetings: [],
+  defaultMeetings: [],
   currentMeeting: {},
+  searchText: "",
   loading: false,
   err: "",
 };
@@ -25,6 +27,14 @@ export default function meetingReducer(state = defaultMeetings, action) {
         ...state,
         currentMeeting: {},
       };
+
+    case meetingTypes.FILTER_MEETING_INNER_REDUX:
+      let filteredMeetingList = filterMeetingInRedux(action.payload, state.filterMeetings);
+      return {
+        ...state,
+        filterInnerMeetings: filteredMeetingList,
+        filterCriteria: action.payload,
+      };
     // ---------------------------------------------------------------------------------
     // II. API DISPATCH SECTION
     // ---------------------------------------------------------------------------------
@@ -43,11 +53,37 @@ export default function meetingReducer(state = defaultMeetings, action) {
       }
       return {
         ...state,
-        meetings: action.payload,
+        defaultMeetings: action.payload,
+        filterMeetings: action.payload,
+        filterInnerMeetings: action.payload,
         loading: false,
       };
 
     case meetingTypes.GET_MEETING_LIST_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+
+    // ---------------------------------------------------------------------------------
+    case meetingTypes.GET_FILTER_MEETING_LIST_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case meetingTypes.GET_FILTER_MEETING_LIST_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false, err: "" };
+      }
+      return {
+        ...state,
+        filterMeetings: action.payload.data,
+        filterCriteria: action.payload.criteria,
+        loading: false,
+      };
+
+    case meetingTypes.GET_FILTER_MEETING_LIST_FAIL:
       return {
         ...state,
         err: action.payload,
@@ -106,7 +142,7 @@ export default function meetingReducer(state = defaultMeetings, action) {
       successAlert("Thành Công", "Bạn đã sửa thông tin cuộc họp thành công");
       return {
         ...state,
-        updateMenu: action.payload,
+        updateMeeting: action.payload,
         loading: false,
       };
     case meetingTypes.UPDATE_MEETING_FAIL:

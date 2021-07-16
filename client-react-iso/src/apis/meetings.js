@@ -8,6 +8,10 @@ export const getMeetingList = (token) => {
   return callAPI("post", baseURL + "/get-meeting", null, token);
 };
 
+export const getFilterMeetingList = (token, crit) => {
+  return callAPI("post", baseURL + "/get-filter-meeting", crit, token);
+};
+
 export const getMeetingById = (token, data) => {
   return callAPI("post", baseURL + "/get-meeting-by-id", data, token);
 };

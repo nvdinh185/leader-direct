@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------------
 export const SET_CURRENT_MEETING_DETAIL = "SET_CURRENT_MEETING_DETAIL";
 export const CLEAR_CURRENT_MEETING_DETAIL = "CLEAR_CURRENT_MEETING_DETAIL";
+export const FILTER_MEETING_INNER_REDUX = "FILTER_MEETING_INNER_REDUX";
 
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
@@ -29,3 +30,8 @@ export const GET_ATTACHMENT_BY_IDS_SUCCESS = "GET_ATTACHMENT_BY_IDS_SUCCESS";
 export const GET_ATTACHMENT_BY_IDS_FAIL = "GET_ATTACHMENT_BY_IDS_FAIL";
 
 export const DELETE_ATTACHMENT_ARR = "DELETE_ATTACHMENT_ARR";
+
+// ---------------------------------------------------------------------------------
+export const GET_FILTER_MEETING_LIST_START = "GET_FILTER_MEETING_LIST_START";
+export const GET_FILTER_MEETING_LIST_SUCCESS = "GET_FILTER_MEETING_LIST_SUCCESS";
+export const GET_FILTER_MEETING_LIST_FAIL = "GET_FILTER_MEETING_LIST_FAIL";
