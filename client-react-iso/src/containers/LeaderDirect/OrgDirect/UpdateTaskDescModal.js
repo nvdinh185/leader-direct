@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDirectOrgExecStatus } from "@redux/directOrgs/actions";
 import { warningAlert, confirmAlert, successAlert } from "@components/AlertModal/ModalInfo";
-import { Form, Input, Button, Radio, Row, Col, Divider } from "antd";
+import { Form, Input, Button, Radio, Row, Col, Divider, Space } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { BoardLabelWrapper } from "./UpdateTaskDescModal.style";
 
 export default function UpdateTaskDescModal(props) {
   const [form] = Form.useForm();
@@ -44,19 +45,22 @@ export default function UpdateTaskDescModal(props) {
         {props.updateArr
           ? props.updateArr.map((updateObj, idx) => {
               return (
-                <Form.Item
-                  key={idx}
-                  label={updateObj.description}
-                  name={updateObj.uuid}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Bạn phải nhập mô tả cho chỉ đạo này",
-                    },
-                  ]}
-                >
-                  <Input.TextArea placeholder="Nhập Mô Tả" />
-                </Form.Item>
+                <>
+                  <Form.Item
+                    key={idx}
+                    label={<BoardLabelWrapper>{updateObj.description}</BoardLabelWrapper>}
+                    name={updateObj.uuid}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Bạn phải nhập mô tả khi thay đổi trạng thái của chỉ đạo!",
+                      },
+                    ]}
+                  >
+                    <Input.TextArea placeholder="Nhập Mô Tả" />
+                  </Form.Item>
+                  <br></br>
+                </>
               );
             })
           : null}

@@ -107,10 +107,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
           },
         })
       );
-      // Time out to test alert overlay of modal
-      // setTimeout(() => {
-      //   confirmAlert("Xác Nhận", `Bạn thực hiện ${updateArr.length} sự thay đổi!`, () => successAlert("Thành Công"));
-      // }, 1000);
       return;
     }
     warningAlert("Thông Báo", "Bạn không thực hiện thay đổi gì cả!");
@@ -127,19 +123,20 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
     }
   }, [backgrounds]);
 
+  // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
     if (token) {
-      dispatch(getFilterDirectOrgStart(token, { organization_id: [12] }));
+      dispatch(getFilterDirectOrgStart(token, { organization_role: [22] }));
     }
   }, [token]);
 
-  // Effect call khi có sự thay đổi directOrg ở redux thì gọi API lấy lại direct exe
-  // useEffect(() => {
-  //   if (directOrgs?.[0]) {
-  //     let uuidArr = directOrgs.map((dO) => dO.uuid);
-  //     dispatch(getDirectExeByDOs(token, { uuidArr }));
-  //   }
-  // }, [directOrgs]);
+  // Effect call khi có sự thay đổi directOrgs ở redux thì gọi API lấy lại direct exe
+  useEffect(() => {
+    if (directOrgs?.[0]) {
+      let uuidArr = directOrgs.map((dO) => dO.uuid);
+      dispatch(getDirectExeByDOs(token, { uuidArr }));
+    }
+  }, [directOrgs]);
 
   return (
     <>

@@ -28,7 +28,7 @@ export default function directReducer(state = defaultDirectOrgs, action) {
       return {
         ...state,
         err: "",
-        directOrgs: action.payload,
+        directOrgAll: action.payload,
         loading: false,
       };
 
@@ -99,7 +99,7 @@ export default function directReducer(state = defaultDirectOrgs, action) {
       return {
         ...state,
         err: "",
-        filterDOs: action.payload,
+        directOrgs: action.payload,
         loading: false,
       };
 

@@ -50,7 +50,6 @@ export default function Dashboard() {
     dispatch(getAllOrganization(token));
     dispatch(getGrantedUserInfo(token));
     dispatch(getCategoryList(token));
-    dispatch(getDirectOrgAll(token));
   }, [token]);
 
   return (
