@@ -86,7 +86,29 @@ export default function directReducer(state = defaultDirectOrgs, action) {
         err: action.payload,
         loading: false,
       };
+    // ---------------------------------------------------------------------------------
+    case directOrgTypes.GET_FILTER_DIRECT_ORG_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directOrgTypes.GET_FILTER_DIRECT_ORG_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, loading: false };
+      }
+      return {
+        ...state,
+        err: "",
+        filterDOs: action.payload,
+        loading: false,
+      };
 
+    case directOrgTypes.GET_DIRECT_EXE_BY_DOS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
     // ---------------------------------------------------------------------------------
     case directOrgTypes.UPDATE_DIRECT_ORG_START:
       return {

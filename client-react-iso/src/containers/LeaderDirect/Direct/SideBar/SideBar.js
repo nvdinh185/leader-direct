@@ -7,6 +7,7 @@ import { Row, Col, Card, Input, Checkbox, Radio, Space, Form, Button } from "ant
 import { DateRangepicker } from "@components/uielements/datePicker";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { filterDirectListInnerRedux, resetFilterDirectCriteria } from "@redux/directs/actions";
+import Scrollbar from "@components/utility/customScrollBar";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -36,10 +37,15 @@ export default function () {
   const [general, setGeneral] = useState();
 
   useEffect(() => {
+    console.log(general);
+  }, [general]);
+
+  useEffect(() => {
     if (organizations?.[0] && directTypes?.[0] && leaderTypes?.[0]) {
       let mNameOrgArr = organizations.map((m) => m.name);
       let mNameCatArr = directTypes.map((m) => m.name);
       let mNameLeaArr = leaderTypes.map((m) => m.name);
+      console.log(mNameOrgArr);
       setGeneral({
         category: {
           list: checkedCatList,
@@ -134,7 +140,7 @@ export default function () {
   };
 
   return (
-    <div style={{ position: "sticky", overflowY: "scroll", height: "calc(100vh - 140px)", top: "75px", marginBottom: "8px" }}>
+    <Scrollbar style={{ height: "calc(100vh - 140px)", marginBottom: "8px" }}>
       <Form form={form}>
         <Card size="small" style={{ background: "none" }}>
           <Form.Item name="search">
@@ -174,24 +180,26 @@ export default function () {
         </Card>
         <Card size="small" title="Chọn Đơn Vị" style={{ margin: "15px" }}>
           <div style={{ overflow: "auto", height: "200px" }}>
-            <Form.Item name="organization">
-              <Row>
-                <Checkbox
-                  indeterminate={indeterminateOrg}
-                  onChange={(e) => handleChangeFilter(e, "ALL_ORGANIZATION")}
-                  checked={checkOrgAll}
-                >
-                  -- Chọn Tất Cả --
-                </Checkbox>
-                <CheckboxGroup
-                  value={checkedOrgList}
-                  options={general.organization.list}
-                  onChange={(v) => {
-                    handleChangeFilter(v, "ORGANIZATION");
-                  }}
-                />
-              </Row>
-            </Form.Item>
+            <Scrollbar>
+              <Form.Item name="organization">
+                <Row>
+                  <Checkbox
+                    indeterminate={indeterminateOrg}
+                    onChange={(e) => handleChangeFilter(e, "ALL_ORGANIZATION")}
+                    checked={checkOrgAll}
+                  >
+                    -- Chọn Tất Cả --
+                  </Checkbox>
+                  <CheckboxGroup
+                    value={checkedOrgList}
+                    options={general?.organization.optionList}
+                    onChange={(v) => {
+                      handleChangeFilter(v, "ORGANIZATION");
+                    }}
+                  />
+                </Row>
+              </Form.Item>
+            </Scrollbar>
           </div>
         </Card>
         <Card size="small" title="Loại Chỉ Đạo" style={{ margin: "15px" }}>
@@ -206,7 +214,7 @@ export default function () {
               </Checkbox>
               <CheckboxGroup
                 value={checkedCatList}
-                options={general.category.list}
+                options={general?.category.optionList}
                 onChange={(v) => {
                   handleChangeFilter(v, "CATEGORY");
                 }}
@@ -226,7 +234,7 @@ export default function () {
               </Checkbox>
               <CheckboxGroup
                 value={checkedLeaderList}
-                options={general.leader.list}
+                options={general?.leader.optionList}
                 onChange={(v) => {
                   handleChangeFilter(v, "LEADER");
                 }}
@@ -235,6 +243,6 @@ export default function () {
           </Form.Item>
         </Card>
       </Form>
-    </div>
+    </Scrollbar>
   );
 }

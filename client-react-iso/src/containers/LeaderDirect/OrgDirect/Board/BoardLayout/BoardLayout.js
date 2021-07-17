@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
-import { getDirectOrgAll, getDirectExeByDOs } from "@redux/directOrgs/actions";
+import { getDirectOrgAll, getDirectExeByDOs, getFilterDirectOrgStart } from "@redux/directOrgs/actions";
 import { Link } from "react-router-dom";
 
 import { Layout, Menu, Dropdown, Popover, Checkbox, Button } from "antd";
@@ -126,6 +126,12 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       }
     }
   }, [backgrounds]);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getFilterDirectOrgStart(token, { organization_id: [12] }));
+    }
+  }, [token]);
 
   // Effect call khi có sự thay đổi directOrg ở redux thì gọi API lấy lại direct exe
   // useEffect(() => {

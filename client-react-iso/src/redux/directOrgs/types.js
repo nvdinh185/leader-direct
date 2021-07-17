@@ -1,3 +1,13 @@
+// ------------------------------------------------------------------------------------------
+// 0 - REDUX SAGA ACTIONS
+// ------------------------------------------------------------------------------------------
+export const GET_FILTER_DIRECT_ORG_START = "GET_FILTER_DIRECT_ORG_START";
+export const GET_FILTER_DIRECT_ORG_SUCCESS = "GET_FILTER_DIRECT_ORG_SUCCESS";
+export const GET_FILTER_DIRECT_ORG_FAIL = "GET_FILTER_DIRECT_ORG_FAIL";
+
+// ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
+
 export const GET_DIRECT_ORG_ALL_START = "GET_DIRECT_ORG_ALL_START";
 export const GET_DIRECT_ORG_ALL_SUCCESS = "GET_DIRECT_ORG_ALL_SUCCESS";
 export const GET_DIRECT_ORG_ALL_FAIL = "GET_DIRECT_ORG_ALL_FAIL";

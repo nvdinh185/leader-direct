@@ -12,6 +12,10 @@ export const getDirectExeByDOs = (token, data) => {
   return callAPI("post", baseURL + "/get-direct-exe-by-dos", data, token);
 };
 
+export const getFilterDirectOrg = (token, data) => {
+  return callAPI("post", baseURL + "/get-filter-direct-org", data, token);
+};
+
 export const updateDirectOrgExecStatus = (token, data) => {
   return callAPI("post", baseURL + "/update-direct-org-exec-status", data, token);
 };

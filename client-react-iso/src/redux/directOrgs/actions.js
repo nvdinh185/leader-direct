@@ -186,3 +186,23 @@ export const updateDirectOrgExecStatusFail = (error) => {
     payload: error,
   };
 };
+
+// ------------------------------------------------------------------------------------------
+export const getFilterDirectOrgStart = (token, data) => {
+  return {
+    type: directOrgTypes.GET_FILTER_DIRECT_ORG_START,
+    payload: { token, data },
+  };
+};
+export const getFilterDirectOrgSuccess = (data) => {
+  return {
+    type: directOrgTypes.GET_FILTER_DIRECT_ORG_SUCCESS,
+    payload: data,
+  };
+};
+export const getFilterDirectOrgFail = (err) => {
+  return {
+    type: directOrgTypes.GET_FILTER_DIRECT_ORG_FAIL,
+    payload: err,
+  };
+};

@@ -7,6 +7,7 @@ import locale from "antd/es/date-picker/locale/vi_VN";
 import { Form, Row, Col, Card, Input, Checkbox, Radio, Space, Button } from "antd";
 import { SearchOutlined, ClearOutlined } from "@ant-design/icons";
 import { DateRangepicker } from "@components/uielements/datePicker";
+import Scrollbar from "@components/utility/customScrollBar";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -85,7 +86,7 @@ const SideBar = React.memo(({ categories }) => {
   };
 
   return (
-    <div style={{ position: "sticky", overflowY: "scroll", height: "calc(100vh - 140px)", top: "75px", marginBottom: "8px" }}>
+    <Scrollbar style={{ height: "calc(100vh - 140px)", marginBottom: "8px" }}>
       <Form form={form}>
         <Card size="small" style={{ background: "none" }}>
           <Form.Item name="search">
@@ -141,7 +142,7 @@ const SideBar = React.memo(({ categories }) => {
           </Row>
         </Card>
       </Form>
-    </div>
+    </Scrollbar>
   );
 });
 

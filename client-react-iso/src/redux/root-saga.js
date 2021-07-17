@@ -1,6 +1,7 @@
-import { all } from "redux-saga/effects";
+import { all, call } from "redux-saga/effects";
 import scrumBoardSaga from "@redux/scrumBoard/saga";
+import directOrgSaga from "@redux/directOrgs/saga";
 
 export default function* rootSaga(getState) {
-  yield all([scrumBoardSaga()]);
+  yield all([scrumBoardSaga(), call(directOrgSaga)]);
 }
