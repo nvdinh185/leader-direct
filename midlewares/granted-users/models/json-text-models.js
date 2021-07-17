@@ -76,6 +76,7 @@ module.exports =  {
     next_id: { type: 'INTEGER' },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 },
+    order: { type: 'INTEGER' },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   organizations: {
@@ -115,6 +116,5 @@ module.exports =  {
     display_name: { type: 'STRING', length: 200 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 }
-  },
-  '': { '': {} }
+  }
 }

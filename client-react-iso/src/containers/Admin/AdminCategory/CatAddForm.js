@@ -22,12 +22,6 @@ export default function MenuAddForm({ modalMode, initialValues, handleCancel, is
     }
   }, [categories]);
 
-  useEffect(() => {
-    if (parentCat?.[0]) {
-      console.log(parentCat);
-    }
-  }, [parentCat]);
-
   const handleOk = async () => {
     try {
       const values = await form.validateFields();

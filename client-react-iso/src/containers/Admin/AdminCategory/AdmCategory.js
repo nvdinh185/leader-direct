@@ -74,7 +74,7 @@ export default function AdminCategory() {
 
   return (
     <LayoutWrapper>
-      <PageHeader>{<IntlMessages id="admin.adminCategory" />}</PageHeader>
+      <PageHeader>{"Quản lý danh mục"}</PageHeader>
       <CatAddForm
         width={size.width > 1200 ? size.width * 0.5 : size.width * 0.4}
         modalMode={modalMode}
@@ -107,7 +107,7 @@ export default function AdminCategory() {
                       // loading={loading}
                       columns={cols}
                       rowClassName={() => "editable-row"}
-                      dataSource={categories && categories.length !== 0 ? categories : []}
+                      dataSource={categories && categories.length !== 0 ? categories : null}
                       scroll={{ y: 400 }}
                       pagination={{
                         pageSize: 30,

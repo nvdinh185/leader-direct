@@ -45,7 +45,6 @@ export default function () {
       let mNameOrgArr = organizations.map((m) => m.name);
       let mNameCatArr = directTypes.map((m) => m.name);
       let mNameLeaArr = leaderTypes.map((m) => m.name);
-      console.log(mNameOrgArr);
       setGeneral({
         category: {
           list: checkedCatList,
@@ -78,7 +77,6 @@ export default function () {
   const handleChangeFilter = (e, mode) => {
     switch (mode) {
       case "DATE_RANGE":
-        console.log(e);
         if (e) {
           let critCreatedTime = { from: moment(e[0]).valueOf(), to: moment(e[1]).valueOf() + 43400000 };
           setCriteria({ ...criteria, created_time: critCreatedTime });
@@ -89,7 +87,6 @@ export default function () {
       case "ORGANIZATION":
       case "LEADER":
         let modeName = mode.toLowerCase();
-        console.log(general[modeName]);
         let valueMap = e.map((value) => general[modeName].reduxList.find((cat) => cat.name === value).id);
         setCriteria({ ...criteria, [modeName]: valueMap });
         general[modeName].setListFunc(e);
@@ -126,6 +123,13 @@ export default function () {
       dispatch(filterDirectListInnerRedux(criteria));
     }
   }, [criteria]);
+
+  // Dispatch effect filter after change in get directs
+  useEffect(() => {
+    if (filterDirects?.[0] && criteria) {
+      dispatch(filterDirectListInnerRedux(criteria));
+    }
+  }, [filterDirects, criteria]);
 
   const handleResetFilterCriteria = () => {
     dispatch(resetFilterDirectCriteria());
