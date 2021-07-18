@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDirectOrgExecStatus } from "@redux/directOrgs/actions";
 import { warningAlert, confirmAlert, successAlert } from "@components/AlertModal/ModalInfo";
 import { Form, Input, Button, Radio, Row, Col, Divider, Space } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { BoardLabelWrapper } from "./UpdateTaskDescModal.style";
+
+const BoardLabelWrapper = styled.p`
+  white-space: normal;
+`;
 
 export default function UpdateTaskDescModal(props) {
   const [form] = Form.useForm();

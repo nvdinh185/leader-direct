@@ -9,6 +9,7 @@ import LayoutWrapper from "@components/utility/layoutWrapper";
 import TaskHistory from "./TaskDetail/TaskHistory";
 import TaskInfo from "./TaskDetail/TaskInfo";
 import TaskAttachs from "./TaskDetail/TaskAttachs";
+import TaskAssCriteria from "./TaskDetail/TaskAssCriteria";
 
 export default function TaskDetail(props) {
   const [taskType, setTaskType] = useState();
@@ -48,6 +49,8 @@ export default function TaskDetail(props) {
       <TaskInfo task={{ ...props }} taskType={taskType}></TaskInfo>
       <Divider style={{ margin: "10px" }}></Divider>
       <TaskAttachs task={props.task}></TaskAttachs>
+      <Divider style={{ margin: "10px" }}></Divider>
+      <TaskAssCriteria task={props.task}></TaskAssCriteria>
       <Divider style={{ margin: "10px" }}></Divider>
       <TaskHistory exeTypes={exeTypes} task={props.task} histories={taskHistory}></TaskHistory>
     </LayoutWrapper>

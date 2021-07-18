@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import drawerActions from "@redux/drawer/actions";
 import { Container } from "./Task.style";
-import TaskCard from "@containers/LeaderDirect/OrgDirect/Task/TaskCard/TaskCard";
+import TaskCard from "@components/ScrumBoard/Task/TaskCard/TaskCard";
 
 class TaskItem extends React.PureComponent {
   render() {

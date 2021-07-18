@@ -12,7 +12,11 @@ export default function directReducer(state = defaultDirectOrgs, action) {
     // ---------------------------------------------------------------------------------
     // 0 - NON API DIRECT ORGS SECTION
     // ---------------------------------------------------------------------------------
-
+    case directOrgTypes.SET_BOARD_UPDATE_ARR:
+      return {
+        ...state,
+        boardUpdateArr: action.payload,
+      };
     // ---------------------------------------------------------------------------------
     // 1 - CALL API DIRECT ORGS SECTION
     // ---------------------------------------------------------------------------------

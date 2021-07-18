@@ -4,7 +4,7 @@ import { getAttachmentByIds } from "@redux/directOrgs/actions";
 import { mapFileColor } from "@constants/fileTypes";
 import AttachmentIcon from "@assets/images/icon/01-icon.svg";
 import BadgeAttach from "@containers/LeaderDirect/Meeting/Detail/BadgeAttach";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 
 export default function TaskAttachs({ task }) {
   const token = useSelector((state) => state.Auth.idToken);

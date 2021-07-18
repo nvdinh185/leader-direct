@@ -7,7 +7,7 @@ import useWindowSize from "@lib/hooks/useWindowSize";
 
 import { Col, Row } from "antd";
 import PlusIcon from "@assets/images/icon/09-icon.svg";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import ListItem from "@containers/LeaderDirect/Direct/DirectGLItem";
 

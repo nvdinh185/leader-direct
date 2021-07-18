@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import drawerActions from "@redux/drawer/actions";
 import { Divider } from "antd";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 // import { IconSvg } from "@components/LeaderDirect/IconSvg";
 import MeetingDetailHeader from "@containers/LeaderDirect/Meeting/Detail/DetailHeader";
 import { CardDetailsWrapper } from "@containers/LeaderDirect/Meeting/Meeting.style";

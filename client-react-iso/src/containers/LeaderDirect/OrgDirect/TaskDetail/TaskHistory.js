@@ -11,7 +11,7 @@ import {
   CheckCircleFilled,
 } from "@ant-design/icons";
 import Clock from "@assets/images/icon/18.svg";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import ContentHolder from "@components/utility/contentHolder";
 import basicStyle from "@assets/styles/constants";
 

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import drawerActions from "@redux/drawer/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import { Draggable } from "react-beautiful-dnd";
-import TaskList from "../Task/TaskList/TaskList";
+import TaskList from "@components/ScrumBoard/Task/TaskList/TaskList";
 import Title from "@components/ScrumBoard/Title";
 import { Container, Header } from "./Column.style";
 

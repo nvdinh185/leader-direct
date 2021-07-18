@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Tag, Space } from "antd";
 import moment from "moment";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import Clock from "@assets/images/icon/17.svg";
 import { ClockIcon } from "@containers/LeaderDirect/Meeting/Meeting.style";
 import DescriptionIcon from "@assets/images/icon/06-icon.svg";

@@ -51,3 +51,23 @@ const filterCheckOrgInArrHelper = (critArr, item) => {
     }
   }
 };
+
+// ------------------------------------------------------------------------------------------
+// 1. Helper kiểm tra giá trị các phần tử có field khác nhau giữa 2 object (tam thời check theo board)
+function returnChangedArr(_baseArr, _changedArr, ...fieldToChecks) {
+  let updateArr = _baseArr.reduce((agg, item) => {
+    // Duyệt qua mảng fieldToChecks để kiểm tra có thay đổi hay không
+    let changeKeyValue = {};
+    fieldToChecks.forEach((field) => {
+      if (_changedArr[field] !== item[field]) {
+        changeKeyValue[field] = _changedArr[field];
+      }
+      return;
+    });
+    if (Object.keys(changeKeyValue).length > 0) {
+      return [...agg, ...changeKeyValue];
+    }
+    return agg;
+  }, []);
+  return updateArr;
+}

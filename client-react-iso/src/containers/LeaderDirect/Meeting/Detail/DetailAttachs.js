@@ -7,7 +7,7 @@ import { deleteAttachmentsArr, getAttachmentByIds } from "@redux/meetings/action
 import { mapFileColor } from "@constants/fileTypes";
 
 import AttachmentIcon from "@assets/images/icon/01-icon.svg";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import { AttachmentWrapper } from "@containers/LeaderDirect/Meeting/Meeting.style";
 import BadgeAttach from "./BadgeAttach";
 

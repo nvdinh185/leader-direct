@@ -7,7 +7,7 @@ import { TaskDescription, ClockIcon } from "@containers/LeaderDirect/Meeting/Mee
 import Clock from "@assets/images/icon/17.svg";
 import TitleIcon from "@assets/images/icon/05-icon.svg";
 import DescriptionIcon from "@assets/images/icon/06-icon.svg";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 
 export default function (props) {
   const categories = useSelector((state) => state.filterData.categories);

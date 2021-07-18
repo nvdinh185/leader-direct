@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button, Popconfirm, Tooltip } from "antd";
-import { IconSvg } from "@components/ScrumBoard/IconSvg/IconSvg";
+import { IconSvg } from "@components/ScrumBoard/IconSvg";
 import RemoveIcon from "@assets/images/icon/02-icon.svg";
 import ShareIcon from "@assets/images/icon/03-icon.svg";
 import ArrowIcon from "@assets/images/icon/04-icon.svg";

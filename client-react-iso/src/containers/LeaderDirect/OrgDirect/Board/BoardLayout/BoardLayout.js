@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
-import { getDirectOrgAll, getDirectExeByDOs, getFilterDirectOrgStart } from "@redux/directOrgs/actions";
+import { getDirectExeByDOs, getFilterDirectOrgStart, setBoardUpdateArr } from "@redux/directOrgs/actions";
 import { Link } from "react-router-dom";
 
 import { Layout, Menu, Dropdown, Popover, Checkbox, Button } from "antd";
@@ -137,6 +137,14 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       dispatch(getDirectExeByDOs(token, { uuidArr }));
     }
   }, [directOrgs]);
+
+  // Khi giá trị task trong board thay chuyển từ cột này qua cột khác thì dispatch function để update arr thay đổi
+  useEffect(() => {
+    if (Object.keys(boardDOs).length > 0) {
+      let updateBoarArr = returnChangedDOArr(directOrgs, boardDOs);
+      dispatch(setBoardUpdateArr(updateBoarArr));
+    }
+  }, [boardDOs]);
 
   return (
     <>

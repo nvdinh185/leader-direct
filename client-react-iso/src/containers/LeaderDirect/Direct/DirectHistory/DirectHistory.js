@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "antd";
 import TitleIcon from "@assets/images/icon/17.svg";
-import HeadingWithIcon from "@components/LeaderDirect/HeadingWithIcon";
+import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 
 export default function DirectHistory() {
   return (

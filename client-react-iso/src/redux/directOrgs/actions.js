@@ -12,12 +12,12 @@ import modalActions from "@redux/modal/actions";
 //   };
 // };
 
-// export const setCurrentViewDirectDetail = (direct) => {
-//   return {
-//     type: directOrgTypes.SET_CURRENT_VIEW_DIRECT_DETAIL,
-//     payload: direct,
-//   };
-// };
+export const setBoardUpdateArr = (updateArr) => {
+  return {
+    type: directOrgTypes.SET_BOARD_UPDATE_ARR,
+    payload: updateArr,
+  };
+};
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------

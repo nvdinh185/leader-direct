@@ -63,3 +63,15 @@ export const TaskCardTopMostDiv = styled.div`
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 `;
+
+export const RibbonCornerBlue = styled.div`
+  width: 200px;
+  padding: 16px;
+  position: fixed;
+  text-align: center;
+  color: #f0f0f0;
+  top: 25px;
+  right: -50px;
+  background-color: #39d;
+  transform: rotate(45deg);
+`;

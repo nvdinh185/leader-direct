@@ -1,37 +1,28 @@
 import React, { Component } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import TaskItem from "../Task";
 import { DropZone, Wrapper } from "./TaskList.style";
-import { Scrollbars } from "react-custom-scrollbars";
 
-class InnerTaskList extends Component {
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.tasks !== this.props.tasks) {
-      return true;
-    }
-
-    return false;
-  }
+const InnerTaskList = React.memo((props) => {
   // ---------------------------------------------------------------------------------
   // TODO: Write task to render task base on list task of columns
   // ---------------------------------------------------------------------------------
-  render() {
-    return this.props.tasks.map((task, index) => (
-      <Draggable key={task.id} draggableId={task.id} index={index}>
-        {(dragProvided, dragSnapshot) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            columnId={this.props.columnId}
-            isDragging={dragSnapshot.isDragging}
-            isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-            provided={dragProvided}
-          />
-        )}
-      </Draggable>
-    ));
-  }
-}
+  return props.tasks.map((task, index) => (
+    <Draggable key={task.id} draggableId={task.id} index={index}>
+      {(dragProvided, dragSnapshot) => (
+        <TaskItem
+          key={task.id}
+          task={task}
+          columnId={props.columnId}
+          isDragging={dragSnapshot.isDragging}
+          isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
+          provided={dragProvided}
+        />
+      )}
+    </Draggable>
+  ));
+});
 
 const InnerList = ({ dropProvided, tasks, columnId }) => (
   <DropZone ref={dropProvided.innerRef}>
@@ -81,7 +72,6 @@ const TaskList = ({
     </Droppable>
   );
 };
-
 TaskList.defaultProps = {
   listId: "LIST",
 };

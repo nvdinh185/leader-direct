@@ -4,7 +4,7 @@ import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 
 import { reorder, reorderTasks } from "@lib/helpers/reorder";
-import Column from "../Column/Column";
+import Column from "../../../../components/ScrumBoard/Column/Column";
 import { PlusOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { ParentContainer, Container, AddListButton } from "./Board.style";
@@ -28,8 +28,8 @@ function Board({
   const statuses = useSelector((state) => state.filterData.statuses);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
 
+  // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
-    // boardRenderWatcher(match.params.id);
     if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
       boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
     }
@@ -53,7 +53,6 @@ function Board({
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
-
     // reordering column
     if (type === "COLUMN") {
       const columnOrdered = reorder(ordered, source.index, destination.index);
@@ -63,22 +62,10 @@ function Board({
       });
       return;
     }
-
-    const updatedColumns = reorderTasks({
-      columns,
-      source,
-      destination,
-      draggableId,
-    });
+    const updatedColumns = reorderTasks({ columns, source, destination, draggableId });
     const draggedTask = tasks[draggableId];
-    const updatedTask = {
-      ...draggedTask,
-      column_id: destination.droppableId,
-    };
-    const updatedTasks = {
-      ...tasks,
-      [updatedTask.id]: updatedTask,
-    };
+    const updatedTask = { ...draggedTask, column_id: destination.droppableId };
+    const updatedTasks = { ...tasks, [updatedTask.id]: updatedTask };
     moveTaskWatcher({ columns: updatedColumns, tasks: updatedTasks });
   };
 

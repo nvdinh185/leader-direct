@@ -1,6 +1,6 @@
-import React, { Fragment } from "react";
-import { Card, Badge, Popconfirm, Tooltip } from "antd";
+import React from "react";
 import moment from "moment";
+import { Card, Badge, Popconfirm, Tooltip } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import ClockIcon from "@assets/images/icon/17.svg";
 import CommentsIcon from "@assets/images/icon/09-icon.svg";
@@ -14,9 +14,10 @@ import {
   CardIcon,
   TaskCardWrapper,
   TaskCardTopMostDiv,
+  RibbonCornerBlue,
 } from "./TaskCard.style";
 
-const TaskCard = ({ task, showDrawer }) => {
+const TaskCard = ({ task, showDrawer, isChanged }) => {
   return (
     <TaskCardWrapper>
       <Card
@@ -32,7 +33,8 @@ const TaskCard = ({ task, showDrawer }) => {
         size="small"
       >
         <TaskCardTopMostDiv></TaskCardTopMostDiv>
-        <CardBody onClick={showDrawer}>
+        {isChanged ? <RibbonCornerBlue>Có Thay Đổi</RibbonCornerBlue> : null}
+        <CardBody style={{ backgroundColor: isChanged ? "grey" : "" }} onClick={showDrawer}>
           <Tooltip title={task.title}>
             <CardTitle>{task.title}</CardTitle>
           </Tooltip>
