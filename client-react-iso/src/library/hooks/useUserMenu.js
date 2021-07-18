@@ -15,7 +15,6 @@ export default function useUserMenu() {
         // Duyệt qua mảng groups rồi lấy về các menu duy nhất (sắp xếp theo order)
         userMenus = userGroups.reduce((agg, group) => {
           let foundGroup = _groups.find((fgroup) => fgroup.id === group);
-          console.log("DEBUG ------------------------------------------------------------- \n", foundGroup);
           let menusGroup = JSON.parse(foundGroup.menus_granted);
           let groupMenusArr = [...new Set(_menus.filter((menu) => menusGroup.includes(menu.id)))];
           return [...agg, ...groupMenusArr];

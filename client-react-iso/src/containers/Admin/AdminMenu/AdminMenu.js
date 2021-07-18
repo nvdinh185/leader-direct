@@ -17,7 +17,6 @@ import MenuAddForm from "./MenuAddForm";
 
 import "@assets/styles/containers/EditableCell.css";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
-import { createNestedFromDb } from "@lib/utils/tree-helper";
 
 export default function AdminUser() {
   const { rowStyle, colStyle, gutter } = basicStyle;
@@ -30,12 +29,6 @@ export default function AdminUser() {
   const [editMenu, setEditMenu] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const size = useWindowSize();
-
-  useEffect(() => {
-    if (menus?.[0]) {
-      createNestedFromDb(menus);
-    }
-  }, [menus]);
 
   const handCallAddModal = () => {
     setModalMode("ADD");

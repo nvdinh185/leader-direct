@@ -76,6 +76,7 @@ module.exports =  {
     next_id: { type: 'INTEGER' },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 50 },
+    is_leaf: { type: 'BOOLEAN' },
     order: { type: 'INTEGER' },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },

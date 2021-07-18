@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu } from "antd";
-import { createNestedFromDb } from "@lib/utils/tree-helper";
+import { createNestedMenuFromDb } from "@lib/utils/tree-helper";
 import Scrollbars from "@components/utility/customScrollBar";
 import appActions from "@redux/app/actions";
 import Logo from "@components/utility/logo";
@@ -21,8 +21,9 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (menus?.[0] && options.length === 0) {
-      console.log(menus);
-      let newMenus = createNestedFromDb(menus);
+      // Lọc lần đầu level đầu tiên để đưa vào thuật toán
+      let parentMenu = menus.filter((menu) => !menu.parent_id);
+      let newMenus = createNestedMenuFromDb(menus, ...parentMenu).filter((menu) => !menu.parent_id);
       setOptions(newMenus);
     }
   }, [menus]);

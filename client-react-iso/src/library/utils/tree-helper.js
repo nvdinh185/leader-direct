@@ -1,38 +1,25 @@
-export const createNestedFromDb = (array) => {
-  if (array?.[0]) {
-    return array.reduce((acc, item) => {
-      // Nếu có parent_id tức là mảng con thì trả về accum luôn
-      if (item.parent_id) {
-        return acc;
-      }
-      if (item?.tag_children_id?.length > 0) {
-        acc.push({
-          key: item.page,
-          label: item.name,
-          leftIcon: item.icon,
-          children: createChildNode(item.tag_children_id, array),
-        });
-        return acc;
-      }
-      acc.push({
-        key: item.page,
-        label: item.name,
-        leftIcon: item.icon,
-      });
-      return acc;
-    }, []);
-  }
-};
-
-const createChildNode = (childIdArr, menus) => {
-  if (childIdArr) {
-    return JSON.parse(childIdArr).map((id) => {
-      console.log("DEBUG ------------------------------------------------------------- \n", childIdArr, menus);
-      const menu = menus.find((menu) => menu.id === id);
+/**
+ * Gọi hồi quy để dựng menu đa cấp ()
+ * @param {[obj]} menuArr mảng chứa tất cả bản ghi menu
+ * @param {[obj]} children mảng chứa các đối tượng con (ở đây dùng rest để nhặt mấy thằng con được spread từ menu sau khi filter)
+ * @returns mảng menu theo định dạng
+ */
+export const createNestedMenuFromDb = (menuArr, ...children) => {
+  const childMenus = children.map((child) => {
+    let dbChild = menuArr.filter((menu) => menu.parent_id === child.id);
+    if (dbChild.length === 0) {
       return {
-        key: menu.page,
-        label: menu.name,
+        key: child.page,
+        label: child.name,
+        leftIcon: child.icon,
       };
-    });
-  }
+    }
+    return {
+      key: child.page,
+      label: child.name,
+      leftIcon: child.icon,
+      children: createNestedMenuFromDb(menuArr, ...dbChild),
+    };
+  });
+  return childMenus;
 };
