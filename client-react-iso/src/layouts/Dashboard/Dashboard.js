@@ -3,10 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Layout } from "antd";
 import { getFunctions, getMenuApiAll, getGrantedGroups, getGrantedUserList, getAllOrganization } from "@redux/adminUsers/actions";
 import { getCategoryList } from "@redux/filterData/actions";
-import { getDirectOrgAll } from "@redux/directOrgs/actions";
 import { getGrantedUserInfo } from "@redux/auth/actions";
 
-import useWindowSize from "@lib/hooks/useWindowSize";
 import appActions from "@redux/app/actions";
 import siteConfig from "@config/site.config";
 
@@ -14,8 +12,10 @@ import ThemeSwitcher from "@containers/ThemeSwitcher/ThemeSwitcher";
 import Sidebar from "@layouts/Sidebar/Sidebar";
 import Topbar from "@layouts/Topbar/Topbar";
 import DashboardRoutes from "./DashboardRoutes";
-
 import { DashboardContainer, DashboardGlobalStyles } from "./Dashboard.styles";
+
+import useWindowSize from "@lib/hooks/useWindowSize";
+import useRefreshPage from "@lib/hooks/useRefreshPage";
 
 const { Content, Footer } = Layout;
 const { toggleAll } = appActions;
@@ -35,6 +35,7 @@ const styles = {
 };
 
 export default function Dashboard() {
+  useRefreshPage();
   const dispatch = useDispatch();
   const appHeight = useSelector((state) => state.App.height);
   const token = useSelector((state) => state.Auth.idToken);
