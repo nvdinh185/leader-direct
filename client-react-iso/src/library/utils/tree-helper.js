@@ -1,6 +1,7 @@
 export const createNestedFromDb = (array) => {
   if (array?.[0]) {
     return array.reduce((acc, item) => {
+      // Nếu có parent_id tức là mảng con thì trả về accum luôn
       if (item.parent_id) {
         return acc;
       }
@@ -26,6 +27,7 @@ export const createNestedFromDb = (array) => {
 const createChildNode = (childIdArr, menus) => {
   if (childIdArr) {
     return JSON.parse(childIdArr).map((id) => {
+      console.log("DEBUG ------------------------------------------------------------- \n", childIdArr, menus);
       const menu = menus.find((menu) => menu.id === id);
       return {
         key: menu.page,

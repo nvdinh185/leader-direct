@@ -7,12 +7,13 @@ import appActions from "@redux/app/actions";
 import Logo from "@components/utility/logo";
 import SidebarWrapper from "./Sidebar.styles";
 import SidebarMenu from "./SidebarMenu";
+import useUserMenu from "@lib/hooks/useUserMenu";
 const { Sider } = Layout;
 
 const { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed } = appActions;
 
 export default function Sidebar() {
-  const menus = useSelector((state) => state.adminUser.menus);
+  const menus = useUserMenu();
   const { view, openKeys, collapsed, openDrawer, current, height } = useSelector((state) => state.App);
   const customizedTheme = useSelector((state) => state.ThemeSwitcher.sidebarTheme);
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (menus?.[0] && options.length === 0) {
+      console.log(menus);
       let newMenus = createNestedFromDb(menus);
       setOptions(newMenus);
     }
