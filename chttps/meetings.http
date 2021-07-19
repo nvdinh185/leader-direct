@@ -28,3 +28,9 @@ Authorization: {{authToken}}
     "category": 43,
     "description": "Mô Tả Giao Ban Tháng 6"
 }
+
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/test-model-dao
+Content-Type: application/json
+# Authorization: {{authToken}}

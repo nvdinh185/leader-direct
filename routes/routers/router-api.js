@@ -493,6 +493,19 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.getFilterMeeting,
     ],
+
+    /**
+     * (133) POST /leader-direct/api/get-filter-meeting
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/test-model-dao": [
+      expHandlers.setRequestParameter("/test-model-dao", "functionCode"),
+      // ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      // postHandler.jsonProcess,
+      apiHandler.testModelDAO,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

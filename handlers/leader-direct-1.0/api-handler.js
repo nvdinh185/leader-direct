@@ -13,6 +13,7 @@
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
 const { general, doHelper, dxHelper, filterHelper } = require("./extds/index");
+const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
 const mime = require("mime-types");
 class ApiHandler {
@@ -1113,6 +1114,13 @@ class ApiHandler {
         req.error = err;
         next();
       });
+  }
+
+  async testModelDAO(req, res, next) {
+    let collName = await dbOrigin.listCollections().toArray();
+    console.log(collName);
+    req.finalJson = collName;
+    next();
   }
 }
 
