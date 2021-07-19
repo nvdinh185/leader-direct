@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 /**
@@ -13,6 +13,7 @@ export default function useGetUserAuthOrg() {
 
   const returnAuthOrgList = (_userInfo, _organizations) => {
     let userOrgId = parseInt(_userInfo.organization);
+    console.log("DEBUG USERINFO ------------------------------------------------------------- \n", _userInfo.isAdmin);
     if (_userInfo.isAdmin) {
       return _organizations;
     }

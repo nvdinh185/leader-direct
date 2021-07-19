@@ -15,10 +15,15 @@ const { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed } = app
 
 export default function Sidebar() {
   const menus = useUserMenu();
+  const userOrg = useGetUserAuthOrg();
   const { view, openKeys, collapsed, openDrawer, current, height } = useSelector((state) => state.App);
   const customizedTheme = useSelector((state) => state.ThemeSwitcher.sidebarTheme);
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    console.log(userOrg);
+  }, [userOrg]);
 
   useEffect(() => {
     if (menus?.[0] && options.length === 0) {

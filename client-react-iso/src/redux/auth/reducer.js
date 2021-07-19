@@ -59,8 +59,13 @@ const reducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        grantedUserInfo: action.payload.grantedUser,
+        grantedUserInfo: {
+          ...action.payload.grantedUser,
+          isAdmin: action.payload.isAdmin,
+          isAdminErr: action.payload.isAdminErr,
+        },
         grantedApis: action.payload.data,
+
         loading: false,
       };
     case actionTypes.GET_GRANTED_USER_INFO_FAIL:

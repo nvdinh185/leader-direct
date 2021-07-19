@@ -84,7 +84,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // Khi có backgrounds trong store thì set riêng giá trị background
   useEffect(() => {
     if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
-      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_DIRECT_ORG);
+      let bg = backgrounds.find((bg) => bg.code === COMMON.BG_DIRECT_ORG_ASS);
       if (bg.status == 1) {
         setBackgroundUrl(bg);
         return;
@@ -95,7 +95,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
     if (token) {
-      dispatch(getFilterDirectOrgStart(token, { organization_role: [22] }));
+      dispatch(getFilterDirectOrgStart(token, { organization_role: [21] }));
     }
   }, [token]);
 

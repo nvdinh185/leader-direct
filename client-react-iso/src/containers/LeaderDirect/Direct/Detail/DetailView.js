@@ -8,9 +8,9 @@ import LayoutWrapper from "@components/utility/layoutWrapper";
 import PageHeader from "@components/utility/pageHeader";
 import DetailInfo from "./DetailInfo";
 import basicStyle from "@assets/styles/constants";
+import DirectHistory from "@containers/LeaderDirect/Direct/Detail/DirectHistory";
 
 import { getDirectByIds } from "@redux/directs/actions";
-import DirectHistory from "@containers/LeaderDirect/Direct/DirectHistory/DirectHistory";
 
 export default function DetailView() {
   const history = useHistory();
