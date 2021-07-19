@@ -21,7 +21,7 @@ export default function UserAddForm({
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.adminUser.loading);
-  const [targetApiKeys, setTargetApiKeys] = useState([]);
+  // const [targetApiKeys, setTargetApiKeys] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -38,7 +38,7 @@ export default function UserAddForm({
       // Nếu có initialValues tức là đang edit thì gọi hàm edit chứ đừng dại gọi add hì
       let newData = {
         ...form.getFieldValue(),
-        function_apis: JSON.stringify(targetApiKeys.sort((a, b) => a - b)),
+        // function_apis: JSON.stringify(targetApiKeys.sort((a, b) => a - b)),
       };
       if (initialValues && modalMode === "EDIT") {
         dispatch(updateGrantedUser(token, newData));
@@ -56,8 +56,7 @@ export default function UserAddForm({
   useEffect(() => {
     if (modalMode === "ADD") {
       form.resetFields();
-      setTargetApiKeys([]);
-
+      // setTargetApiKeys([]);
       return;
     }
     if (Object.keys(initialValues).length > 0 && modalMode === "EDIT") {
@@ -66,18 +65,18 @@ export default function UserAddForm({
         ...initialValues,
       });
       // Set giá trị đã có của cho target của transfer
-      let groupId = JSON.parse(initialValues.function_groups)?.[0];
-      let groupApis = JSON.parse(groups.find((group) => group.id === groupId).function_apis);
-      let apiArr = JSON.parse(initialValues.function_apis).concat(groupApis);
-      let targetInitArr = apis.filter((api) => apiArr.includes(api.id)).map((item) => item.id);
-      setTargetApiKeys(targetInitArr);
+      // let groupId = JSON.parse(initialValues.function_groups)?.[0];
+      // let groupApis = JSON.parse(groups.find((group) => group.id === groupId).function_apis);
+      // let apiArr = JSON.parse(initialValues.function_apis).concat(groupApis);
+      // let targetInitArr = apis.filter((api) => apiArr.includes(api.id)).map((item) => item.id);
+      // setTargetApiKeys(targetInitArr);
     }
   }, [initialValues, modalMode]);
 
-  const onChangeApi = (newTargetKeys, direction, moveKeys) => {
-    console.log(newTargetKeys, direction, moveKeys);
-    setTargetApiKeys(newTargetKeys);
-  };
+  // const onChangeApi = (newTargetKeys, direction, moveKeys) => {
+  //   console.log(newTargetKeys, direction, moveKeys);
+  //   setTargetApiKeys(newTargetKeys);
+  // };
 
   return (
     <Modal
@@ -119,6 +118,7 @@ export default function UserAddForm({
         <Form.Item label="Nhóm Quyền" name="function_groups">
           <Select
             // defaultValue={initialValues && initialValues.function_groups?.[0] ? initialValues.function_groups[0] : null}
+            multiple
             size="large"
             showSearch
             placeholder="Chọn Nhóm Quyền"
@@ -131,7 +131,7 @@ export default function UserAddForm({
               : null}
           </Select>
         </Form.Item>
-        <Form.Item label="Gán API Cho User" prefix={<IdcardOutlined />}>
+        {/* <Form.Item label="Gán API Cho User" prefix={<IdcardOutlined />}>
           <Transfers
             dataSource={apis}
             targetKeys={targetApiKeys}
@@ -146,7 +146,7 @@ export default function UserAddForm({
               height: 300,
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="Mô Tả" name="description">
           <Input.TextArea size="large" placeholder="Nhập Mô Tả Cho Người Dùng" prefix={<FileTextOutlined />} />
         </Form.Item>

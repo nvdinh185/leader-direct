@@ -1,0 +1,15 @@
+# @baseHost = localhost
+@baseHost = 10.16.150.69
+@basePort = 9232
+# @baseHost = 10.16.150.69
+@authToken = eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+
+GET http://{{baseHost}}:{{basePort}}/leader-direct/api/get-granted-user
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "username": "hieu.quang"
+}
+    
+    

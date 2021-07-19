@@ -4,7 +4,6 @@ import * as dOTypes from "./types";
 import * as doActions from "./actions";
 
 export function* getFilterDirectOrgStart({ payload }) {
-  console.log("DEBUG ---", payload);
   try {
     const result = yield doApi.getFilterDirectOrg(payload.token, payload.data);
     yield put(doActions.getFilterDirectOrgSuccess(result.data));

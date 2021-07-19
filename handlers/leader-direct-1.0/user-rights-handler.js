@@ -306,9 +306,21 @@ class UserRightsHandler {
         );
         functions.username = granted.username;
 
+        let isAdmin = false;
+        let isAdminErr = "";
+
+        try {
+          let userGroupId = JSON.parse(granted.function_groups)[0];
+          isAdmin = [21, 99].includes(userGroupId) ? true : false;
+        } catch (error) {
+          isAdminErr = error;
+        }
+
         req.finalJson = {
           ...functions,
           grantedUser: granted,
+          isAdmin: isAdmin,
+          isAdminErr: isAdminErr,
           // chỉ trả độ dài id duy nhất thôi
           length: [...new Set([...funcs, ...funcsGroup])].length,
         };
