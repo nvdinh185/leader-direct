@@ -1116,11 +1116,46 @@ class ApiHandler {
       });
   }
 
+  // ---------------------------------------------------------------------------------
+  // SECTION 2: NHÓM HÀM PHỤC VỤ THỐNG KÊ BÁO CÁO
+  // ---------------------------------------------------------------------------------
+
+  // ----------------------------------------------------------------------------------
   async testModelDAO(req, res, next) {
-    let collName = await dbOrigin.listCollections().toArray();
+    let collName = await dbOrigin.collection("meetings").find({}).toArray();
     console.log(collName);
     req.finalJson = collName;
     next();
+  }
+
+  /**
+   * (134) POST /leader-direct/api/get-count-data-by-criteria
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  async getCountDataByCriteria(req, res, next) {
+    if (!req.json_data.model || !req.json_data.jsonWhere) {
+      req.error = "Không có dữ liệu theo yêu cầu";
+      next();
+      return;
+    }
+    let { model, jsonWhere } = req.json_data;
+    try {
+      let data = await leaderDirectModels[model].getCount(jsonWhere);
+      req.finalJson = data;
+      next();
+    } catch (error) {
+      console.log(error);
+      req.error = error;
+      next();
+    }
   }
 }
 

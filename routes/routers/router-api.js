@@ -506,6 +506,19 @@ const funcPaths = {
       // postHandler.jsonProcess,
       apiHandler.testModelDAO,
     ],
+
+    /**
+     * (134) POST /leader-direct/api/get-count-data-by-criteria
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-count-data-by-criteria": [
+      expHandlers.setRequestParameter("/get-count-data-by-criteria", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getCountDataByCriteria,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();
