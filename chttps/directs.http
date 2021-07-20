@@ -24,8 +24,24 @@ Authorization: {{authToken}}
 {
     "category": 35,
     "meeting_id": 1,
-    "description": "Test Nhập Chỉ Đạo",
+    "description": "Test Nhập Chỉ Đạo 2",
     "leader": 71,
-    "executors": "[4,6,7]",
-    "assessors": "[2]"
+    "executors": "[7,8,9]",
+    "assessors": "[3]"
+}
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/update-direct
+User-Agent: rest-client
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "meeting_id": 1,
+    "uuid": "aee38bd4-59f1-4d03-85ef-1b8f9722530a",
+    "category": 35,
+    "description": "Test Nhập Chỉ Đạo - EDIT",
+    "leader": 71,
+    "executors": "[6]",
+    "assessors": "[2,4]"
 }

@@ -47,7 +47,15 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
     let updateArr = _directOrgs.reduce((agg, directOrg) => {
       let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
       if (boardItemStt !== directOrg.exec_status) {
-        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt, description: directOrg.description }];
+        return [
+          ...agg,
+          {
+            uuid: directOrg.uuid,
+            direct_uuid: directOrg.direct_uuid,
+            exec_status: boardItemStt,
+            description: directOrg.description,
+          },
+        ];
       }
       return agg;
     }, []);
@@ -95,7 +103,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
     if (token) {
-      dispatch(getFilterDirectOrgStart(token, { organization_role: [22] }));
+      dispatch(getFilterDirectOrgStart(token, { organization_role: [22], status: 1 }));
     }
   }, [token]);
 

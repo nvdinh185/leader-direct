@@ -31,7 +31,14 @@ function Board({
   // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
     if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
-      boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
+      // TODO: Đối với ass thì làm lại các status (gồm 11 + các status tiếp theo của ass 111 -> 114)
+      let assStts = statuses.reduce((acc, stt) => {
+        if (stt.id >= 111) {
+          return [...acc, stt];
+        }
+        return acc;
+      }, []);
+      boardRenderWatcher({ statuses: assStts, data: directOrgs, field: "exec_status" });
     }
   }, [boardRenderWatcher, statuses, directOrgs]);
 
@@ -89,6 +96,7 @@ function Board({
 
               return (
                 <Column
+                  isDragDisabled={true}
                   key={columnId}
                   index={index}
                   title={column.title}

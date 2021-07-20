@@ -41,10 +41,9 @@ module.exports =  {
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
     },
     leader: {
-      type: 'STRING',
+      type: 'INTEGER',
       notNull: 1,
-      foreignKey: 'FOREIGN KEY (leader) REFERENCES categories(id)',
-      length: 255
+      foreignKey: 'FOREIGN KEY (leader) REFERENCES categories(id)'
     },
     executors: { type: 'STRING', length: 200 },
     assessors: { type: 'STRING', length: 200 },
@@ -54,6 +53,7 @@ module.exports =  {
     created_user: { type: 'STRING', length: 255 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 255 },
+    assess_criteria: { type: 'STRING', length: 500 },
     percent_complete: { type: 'STRING', length: 255 },
     leader_opinion: { type: 'STRING', length: 500 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
@@ -157,6 +157,87 @@ module.exports =  {
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
     organization_role: { type: 'INTEGER', notNull: 1 },
+    description: { type: 'STRING', length: 1000 },
+    update_no: { type: 'INTEGER', notNull: 1 },
+    category: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
+    },
+    attachments: { type: 'STRING', length: 500 },
+    created_time: { type: 'DATETIME' },
+    created_user: { type: 'STRING', length: 50 },
+    status: { type: 'BOOLEAN', defaultValue: '1' }
+  },
+  direct_assessments: {
+    id: { type: 'INTEGER', notNull: 1, autoIncrement: 1 },
+    uuid: {
+      type: 'STRING',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      length: 50
+    },
+    direct_uuid: {
+      type: 'STRING',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
+      length: 50
+    },
+    direct_org_uuid: {
+      type: 'STRING',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (direct_org_id) REFERENCES direct_orgs(id)',
+      length: 50
+    },
+    organization_id: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
+    },
+    organization_exe: { type: 'INTEGER', notNull: 1 },
+    description: { type: 'STRING', length: 1000 },
+    category: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
+    },
+    exe_histories: { type: 'STRING', length: 1000 },
+    attachments: { type: 'STRING', length: 500 },
+    created_time: { type: 'DATETIME' },
+    created_user: { type: 'STRING', length: 50 },
+    status: { type: 'BOOLEAN', defaultValue: '1' },
+    update_no: { type: 'INTEGER', notNull: 1 }
+  },
+  direct_assess_logs: {
+    id: { type: 'INTEGER', notNull: 1, autoIncrement: 1 },
+    uuid: {
+      type: 'STRING',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      length: 50
+    },
+    direct_uuid: {
+      type: 'STRING',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
+      length: 50
+    },
+    direct_org_uuid: {
+      type: 'STRING',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (direct_org_id) REFERENCES direct_orgs(id)',
+      length: 50
+    },
+    direct_exe_uuid: { type: 'STRING', length: 1000 },
+    direct_ass_uuid: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
+    },
+    organization_exe: { type: 'INTEGER', notNull: 1 },
+    organization_ass: { type: 'INTEGER', notNull: 1 },
     description: { type: 'STRING', length: 1000 },
     category: {
       type: 'INTEGER',

@@ -5,7 +5,8 @@ export const Container = styled.div`
   box-sizing: border-box;
   margin: ${grid}px;
   display: flex;
-  width: 280px;
+  width: 100%;
+  min-width: 280px;
   border-radius: 5px;
   overflow: hidden;
   background-color: rgba(242, 245, 253, 0.1);

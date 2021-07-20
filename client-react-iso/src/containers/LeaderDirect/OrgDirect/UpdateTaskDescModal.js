@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import * as COMMON from "@constants/common";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDirectOrgExecStatus } from "@redux/directOrgs/actions";
 import { warningAlert, confirmAlert, successAlert } from "@components/AlertModal/ModalInfo";
@@ -32,7 +33,7 @@ export default function UpdateTaskDescModal(props) {
       });
       if (dataToPost && dataToPost.length > 0) {
         // TODO: Call api to update the change arr
-        dispatch(updateDirectOrgExecStatus(token, { update_arr: dataToPost }));
+        dispatch(updateDirectOrgExecStatus(token, { update_arr: dataToPost, mode: COMMON.ORGANIZATION_ROLE.EXE }));
       }
     } catch (errorInfo) {
       console.log("Failed:", errorInfo);

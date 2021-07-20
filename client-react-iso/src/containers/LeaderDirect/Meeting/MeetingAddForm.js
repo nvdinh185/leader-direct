@@ -11,7 +11,6 @@ const { Option } = Select;
 export default function MeetingAddForm({
   meetingTypes,
   organizations,
-  meetings,
   modalMode,
   okText,
   initialValues,

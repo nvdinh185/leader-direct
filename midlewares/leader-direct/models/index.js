@@ -12,6 +12,7 @@ module.exports = {
     direct_loops: new (require("./direct_loops"))(db),
     direct_orgs: new (require("./direct_orgs"))(db),
     direct_executes: new (require("./direct_executes"))(db),
+    direct_assessments: new (require("./direct_assessments"))(db),
     attachments: new (require("./attachments"))(db),
     categories: new (require("./categories"))(db),
 

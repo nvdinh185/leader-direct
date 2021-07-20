@@ -519,6 +519,19 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.getCountDataByCriteria,
     ],
+
+    /**
+     * (135) POST /leader-direct/api/get-fitler-data-dynamic
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-filter-data-dynamic": [
+      expHandlers.setRequestParameter("/get-fitler-data-dynamic", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getFilterDataDynamic,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

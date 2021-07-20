@@ -428,7 +428,7 @@ class ApiHandler {
           defaultDataLoops.executors = jsonData.executors;
         }
         if (jsonData.assessors) {
-          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.assessors, "assessors");
+          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.assessors, "assessors", jsonData.executors);
           defaultDataLoops.assessors = jsonData.assessors;
         }
 
@@ -478,7 +478,7 @@ class ApiHandler {
           doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "executors", oldDirect);
         }
         if (jsonData.assessors) {
-          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "assessors", oldDirect);
+          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "assessors", oldDirect, jsonData.executors);
         }
         req.finalJson = data;
         next();
@@ -1011,7 +1011,8 @@ class ApiHandler {
   /**
    * (131) POST /leader-direct/api/update-direct-org-exec-status
    *  Post dữ liệu direct_org (uuid) lên kèm theo status (DO_STATUS) muốn thay đổi
-   *  - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *  - Logic là update thông tin direct_org của exe trước -> tạo histories (dx)
+   *  - Tiếp theo là update các direct_org có direct_uuid tương ứng và role là 21 theo bảng map stt tương ứng
    *
    * SAMPLE INPUTS: {uuid: 'asdfas-asdf1123', status: 51}
    */
@@ -1043,8 +1044,12 @@ class ApiHandler {
           updated_user: req.user.username,
         };
       });
-      // Đối với direct org thì update status và bổ sung thêm trường histories (nếu có insert mới)
+      // ---------------------------------------------------------------------------------
+      // Khi sự kiện update direct org xảy ra thì tạo thêm bản ghi vào direct_executes đồng thời có logic tạo bản ghi mới
+      // ở bên direct_assessments_logs để báo cho đơn vị đánh giá cập nhập thông tin
       let result = await leaderDirectModels.direct_orgs.updateRows(updateDOArr, { uuid: { $in: uuidArr } });
+      // TODO: Code tạo mới bản ghi ở direct_assessments (tạo mới rồi update vào mảng histories của DO của thằng assess)
+
       req.finalJson = { result, resultDx: { resultUpdate, resultInsert } };
       next();
     } catch (err) {
@@ -1149,6 +1154,39 @@ class ApiHandler {
     let { model, jsonWhere } = req.json_data;
     try {
       let data = await leaderDirectModels[model].getCount(jsonWhere);
+      req.finalJson = data;
+      next();
+    } catch (error) {
+      console.log(error);
+      req.error = error;
+      next();
+    }
+  }
+
+  /**
+   * (134) POST /leader-direct/api/get-filter-data-dynamic
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  async getFilterDataDynamic(req, res, next) {
+    if (!req.json_data.model || !req.json_data.jsonWhere) {
+      req.error = "Không có dữ liệu theo yêu cầu";
+      next();
+      return;
+    }
+    let { model, jsonWhere } = req.json_data;
+    let jsonWhereNew = filterHelper.filterCriteriaBuilder(jsonWhere, ...Object.keys(jsonWhere));
+    console.log(jsonWhereNew);
+    try {
+      let data = await leaderDirectModels[model].getAllData(jsonWhereNew);
+      console.log(data);
       req.finalJson = data;
       next();
     } catch (error) {

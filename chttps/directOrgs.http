@@ -22,5 +22,21 @@ Authorization: {{authToken}}
     "organization_id": [5],
     "organization_role": [21,22]
 }
-    
+
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/update-direct-org-exec-status
+User-Agent: rest-client
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "update_arr":[{
+        "uuid":"2ec432de-002c-4d73-90fe-23dc9184b5c7",
+        "direct_uuid":"c225f018-63d2-4973-831a-6dc1c41e7dec",
+        "exec_status":13,
+        "description":"Test Edit Cap Nhap Trang Thang 14 - EDIT"
+        }],
+    "mode":22
+}
     

@@ -93,6 +93,7 @@ export default function () {
   }
 
   function handleOpenModal() {
+    console.log(initModalProps);
     dispatch(
       modalActions.openModal({
         ...initModalProps,
@@ -127,12 +128,12 @@ export default function () {
 
   // Sau khi có đủ các dữ liệu từ store thì set giá trị ban đầu cần truyền cho modal
   useEffect(() => {
-    if (organizations?.[0] && meetingTypes?.[0] && filterMeetings?.[0]) {
+    if (organizations?.[0] && meetingTypes?.[0]) {
+      console.log(filterMeetings);
       setInitModalProps({
         modalType: COMMON.MEETING_ADD_EDIT_MODAL,
         modalProps: {
           organizations: organizations,
-          meetings: filterMeetings,
           meetingTypes: meetingTypes,
           width: size.width > 1200 ? size.width * 0.7 : size.width * 0.6,
           centered: true,
@@ -142,7 +143,7 @@ export default function () {
         },
       });
     }
-  }, [organizations, meetingTypes, meetings]);
+  }, [organizations, meetingTypes, filterMeetings]);
 
   // ---------------------------------------------------------------------------------
   // NHÓM EFFECT SET GIAO DIỆN CHO LAYOUT

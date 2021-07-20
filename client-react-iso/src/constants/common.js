@@ -20,7 +20,13 @@ export const MEETING_ADD_EDIT_MODAL = "MEETING_ADD_EDIT_MODAL";
 export const EXE_TYPE_MAP = {
   CREATE: 51,
   ONGOING: 52,
-  COMPLETE: 53,
-  COMPLETE_PRCT: 54,
+  COMPLETE_PRCT: 53,
+  COMPLETE: 54,
   REQ_EXT1: 55,
+};
+
+// ---------------------------------------------------------------------------------
+export const ORGANIZATION_ROLE = {
+  ASS: 21,
+  EXE: 22,
 };

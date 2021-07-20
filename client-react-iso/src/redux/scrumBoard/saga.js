@@ -11,7 +11,6 @@ function* boardRenderEffectSaga({ payload }) {
   let boards;
   let columns;
   let tasks;
-  // TODO: render board base on data from server instead of localStorage
   if (payload) {
     const [boardNCols, boardData] = generateColumnDnd(payload.statuses, payload.data, payload.field);
     boards = boardNCols.board;

@@ -14,9 +14,9 @@ const DX_STATUS = {
 
 const ASS_TYPES = {
   UPDATE_CRIT: 61,
-  ACCEPT_EXT1: 62,
-  ASS_EXE: 63,
-  ASS_EXE_CMPLT: 64,
+  ASS_EXE: 62,
+  ASS_EXE_CMPLT: 63,
+  ACCEPT_EXT1: 64,
   UPDATE_LEADER_OPINION: 65,
 };
 
@@ -26,14 +26,22 @@ const DO_STATUS = {
   COMPLETE_PRCT: 13,
   COMPLETE: 14,
   EXTEND1: 15,
+  ASS_UP_CRIT: 111,
+  ASS_EXE: 112,
+  ASS_EXE_CMPLT: 114,
+  ASS_ACC_EX1: 115,
 };
 
 const DO_DX_STT_MAP = {
-  11: { DX: 51 },
-  12: { DX: 52 },
-  13: { DX: 53 },
-  14: { DX: 54 },
-  15: { DX: 55 },
+  11: { DX: 51, DO_ASS: 111 },
+  12: { DX: 52, DO_ASS: 112 },
+  13: { DX: 53, DO_ASS: 113 },
+  14: { DX: 54, DO_ASS: 113 },
+  15: { DX: 55, DO_ASS: 115 },
+  111: { DX: 61 },
+  112: { DX: 62 },
+  113: { DX: 63 },
+  114: { DX: 64 },
 };
 
 /**
@@ -59,4 +67,4 @@ const generateUUID = () => {
   });
 };
 
-module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP };
+module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP, ASS_TYPES };

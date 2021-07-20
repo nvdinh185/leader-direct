@@ -14,7 +14,6 @@ import { CaretDownOutlined, DownOutlined, LoadingOutlined } from "@ant-design/ic
 import PageHeader from "@components/utility/pageHeader";
 import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
 import { variables } from "@assets/styles/variables";
-import AvatarIcon from "@assets/images/icon/08-icon.svg";
 import { Scrollbars } from "react-custom-scrollbars";
 import { DateRangepicker } from "@components/uielements/datePicker";
 
@@ -95,7 +94,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
     if (token) {
-      dispatch(getFilterDirectOrgStart(token, { organization_role: [21] }));
+      dispatch(getFilterDirectOrgStart(token, { organization_role: [21], status: 1 }));
     }
   }, [token]);
 
