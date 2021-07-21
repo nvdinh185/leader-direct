@@ -30,6 +30,8 @@ const createInitDirectExeHelper = (dataInput) => {
   });
 };
 
+// ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
 /**
  * Hàm tạo direct_org theo các giá trị truyền vào (để rút gọn bớt mấy cái hàm lặp lại)
  * @param {[object]} req mảng chứa thông tin cần update của direct org [{uuid: '123dsfas', exec_status: 12}]
@@ -69,36 +71,24 @@ const returnDXAddOrUpdateArr = (req) => {
       (agg, item) => {
         const reqDxCat = DO_DX_STT_MAP[item.exec_status].DX;
         const oldUuidDx = oldDXArr.filter((old) => old.direct_org_uuid === item.uuid && old.category === reqDxCat);
+        // ---------------------------------------------------------------------------------
+        // TODO: Nếu dữ liệu là 14 (hoàn thành hoặc 15 xin gia hạn) thì update bản ghi ở direct assess
+        //
+        if (oldUuidDx.length === 0 && (item.exec_status === DO_STATUS.COMPLETE || item.exec_status === DO_STATUS.EXTEND1)) {
+        }
+
+        // ---------------------------------------------------------------------------------
         // TODO: Check nếu ko có exec_status hoặc exec_status là đang thực hiện (12) và hoàn thành % (13) thì
         // đưa vào case insert thêm bản ghi + tăng thêm update_no lên
         if (oldUuidDx.length === 0 || item.exec_status === DO_STATUS.ONGOING || item.exec_status === DO_STATUS.COMPLETE_PRCT) {
-          // Lấy 1 đối tượng có direct org tương đương ở oldDXArr để có thông tin của nó
-          let sampleOldDXArr = oldDXArr.find((old) => old.direct_org_uuid === item.uuid);
-          let update_no = 1;
-          // Nếu có exec_status thì sample sẽ là bản ghi mới nhất
-          if (oldUuidDx.length > 0) {
-            sampleOldDXArr = oldUuidDx.sort((a, b) => new Date(b.created_time).getTime() - new Date(a.created_time).getTime())[0];
-            update_no = oldUuidDx.length === 0 ? 1 : ++sampleOldDXArr.update_no;
-          }
-          let newUUID = generateUUID();
-          genUUIDs.push({ doUUID: item.uuid, dxUUID: newUUID });
+          let returnCreateObj = returnCreateNewDxObj(req, item, reqDxCat, oldDXArr, oldUuidDx, genUUIDs);
           return {
             ...agg,
-            insertNewArr: [
-              ...agg.insertNewArr,
-              {
-                ...sampleOldDXArr,
-                uuid: newUUID,
-                description: item.description ? item.description : "",
-                category: reqDxCat,
-                update_no: update_no,
-                created_time: new Date().getTime(),
-                created_user: req.user.username,
-                status: 1,
-              },
-            ],
+            insertNewArr: [...agg.insertNewArr, returnCreateObj],
           };
         }
+
+        // ---------------------------------------------------------------------------------
         // Nếu có thì tìm tất cả thằng trùng cả
         // Nếu tìm ra uuidDx trùng map category với exec_status thì update
         return {
@@ -113,6 +103,41 @@ const returnDXAddOrUpdateArr = (req) => {
     );
     res({ ...dXAddOrUpdateArr, insertUUIDs: genUUIDs });
   });
+};
+
+const returnCreateNewDxObj = (req, item, reqDxCat, oldDXArr, oldUuidDx, genUUIDs) => {
+  // Lấy 1 đối tượng có direct org tương đương ở oldDXArr để có thông tin của nó
+  let sampleOldDXArr = oldDXArr.find((old) => old.direct_org_uuid === item.uuid);
+  let update_no = 1;
+  // Nếu có exec_status thì sample sẽ là bản ghi mới nhất
+  if (oldUuidDx.length > 0) {
+    sampleOldDXArr = oldUuidDx.sort((a, b) => new Date(b.created_time).getTime() - new Date(a.created_time).getTime())[0];
+    update_no = oldUuidDx.length === 0 ? 1 : ++sampleOldDXArr.update_no;
+  }
+  let newUUID = generateUUID();
+  genUUIDs.push({ doUUID: item.uuid, dxUUID: newUUID });
+  let returnCreateDx = {
+    ...sampleOldDXArr,
+    uuid: newUUID,
+    description: item.description ? item.description : "",
+    category: reqDxCat,
+    update_no: update_no,
+    created_time: new Date().getTime(),
+    created_user: req.user.username,
+    status: 1,
+  };
+  return returnCreateDx;
+};
+
+/**
+ * Hàm trả về mảng dass cần update category khi dx tạo mới
+ * @param {*} oldDXArr
+ * @param {*} newDOUpItem
+ */
+const updateDirectAssLogsOnDxChanged = (oldDXArr, newDOUpItem) => {
+  let oldDx = oldDXArr.find((dx) => dx.uuid === newDOUpItem.uuid);
+  // Tìm trong d ass đã tồn tại bản ghi có trạng thái này chưa
+  let foundDass = leaderDirectModels.direct_assessments.getAllData({});
 };
 
 module.exports = { createInitDirectExeHelper, createOrUpdateDXOnDOChanged };

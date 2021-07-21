@@ -9,27 +9,25 @@ import { getDirectExeByDOs, getFilterDirectOrgStart, setBoardUpdateArr } from "@
 
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
-import { Layout, Menu, Dropdown, Popover, Checkbox, Button, Form, Row, Col, DatePicker } from "antd";
-import { CaretDownOutlined, DownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Layout, Menu, Dropdown, Popover, Checkbox, Button, Form, Row, Col, DatePicker, Select } from "antd";
 import PageHeader from "@components/utility/pageHeader";
 import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
 import { variables } from "@assets/styles/variables";
 import { Scrollbars } from "react-custom-scrollbars";
 import { DateRangepicker } from "@components/uielements/datePicker";
-
-import "@assets/styles/containers/BoardLayout.css";
-
 import { Filters, Header, HeaderSecondary } from "./BoardLayout.style";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import { warningAlert } from "@components/AlertModal/ModalInfo";
 import useWindowSize from "@lib/hooks/useWindowSize";
-import { InputGroup } from "@components/uielements/input";
 
+import "@assets/styles/containers/BoardLayout.css";
+const { Option } = Select;
 const { Content } = Layout;
 
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openModal }) => {
-  const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const token = useSelector((state) => state.Auth.idToken);
+  const backgrounds = useSelector((state) => state.filterData.backgrounds);
+  const organizations = useSelector((state) => state.adminUser.organizations);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
   const boardDOs = useSelector((state) => state.scrumBoard.tasks);
   const [backgroundUrl, setBackgroundUrl] = useState();
@@ -153,34 +151,44 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
               </Form.Item>
               <Form.Item name="date">
                 <Col span={24}>
-                  <InputGroup compact style={{ marginBottom: "15px" }}>
-                    <DatePicker
-                      onChange={(e) => {
-                        console.log("CHANGED");
-                      }}
-                      format="MM/YYYY"
-                      value={monthPicked}
-                      locale={locale}
-                      mode="month"
-                      open={isOpen}
-                      onOpenChange={() => setIsOpen(true)}
-                      onPanelChange={(v) => {
-                        let datepicked = v.startOf("month");
-                        setMonthPicked(datepicked);
-                        setIsOpen(false);
-                      }}
-                      style={{
-                        color: "white",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        border: "1px line white",
-                        backgroundColor: "#ffffff2b",
-                      }}
-                      disabledDate={(date) => date > new Date()}
-                      name="date"
-                    ></DatePicker>
-                  </InputGroup>
+                  <DatePicker
+                    onChange={(e) => {
+                      console.log("CHANGED");
+                    }}
+                    format="MM/YYYY"
+                    value={monthPicked}
+                    locale={locale}
+                    mode="month"
+                    open={isOpen}
+                    onOpenChange={() => {
+                      setIsOpen(!isOpen);
+                    }}
+                    onPanelChange={(v) => {
+                      let datepicked = v.startOf("month");
+                      setMonthPicked(datepicked);
+                      setIsOpen(false);
+                    }}
+                    onChange={() => {
+                      if (monthPicked) {
+                        setMonthPicked("");
+                      }
+                    }}
+                    style={{
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      border: "1px line white",
+                      backgroundColor: "#ffffff2b",
+                    }}
+                    disabledDate={(date) => date > new Date()}
+                    name="date"
+                  ></DatePicker>
                 </Col>
+              </Form.Item>
+              <Form.Item name="date">
+                <Select mode="multiple" allowClear style={{ width: "100%" }} placeholder="Please select">
+                  {organizations ? organizations.map((org, idx) => <Option key={idx} value={org.id}>{org.name}</Option>) : null}
+                </Select>
               </Form.Item>
             </Filters>
           </Form>

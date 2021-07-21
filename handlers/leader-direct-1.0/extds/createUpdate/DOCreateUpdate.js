@@ -56,7 +56,7 @@ function createDirectOrgHelper(jsonData, defaultDataInput, orgIdArrStr, directOr
 }
 
 /**
- * Hàm tạo direct_org theo các giá trị truyền vào (để rút gọn bớt mấy cái hàm lặp lại)
+ * Hàm update direct_org theo các giá trị truyền vào (để rút gọn bớt mấy cái hàm lặp lại)
  * @param {*} jsonData
  * @param {*} defaultDataInput
  * @param {*} directOrgMode Mode chạy cái này (assessor hay executor)
@@ -123,6 +123,7 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
     });
 
     if (oldDirectOrg && Object.keys(oldDirectOrg).length > 0) {
+      // TODO: STEP 1: Đổi status cho bản ghi cũ có giá trị 0
       await leaderDirectModels.direct_orgs.updateOneRecord(
         {
           ...oldDirectOrg,
@@ -134,9 +135,27 @@ const updateDOCreateNew = (newDOrgToInsert, jsonData, defaultDataInput, directOr
         { uuid: oldDirectOrg.uuid }
       );
       //--------------------------------
+      // TODO: Đồng thời đổi status ở tất cả direct assessments của thằng do này thành 1
+      let jsonWhere = {};
+      if (directOrgMode === "executors") {
+        jsonWhere = {
+          direct_org_uuid: oldDirectOrg.uuid,
+          organization_exe: oldDirectOrg.organization_id,
+        };
+      }
+      // Nếu thay đổi nằm ở role assessors thì thay đổi ở org_id (ăn hết các bản ghi có do_uuid ở d_ass)
+      jsonWhere = {
+        direct_org_uuid: oldDirectOrg.uuid,
+        organization_id: oldDirectOrg.organization_id,
+      };
+      let foundDAssArr = leaderDirectModels.direct_assessments.getAllData(jsonWhere);
+      let DAssUpdateArr = foundDAssArr.map((found) => ({ ...found, status: 1 }));
+      let DAssUpdateUUIDArr = foundDAssArr.map((found) => found.uuid);
+      await leaderDirectModels.direct_assessments.updateRows(DAssUpdateArr, { uuid: { $in: DAssUpdateUUIDArr } });
       return;
     }
-    // Chưa có thì insert thêm bản ghi mới đồng thời insert thêm cho bảng direct_executes
+    // Chưa có thì insert thêm bản ghi mới đồng thời insert thêm cho bảng direct_executes & thằng direct_assessments
+    // TODO: Hiện thêm mới 1 DO exe nhưng chưa thêm mới bên D Ass
     let doUUID = generateUUID();
     try {
       let defautData = {
@@ -188,7 +207,7 @@ const updateDOUpdateOld = (oldDOrgToUpdate, jsonData, defaultDataInput, directOr
           uuid: oldDirectOrg.uuid,
         }
       );
-      // Đồng thời chuyển trạng thái bản ghi trong direct assessment có liên quan nếu là thằng assessor
+      // Đồng thời chuyển trạng thái các bản ghi trong direct assessment có liên quan nếu là thằng assessor
       if (directOrgMode === "assessors") {
         // Lấy các bản ghi có direct_org_id bằng ở trên
         let directAssessArr = await leaderDirectModels.direct_assessments.getAllData({ direct_org_uuid: oldDirectOrg.uuid });
@@ -198,18 +217,36 @@ const updateDOUpdateOld = (oldDOrgToUpdate, jsonData, defaultDataInput, directOr
         await leaderDirectModels.direct_assessments.updateRows(updateDAssArr, { uuid: uuidArrToUpdate });
       }
       // Đồng thời chuyển trạng thái bản ghi trong direct executors có liên quan nếu là thằng executors
+      // 1. Chuyển trạng thái của mấy thằng direct_org có liên quan
       if (directOrgMode === "executors") {
+        // 1. Cập Nhập direct_executors
         // Lấy các bản ghi có direct_org_id bằng ở trên
         let directExeArr = await leaderDirectModels.direct_executes.getAllData({ direct_org_uuid: oldDirectOrg.uuid });
         // Update trạng thái cho nó về 0
         let uuidArrToUpdate = directExeArr.map((dexe) => dexe.uuid);
         let updateDExeArr = directExeArr.map((dexe) => ({ ...dexe, status: 0 }));
         await leaderDirectModels.direct_executes.updateRows(updateDExeArr, { uuid: uuidArrToUpdate });
+
+        // TODO: Chuyển các bản ghi của direct_assessments có liên quan tới các thằng direct_org này
+        // 2. Cập nhập direct_assessments theo các uuid có org_exe giống doOld
+        let jsonWhereAss = {
+          direct_uuid: oldDirectOrg.direct_uuid,
+          organization_exe: oldDirectOrg.organization_id,
+          status: 1,
+        };
+        console.log("DEBUG jsonwWHere ------------------------------------------------------------- \n", jsonWhereAss);
+        let directAssesArr = await leaderDirectModels.direct_assessments.getAllData(jsonWhereAss);
+        let uuidDassArrUpdate = directAssesArr.map((dass) => dass.uuid);
+        let updateDAssArr = directAssesArr.map((dass) => ({ ...dass, status: 0 }));
+        await leaderDirectModels.direct_assessments.updateRows(updateDAssArr, { uuid: uuidDassArrUpdate });
       }
     } catch (error) {
       console.log(error);
     }
   });
 };
+
+// ---------------------------------------------------------------------------------
+// TODO: Ở logic trên khi update direct org thì histories của direct ass đang chưa thay đổi
 
 module.exports = { createDirectOrgHelper, updateDirectOrgHelper };

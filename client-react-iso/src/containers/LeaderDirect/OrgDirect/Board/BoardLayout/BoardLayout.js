@@ -172,11 +172,18 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
                       locale={locale}
                       mode="month"
                       open={isOpen}
-                      onOpenChange={() => setIsOpen(true)}
+                      onOpenChange={() => {
+                        setIsOpen(!isOpen);
+                      }}
                       onPanelChange={(v) => {
                         let datepicked = v.startOf("month");
                         setMonthPicked(datepicked);
                         setIsOpen(false);
+                      }}
+                      onChange={() => {
+                        if (monthPicked) {
+                          setMonthPicked("");
+                        }
                       }}
                       style={{
                         color: "white",

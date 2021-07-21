@@ -43,4 +43,26 @@ const createInitDirectAssHelper = (dataInput, executerArrStr) => {
   });
 };
 
+const createOneInitDirectAssHelper = (dataInput) => {
+  return new Promise(async (resolve, reject) => {
+    if (dataInput) {
+      let dataToInsert = {
+        ...dataInput,
+        created_time: new Date().getTime(),
+        status: 1,
+      };
+      try {
+        // Tạo 1 bản ghi thêm mới
+        let dxUUID = generateUUID();
+        let result = await leaderDirectModels.direct_assessments.insertOneRecord({ ...dataToInsert, uuid: dxUUID });
+
+        resolve({ dxUUID: [dxUUID], result });
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    }
+  });
+};
+
 module.exports = { createInitDirectAssHelper };
