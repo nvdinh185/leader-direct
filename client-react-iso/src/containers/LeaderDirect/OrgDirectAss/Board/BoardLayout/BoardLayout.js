@@ -9,18 +9,20 @@ import { getDirectExeByDOs, getFilterDirectOrgStart, setBoardUpdateArr } from "@
 
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
-import { Layout, Menu, Dropdown, Popover, Checkbox, Button, Form, Row, Col, DatePicker, Select } from "antd";
+import { Layout, Dropdown, Popover, DatePicker, Select, Row, Spin } from "antd";
 import PageHeader from "@components/utility/pageHeader";
 import SearchInput from "@components/ScrumBoard/SearchInput/SearchInput";
 import { variables } from "@assets/styles/variables";
 import { Scrollbars } from "react-custom-scrollbars";
 import { DateRangepicker } from "@components/uielements/datePicker";
-import { Filters, Header, HeaderSecondary } from "./BoardLayout.style";
+import { Filters, HeaderSecondary } from "./BoardLayout.style";
 import { ButtonAdd } from "@components/Admin/ButtonAdd";
 import { warningAlert } from "@components/AlertModal/ModalInfo";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import "@assets/styles/containers/BoardLayout.css";
+import { getFilterDirectAss } from "@redux/directAsses/actions";
+import { returnFromToUnixFromMomentMonth } from "@lib/utils/date";
 const { Option } = Select;
 const { Content } = Layout;
 
@@ -30,15 +32,15 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   const organizations = useSelector((state) => state.adminUser.organizations);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
   const boardDOs = useSelector((state) => state.scrumBoard.tasks);
-  const [backgroundUrl, setBackgroundUrl] = useState();
-  const [form] = Form.useForm();
-
-  const [monthPicked, setMonthPicked] = useState();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const size = useWindowSize();
-
+  const loading = useSelector((state) => state.directAsses.loading);
   const dispatch = useDispatch();
+
+  const [backgroundUrl, setBackgroundUrl] = useState();
+  const [monthPicked, setMonthPicked] = useState();
+  const [fromToPicked, setFromToPicked] = useState([]);
+  const [selectedOrg, setSelectedOrg] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const size = useWindowSize();
 
   function returnChangedDOArr(_directOrgs, _boardDOs) {
     let updateArr = _directOrgs.reduce((agg, directOrg) => {
@@ -75,7 +77,36 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   }
 
   const handleChangeFilter = (e, mode) => {
-    console.log(e);
+    switch (mode) {
+      case "DATE_RANGE":
+        if (e) {
+          // TODO: dispatch action to filter data here
+          // Khi date range thay đổi thì bỏ month pick đi
+          setMonthPicked("");
+          setFromToPicked([e[0].startOf("day"), e[1].endOf("day")]);
+          let dateRange = [e[0].startOf("day"), e[1].endOf("day")];
+          let dateRangeUnix = [moment(dateRange[0]).valueOf(), moment(dateRange[1]).valueOf()];
+          dispatch(getFilterDirectAss(token, { created_time: { from: dateRangeUnix[0], to: dateRangeUnix[1] } }));
+        }
+        break;
+      case "SELECT":
+        // TODO: chỗ này thì gọi action để filter dữ liệu trong redux store (vì chắc chắn dữ liệu đã có rồi)
+        setSelectedOrg(e);
+        break;
+      case "MONTH":
+        console.log(e);
+        // TODO: dispatch action to filter data here
+        // Khi chọn month thì dẹp date range đi
+        setFromToPicked([]);
+        setMonthPicked(e);
+        const newMonth = moment(e);
+        const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
+        dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to } }));
+        setIsOpen(false);
+        break;
+      default:
+        break;
+    }
   };
 
   // Khi có backgrounds trong store thì set riêng giá trị background
@@ -126,93 +157,117 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
           {"Chỉ Đạo Của Đơn Vị"}
         </PageHeader>
         <HeaderSecondary>
-          <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
-          {/* // --------------------------------------------------------------------------------- 
-          // TODO: RENDER YOUR OWN FILTER HERE
-          // ---------------------------------------------------------------------------------  */}
-          <Form form={form}>
+          <Row style={{ width: "100%", justifyContent: "space-between" }}>
+            <SearchInput searchColor="white" onChange={(value) => setSearchText(value)} />
             <Filters>
-              <Form.Item name="date_range">
-                <Col span={24}>
-                  <DateRangepicker
-                    style={{
-                      color: "white",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      border: "1px line white",
-                      backgroundColor: "#ffffff2b",
-                    }}
-                    onChange={(e) => handleChangeFilter(e, "DATE_RANGE")}
-                    locale={locale}
-                    format="DD/MM/YYYY"
-                    disabledDate={(date) => date > new Date()}
-                  ></DateRangepicker>
-                </Col>
-              </Form.Item>
-              <Form.Item name="date">
-                <Col span={24}>
-                  <DatePicker
-                    onChange={(e) => {
-                      console.log("CHANGED");
-                    }}
-                    format="MM/YYYY"
-                    value={monthPicked}
-                    locale={locale}
-                    mode="month"
-                    open={isOpen}
-                    onOpenChange={() => {
-                      setIsOpen(!isOpen);
-                    }}
-                    onPanelChange={(v) => {
-                      let datepicked = v.startOf("month");
-                      setMonthPicked(datepicked);
-                      setIsOpen(false);
-                    }}
-                    onChange={() => {
-                      if (monthPicked) {
-                        setMonthPicked("");
-                      }
-                    }}
-                    style={{
-                      color: "white",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      border: "1px line white",
-                      backgroundColor: "#ffffff2b",
-                    }}
-                    disabledDate={(date) => date > new Date()}
-                    name="date"
-                  ></DatePicker>
-                </Col>
-              </Form.Item>
-              <Form.Item name="date">
-                <Select mode="multiple" allowClear style={{ width: "100%" }} placeholder="Please select">
-                  {organizations ? organizations.map((org, idx) => <Option key={idx} value={org.id}>{org.name}</Option>) : null}
-                </Select>
-              </Form.Item>
+              <DateRangepicker
+                value={fromToPicked}
+                style={{
+                  height: "33px",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  border: "1px line white",
+                  backgroundColor: "#ffffff2b",
+                }}
+                onChange={(e) => handleChangeFilter(e, "DATE_RANGE")}
+                locale={locale}
+                format="DD/MM/YYYY"
+                disabledDate={(date) => date > new Date()}
+              ></DateRangepicker>
+              <DatePicker
+                onChange={(e) => {
+                  console.log("CHANGED");
+                }}
+                format="MM/YYYY"
+                value={monthPicked}
+                locale={locale}
+                mode="month"
+                open={isOpen}
+                onOpenChange={() => {
+                  setIsOpen(!isOpen);
+                }}
+                onPanelChange={(v) => {
+                  handleChangeFilter(v, "MONTH");
+                }}
+                onChange={() => {
+                  if (monthPicked) {
+                    setMonthPicked("");
+                  }
+                }}
+                style={{
+                  height: "33px",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  border: "1px line white",
+                  backgroundColor: "#ffffff2b",
+                }}
+                disabledDate={(date) => date > new Date()}
+                name="date"
+              ></DatePicker>
+              <Select
+                className="select-org-board"
+                placeholder="Chọn Đơn Vị"
+                maxTagTextLength={10}
+                maxTagCount={4}
+                value={selectedOrg}
+                onChange={(v) => handleChangeFilter(v, "SELECT")}
+                mode="multiple"
+                allowClear
+                style={{ minWidth: "200px", maxWidth: "60%", minHeight: "35px" }}
+              >
+                {organizations
+                  ? organizations.map((org, idx) => (
+                      <Option key={idx} value={org.id}>
+                        {org.name}
+                      </Option>
+                    ))
+                  : null}
+              </Select>
             </Filters>
-          </Form>
-          <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
-            Cập Nhập Dữ Liệu
-          </ButtonAdd>
+            <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
+              Cập Nhập Dữ Liệu
+            </ButtonAdd>
+          </Row>
         </HeaderSecondary>
-
-        <Content
-          style={{
-            padding: "0 24px",
-            width: "100%",
-          }}
-        >
-          <Scrollbars
+        {loading ? (
+          <Spin tip="Đang tải dữ liệu">
+            <Content
+              style={{
+                padding: "0 24px",
+                width: "100%",
+              }}
+            >
+              <Scrollbars
+                style={{
+                  width: "100%",
+                  height: "calc(100vh - 200px)",
+                }}
+                autoHide
+              >
+                {children}
+              </Scrollbars>
+            </Content>
+          </Spin>
+        ) : (
+          <Content
             style={{
+              padding: "0 24px",
               width: "100%",
-              height: "calc(100vh - 200px)",
             }}
-            autoHide
           >
-            {children}
-          </Scrollbars>
-        </Content>
+            <Scrollbars
+              style={{
+                width: "100%",
+                height: "calc(100vh - 200px)",
+              }}
+              autoHide
+            >
+              {children}
+            </Scrollbars>
+          </Content>
+        )}
       </Layout>
     </>
   );

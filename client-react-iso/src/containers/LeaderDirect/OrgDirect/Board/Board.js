@@ -31,7 +31,13 @@ function Board({
   // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
     if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
-      boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
+      let exeStts = statuses.reduce((acc, stt) => {
+        if (stt.id < 111) {
+          return [...acc, stt];
+        }
+        return acc;
+      }, []);
+      boardRenderWatcher({ statuses: exeStts, data: directOrgs, field: "exec_status" });
     }
   }, [boardRenderWatcher, statuses, directOrgs]);
 

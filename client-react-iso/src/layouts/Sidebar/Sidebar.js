@@ -22,10 +22,6 @@ export default function Sidebar() {
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    console.log(userOrg);
-  }, [userOrg]);
-
-  useEffect(() => {
     if (menus?.[0] && options.length === 0) {
       // Lọc lần đầu level đầu tiên để đưa vào thuật toán
       let parentMenu = menus.filter((menu) => !menu.parent_id);
@@ -35,7 +31,6 @@ export default function Sidebar() {
         { keyName: "leftIcon", dbName: "icon" },
       ];
       let newMenus = createNestedMenuFromDb(menus, menuMap, ...parentMenu).filter((menu) => !menu.parent_id);
-      console.log(newMenus);
       setOptions(newMenus);
     }
   }, [menus]);

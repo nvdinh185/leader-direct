@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const SearchWrapper = styled.div`
-  width: 400px;
+  width: 300px;
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;

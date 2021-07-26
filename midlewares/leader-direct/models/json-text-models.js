@@ -58,6 +58,27 @@ module.exports =  {
     leader_opinion: { type: 'STRING', length: 500 },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
+  direct_logs: {
+    uuid: {
+      type: 'STRING',
+      notNull: 1,
+      primaryKey: 1,
+      isUnique: 1,
+      length: 50
+    },
+    direct_uuid: {
+      type: 'STRING',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
+      length: 50
+    },
+    updated_fields: { type: 'STRING', length: 500 },
+    prev_values: { type: 'STRING', length: 1000 },
+    updated_values: { type: 'STRING', length: 1000 },
+    updated_user: { type: 'STRING', length: 50 },
+    updated_time: { type: 'DATETIME' },
+    updated_ip: { type: 'STRING', length: 50 }
+  },
   direct_loops: {
     id: {
       type: 'NUMBER',
@@ -97,11 +118,6 @@ module.exports =  {
       notNull: 1,
       foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
     },
-    direct_id: {
-      type: 'INTEGER',
-      notNull: 1,
-      foreignKey: 'FOREIGN KEY (direct_id) REFERENCES directs(id)'
-    },
     direct_uuid: {
       type: 'STRING',
       notNull: 1,
@@ -113,8 +129,6 @@ module.exports =  {
       notNull: 1,
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
-    organization_role: { type: 'INTEGER', notNull: 1 },
-    description: { type: 'STRING', length: 500 },
     attachments: { type: 'STRING', length: 1000 },
     exec_status: {
       type: 'INTEGER',
@@ -156,8 +170,6 @@ module.exports =  {
       notNull: 1,
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
-    organization_role: { type: 'INTEGER', notNull: 1 },
-    description: { type: 'STRING', length: 1000 },
     update_no: { type: 'INTEGER', notNull: 1 },
     category: {
       type: 'INTEGER',
@@ -167,6 +179,7 @@ module.exports =  {
     attachments: { type: 'STRING', length: 500 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 50 },
+    is_editable: { type: 'BOOLEAN' },
     status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   direct_assessments: {
@@ -178,16 +191,15 @@ module.exports =  {
       isUnique: 1,
       length: 50
     },
+    meeting_id: {
+      type: 'INTEGER',
+      notNull: 1,
+      foreignKey: 'FOREIGN KEY (meeting_id) REFERENCES meetings(id)'
+    },
     direct_uuid: {
       type: 'STRING',
       notNull: 1,
       foreignKey: 'FOREIGN KEY (direct_uuid) REFERENCES directs(uuid)',
-      length: 50
-    },
-    direct_org_uuid: {
-      type: 'STRING',
-      notNull: 1,
-      foreignKey: 'FOREIGN KEY (direct_org_id) REFERENCES direct_orgs(id)',
       length: 50
     },
     organization_id: {
@@ -197,7 +209,7 @@ module.exports =  {
     },
     organization_exe: { type: 'INTEGER', notNull: 1 },
     description: { type: 'STRING', length: 1000 },
-    category: {
+    exec_status: {
       type: 'INTEGER',
       notNull: 1,
       foreignKey: 'FOREIGN KEY (category) REFERENCES categories(id)'
@@ -206,6 +218,7 @@ module.exports =  {
     attachments: { type: 'STRING', length: 500 },
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 50 },
+    is_editable: { type: 'BOOLEAN' },
     status: { type: 'BOOLEAN', defaultValue: '1' },
     update_no: { type: 'INTEGER', notNull: 1 }
   },

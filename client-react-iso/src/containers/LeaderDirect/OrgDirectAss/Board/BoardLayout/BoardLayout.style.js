@@ -84,6 +84,7 @@ export const Filters = styled.div`
   font-family: "Roboto";
   font-weight: 500;
   display: flex;
+  align-items: flex-start;
   justify-content: space-around;
 
   @media only screen and (max-width: 767px) {
@@ -91,7 +92,7 @@ export const Filters = styled.div`
   }
 
   > div {
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     cursor: pointer;
 
     @media only screen and (max-width: 767px) {

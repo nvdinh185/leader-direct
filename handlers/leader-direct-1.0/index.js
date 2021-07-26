@@ -4,15 +4,11 @@
 
 // Xuất bản các handler để các router nhúng vào gọi xử lý được
 module.exports = {
+  userRightsHandler: require("./user-rights-handler"),
 
+  userTablesHandler: require("./user-tables-handler"),
 
-    userRightsHandler: require("./user-rights-handler"),
+  modelsHandler: require("./models-handler"),
 
-    userTablesHandler: require("./user-tables-handler"),
-
-    modelsHandler: require("./models-handler"),
-
-    apiHandler: require("./api-handler"),
-
-}
-        
+  apiHandler: require("./api-handler"),
+};

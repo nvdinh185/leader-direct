@@ -13,6 +13,7 @@ module.exports = {
     direct_orgs: new (require("./direct_orgs"))(db),
     direct_executes: new (require("./direct_executes"))(db),
     direct_assessments: new (require("./direct_assessments"))(db),
+    direct_assess_logs: new (require("./direct_assess_logs"))(db),
     attachments: new (require("./attachments"))(db),
     categories: new (require("./categories"))(db),
 

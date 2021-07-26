@@ -13,7 +13,6 @@ export default function useGetUserAuthOrg() {
 
   const returnAuthOrgList = (_userInfo, _organizations) => {
     let userOrgId = parseInt(_userInfo.organization);
-    console.log("DEBUG USERINFO ------------------------------------------------------------- \n", _userInfo.isAdmin);
     if (_userInfo.isAdmin) {
       return _organizations;
     }
@@ -23,7 +22,6 @@ export default function useGetUserAuthOrg() {
   useEffect(() => {
     if (userInfo) {
       let authOrgs = returnAuthOrgList(userInfo, organizations);
-      console.log("DEBUG ORG ------------------------------------------------------------- \n", authOrgs);
       setState(authOrgs);
     }
   }, [userInfo, organizations]);

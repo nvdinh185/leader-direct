@@ -12,7 +12,7 @@
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
 const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const { general, doHelper, dxHelper, filterHelper } = require("./extds/index");
+const { general, doHelper, daHelper, dxHelper, filterHelper } = require("./extds/index");
 const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
 const mime = require("mime-types");
@@ -424,11 +424,11 @@ class ApiHandler {
           created_user: req.user.username,
         };
         if (jsonData.executors) {
-          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.executors, "executors");
+          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.executors);
           defaultDataLoops.executors = jsonData.executors;
         }
         if (jsonData.assessors) {
-          doHelper.createDirectOrgHelper(jsonData, defaultDataInput, jsonData.assessors, "assessors", jsonData.executors);
+          daHelper.createDirectAssHelper(jsonData, defaultDataInput, jsonData.assessors, jsonData.executors);
           defaultDataLoops.assessors = jsonData.assessors;
         }
 
@@ -475,10 +475,10 @@ class ApiHandler {
       .updateOneRecord(jsonData, { uuid: jsonData.uuid })
       .then(async (data) => {
         if (jsonData.executors) {
-          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "executors", oldDirect);
+          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, oldDirect, jsonData.executors, jsonData.assessors);
         }
         if (jsonData.assessors) {
-          doHelper.updateDirectOrgHelper(jsonData, defaultDataInput, "assessors", oldDirect, jsonData.executors);
+          daHelper.updateDirectAssHelper(jsonData, defaultDataInput, oldDirect, jsonData.executors);
         }
         req.finalJson = data;
         next();
@@ -1194,6 +1194,37 @@ class ApiHandler {
       req.error = error;
       next();
     }
+  }
+
+  /**
+   * (136) POST /leader-direct/api/get-filter-direct-ass
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  getFilterDirectAss(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    leaderDirectModels.direct_assessments
+      .getAllData(jsonWhere)
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        req.error = err;
+        next();
+      });
   }
 }
 

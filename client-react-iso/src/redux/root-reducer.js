@@ -10,6 +10,7 @@ import adminUserReducer from "@redux/adminUsers/reducer";
 import meetingReducer from "@redux/meetings/reducer";
 import directReducer from "@redux/directs/reducer";
 import directOrgReducer from "@redux/directOrgs/reducer";
+import directAssReducer from "@redux/directAsses/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
 
 export default combineReducers({
@@ -19,6 +20,7 @@ export default combineReducers({
   meetings: meetingReducer,
   directs: directReducer,
   directOrgs: directOrgReducer,
+  directAsses: directAssReducer,
   filterData: filterDataReducer,
   ThemeSwitcher,
   LanguageSwitcher,

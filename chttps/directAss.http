@@ -1,0 +1,15 @@
+@baseHost = localhost
+@basePort = 9232
+# @baseHost = 10.16.150.69
+@authToken = eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNjYyMjM3MDU4OSwiZXhwIjoxNjU4MTU4MzcwNTg5fQ==.WlVXNVF3VzA0VEtFTnNiNmt5ZFR3eld1RHNFNmRzb1QzM1hDUE9Ob0RRVHNZcWg3c2MxZ0ZZWDhxc3BtWGlpNFg4cjByUXhSZWdveitBRjNYdk9DRWc9PQ==
+
+
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-filter-direct-ass
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "created_time": {"from": 1626189072000, "to": 1666354152767}
+}
+
+###
