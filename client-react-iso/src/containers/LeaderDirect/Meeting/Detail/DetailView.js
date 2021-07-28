@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDirectByIds } from "@redux/directs/actions";
 import { clearCurrentMeetingDetail, getMeetingById } from "@redux/meetings/actions";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { Divider, Row, Col, Card } from "antd";
 import { LeftCircleOutlined } from "@ant-design/icons";
 import { CardDetailsWrapper } from "@containers/LeaderDirect/Meeting/Meeting.style";
@@ -17,6 +17,7 @@ import basicStyle from "@assets/styles/constants";
 export default function DetailView() {
   const history = useHistory();
   const meeting = useLocation().state;
+  const match = useRouteMatch();
 
   const token = useSelector((state) => state.Auth.idToken);
   const currentMeeting = useSelector((state) => state.meetings.currentMeeting);
@@ -26,16 +27,12 @@ export default function DetailView() {
 
   const { rowStyle, colStyle, gutter } = basicStyle;
 
-  // useEffect(() => {
-  //   if (Object.keys(currentMeeting).length === 0) {
-  //     dispatch(getMeetingById(token, { id: meeting.id }));
-  //   }
-  // }, []);
+  useEffect(() => {}, []);
 
   // Khi current meeting trong store thay đổi thì gọi hàm lấy directs
   useEffect(() => {
     if (Object.keys(currentMeeting).length === 0) {
-      dispatch(getMeetingById(token, { id: meeting.id }));
+      dispatch(getMeetingById(token, { id: meeting ? meeting.id : match.params.id }));
       return;
     }
     if (currentMeeting.directs) {
@@ -54,17 +51,17 @@ export default function DetailView() {
     <LayoutWrapper>
       <PageHeader>
         <LeftCircleOutlined style={{ fontSize: "30px", paddingRight: "10px" }} onClick={() => history.goBack()} />
-        {meeting?.name}
+        {currentMeeting?.name}
       </PageHeader>
       <Row style={rowStyle} gutter={gutter} justify="start">
         <Col span={24} style={colStyle}>
           <Card>
             <CardDetailsWrapper>
-              <DetailInfo meeting={meeting}></DetailInfo>
+              <DetailInfo meeting={currentMeeting}></DetailInfo>
               <Divider />
-              <DetailAttachs meeting={meeting}></DetailAttachs>
+              <DetailAttachs meeting={currentMeeting}></DetailAttachs>
               <Divider />
-              <DetailDirects view={meeting.view} directs={directIds} meeting={meeting}></DetailDirects>
+              <DetailDirects directs={directIds} meeting={currentMeeting}></DetailDirects>
               <Divider></Divider>
               <LeftCircleOutlined
                 style={{ fontSize: "35px", paddingRight: "10px", color: "grey" }}

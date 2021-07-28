@@ -17,15 +17,17 @@ export const returnAttchArr = (str) => {
 };
 
 export const returnHexColor = (str) => {
-  const re = /^#[0-9a-f]{3,6}$/i;
-  let stringSplit = str.split(" ");
-  let bgColorStr = "";
-  stringSplit.every((str) => {
-    if (re.test(str)) {
-      bgColorStr = str;
-      return false;
-    }
-    return true;
-  });
-  return bgColorStr;
+  if (str) {
+    const re = /^#[0-9a-f]{3,6}$/i;
+    let stringSplit = str.split(" ");
+    let bgColorStr = "";
+    stringSplit.every((str) => {
+      if (re.test(str)) {
+        bgColorStr = str;
+        return false;
+      }
+      return true;
+    });
+    return bgColorStr;
+  }
 };

@@ -17,8 +17,8 @@ export default function DetailInfo(props) {
   useEffect(() => {
     if (categories?.[0] && props.meeting) {
       let meetingCat = categories.find((cat) => cat.id === parseInt(props.meeting.category));
-      let bgColorCat = returnHexColor(meetingCat.bg_color);
-      setCatgoryDisplay({ name: meetingCat.name, bgColor: bgColorCat });
+      let bgColorCat = returnHexColor(meetingCat?.bg_color);
+      setCatgoryDisplay({ name: meetingCat?.name, bgColor: bgColorCat });
     }
   }, [categories, props.meeting]);
 
@@ -28,7 +28,7 @@ export default function DetailInfo(props) {
       <Row>
         <Col span={8}>
           <HeadingWithIcon heading="Số Lượng Chỉ Đạo" />
-          <p>{props.meeting.directs ? JSON.parse(props.meeting.directs).length : 0}</p>
+          <p>{props.meeting?.directs ? JSON.parse(props.meeting.directs).length : 0}</p>
         </Col>
         <Col span={8}>
           <HeadingWithIcon heading="Phân Loại" />
@@ -39,12 +39,12 @@ export default function DetailInfo(props) {
         <Col span={8}>
           <HeadingWithIcon heading="Ngày Tạo" />
           <ClockIcon src={Clock} />
-          {moment(props.meeting.created_time).format("DD/MM/YYYY HH:mm")}
+          {moment(props.meeting?.created_time).format("DD/MM/YYYY HH:mm")}
         </Col>
       </Row>
       <div style={{ clear: "both", paddingTop: "10px" }}>
         <HeadingWithIcon heading="Mô Tả" iconSrc={DescriptionIcon} />
-        <TaskDescription>{props.meeting.description}</TaskDescription>
+        <TaskDescription>{props.meeting?.description}</TaskDescription>
       </div>
     </>
   );

@@ -12,7 +12,7 @@ import { AttachmentWrapper } from "@containers/LeaderDirect/Meeting/Meeting.styl
 import BadgeAttach from "./BadgeAttach";
 
 export default function DetailAttachs({ meeting, ...props }) {
-  let attachArr = returnAttchArr(meeting.attachments);
+  let attachArr = returnAttchArr(meeting?.attachments);
 
   const token = useSelector((state) => state.Auth.idToken);
   const attachments = useSelector((state) => state.meetings.attachments);
@@ -22,7 +22,7 @@ export default function DetailAttachs({ meeting, ...props }) {
 
   // Effect to get attachments info here
   useEffect(() => {
-    if (meeting.attachments && attachArr && attachArr.length > 0 && token) {
+    if (meeting?.attachments && attachArr && attachArr.length > 0 && token) {
       let attchJsonArr = attachArr.map((attch) => ({ uuid: attch }));
       if (attchJsonArr && attchJsonArr?.[0]) {
         dispatch(getAttachmentByIds(token, JSON.stringify(attchJsonArr)));
