@@ -12,10 +12,12 @@ import directReducer from "@redux/directs/reducer";
 import directOrgReducer from "@redux/directOrgs/reducer";
 import directAssReducer from "@redux/directAsses/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
+import Contacts from "@redux/contacts/reducer";
 
 export default combineReducers({
   Auth,
   App,
+  Contacts,
   adminUser: adminUserReducer,
   meetings: meetingReducer,
   directs: directReducer,

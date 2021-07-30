@@ -42,10 +42,10 @@ const routes = [
     path: "leader-direct-mng",
     component: lazy(() => import("@containers/LeaderDirect/DirectRoutes")),
   },
-  // {
-  //   path: "leader-direct-history",
-  //   component: lazy(() => import("@containers/LeaderDirect/Direct/DirectHistoryRoutes")),
-  // },
+  {
+    path: "leader-direct-criteria",
+    component: lazy(() => import("@containers/LeaderDirect/OrgDeadCrit/OrgDeadCrit")),
+  },
   {
     path: "leader-direct-assess",
     component: lazy(() => import("@containers/LeaderDirect/DirectAssRoutes")),

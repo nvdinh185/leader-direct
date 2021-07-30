@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { grid, colors, borderRadius } from '@iso/assets/styles/constants';
+import styled from "styled-components";
+import { grid, colors, borderRadius } from "@assets/styles/constants";
 
 export const Container = styled.div`
   box-sizing: border-box;
@@ -26,8 +26,7 @@ export const Header = styled.div`
   justify-content: center;
   border-top-left-radius: ${borderRadius}px;
   border-top-right-radius: ${borderRadius}px;
-  background-color: ${({ isDragging }) =>
-    isDragging ? colors.blue.lighter : colors.grey.dark};
+  background-color: ${({ isDragging }) => (isDragging ? colors.blue.lighter : colors.grey.dark)};
   margin-top: 16px;
   margin-bottom: 16px;
   transition: background-color 0.1s ease;
