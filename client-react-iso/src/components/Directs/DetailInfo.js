@@ -9,10 +9,8 @@ import TitleIcon from "@assets/images/icon/05-icon.svg";
 import DescriptionIcon from "@assets/images/icon/06-icon.svg";
 import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 
-export default function (props) {
+export default function ({ currentDirect }) {
   const categories = useSelector((state) => state.filterData.categories);
-  const currentDirect = useSelector((state) => state.directs.currentDirect);
-
   const [categoryDisplay, setCatgoryDisplay] = useState();
 
   // Trường hợp refresh lại page thì chỉ có

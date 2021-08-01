@@ -9,6 +9,7 @@ import modal from "@redux/modal/reducer";
 import adminUserReducer from "@redux/adminUsers/reducer";
 import meetingReducer from "@redux/meetings/reducer";
 import directReducer from "@redux/directs/reducer";
+import directCritReducer from "@redux/directCrits/reducer";
 import directOrgReducer from "@redux/directOrgs/reducer";
 import directAssReducer from "@redux/directAsses/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
@@ -21,6 +22,7 @@ export default combineReducers({
   adminUser: adminUserReducer,
   meetings: meetingReducer,
   directs: directReducer,
+  directCrits: directCritReducer,
   directOrgs: directOrgReducer,
   directAsses: directAssReducer,
   filterData: filterDataReducer,

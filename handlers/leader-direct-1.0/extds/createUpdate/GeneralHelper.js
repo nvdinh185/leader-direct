@@ -3,6 +3,13 @@ const ORG_ROLE = {
   EXECUTOR: 22,
 };
 
+const D_STATUS = {
+  D_DEL: 0,
+  D_NEW: 1,
+  D_U_CRIT: 2,
+  D_U_CMT: 3,
+};
+
 const DX_STATUS = {
   CREATE_DIRECT: 51,
   UPDATE_EXE_STATUS: 52,
@@ -67,4 +74,4 @@ const generateUUID = () => {
   });
 };
 
-module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP, ASS_TYPES };
+module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP, ASS_TYPES, D_STATUS };

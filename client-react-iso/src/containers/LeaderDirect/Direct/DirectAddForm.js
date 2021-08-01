@@ -21,6 +21,7 @@ export default function DirectAddForm({
   const [form] = Form.useForm();
   const token = useSelector((state) => state.Auth.idToken);
   const status = useSelector((state) => state.directs.loading);
+  const directStatus = useSelector((state) => state.filterData.directStatus);
 
   const dispatch = useDispatch();
 
@@ -228,8 +229,13 @@ export default function DirectAddForm({
               filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
               filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
             >
-              <Option value={1}>Hoạt Động</Option>
-              <Option value={0}>Không Hoạt Động</Option>
+              {directStatus
+                ? directStatus.map((ds, idx) => (
+                    <Option key={idx} value={ds.value}>
+                      {ds.name}
+                    </Option>
+                  ))
+                : null}
             </Select>
           </Form.Item>
         ) : null}

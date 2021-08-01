@@ -3,33 +3,35 @@ import { InputSearch } from "@components/uielements/input";
 import { OrgDeadCritListWrapper } from "./OrgDeadCritList.style";
 import Scrollbar from "@components/utility/customScrollBar";
 
-function filterContacts(contacts, search) {
-  search = search.toUpperCase();
-  return search ? contacts.filter((contact) => contact.name.toUpperCase().includes(search)) : contacts;
-}
-
 export default function OrgDeadCritList(props) {
   const [search, setSearch] = React.useState("");
 
-  function singleContact(contact) {
-    const { selectedId, deleteContact, changeContact } = props;
-    const activeClass = selectedId === contact.id ? "active" : "";
-    const onChange = () => changeContact(contact.id);
+  function singleContact(direct) {
+    const { selectedId, changeDirectCrit } = props;
+    const activeClass = selectedId === direct.uuid ? "active" : "";
+    const onChange = () => changeDirectCrit(direct.uuid);
+
     return (
-      <div key={contact.id} className={`${activeClass} isoSingleContact`} onClick={onChange}>
-        <div className="isoAvatar">{contact.avatar ? <img alt="#" src={contact.avatar} /> : ""}</div>
+      <div key={direct.uuid} className={`${activeClass} isoSingleContact`} onClick={onChange}>
+        <div className="isoAvatar">{direct.avatar ? <img alt="#" src={direct.avatar} /> : ""}</div>
         <div className="isoContactName">
-          <h3>{contact.name ? contact.name : "No Name"}</h3>
+          <h3>{direct.description ? direct.description : "No Description"}</h3>
         </div>
         {/* TODO: Add more button here */}
       </div>
     );
   }
+
+  function filterContacts(directs, search) {
+    search = search.toUpperCase();
+    return search ? directs.filter((direct) => direct.description.toUpperCase().includes(search)) : directs;
+  }
+
   function onChange(event) {
     setSearch(event.target.value);
   }
 
-  const contacts = filterContacts(props.contacts, search);
+  const contacts = filterContacts(props.directs, search);
   return (
     <OrgDeadCritListWrapper className="isoContactListWrapper">
       <InputSearch placeholder={"Tìm Kiếm"} value={search} onChange={onChange} className="isoSearchBar" />

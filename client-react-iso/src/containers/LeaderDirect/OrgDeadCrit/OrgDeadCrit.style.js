@@ -4,7 +4,7 @@ import { transition, borderRadius } from "@lib/helpers/style_utils";
 import WithDirection from "@lib/helpers/rtl";
 
 const WOrgDeadCritWrapper = styled.div`
-  padding: 50px 35px;
+  padding: 10px 35px;
   display: flex;
   ${"" /* max-height: calc(100vh - 130px); */} @media only screen and (max-width: 767px) {
     padding: 50px 20px;

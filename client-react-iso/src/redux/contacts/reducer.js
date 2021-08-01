@@ -1,11 +1,11 @@
-import fakeData from './data';
-import contactActions from './actions';
+import fakeData from "./data";
+import contactActions from "./actions";
 
 const contacts = new fakeData(10).getAll();
 
 const initState = {
   contacts,
-  selectedId: contacts[0].id,
+  selectedId: contacts[3].id,
   editView: false,
 };
 

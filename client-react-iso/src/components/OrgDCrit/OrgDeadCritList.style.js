@@ -148,6 +148,7 @@ const WDContactListWrapper = styled.div`
         flex-shrink: 0;
         overflow: hidden;
         ${borderRadius("50%")};
+        background: ${(props) => (props.bgColor ? props.bgColor : "linear-gradient(135deg, #ed5565 0%, #d52739 100%)")};
 
         img {
           width: 100%;

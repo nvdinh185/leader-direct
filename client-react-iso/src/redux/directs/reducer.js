@@ -81,8 +81,7 @@ export default function directReducer(state = defaultDirects, action) {
       }
       return {
         ...state,
-        filterMeetings: action.payload.data,
-        filterCriteria: action.payload.criteria,
+        filterDirects: action.payload.data,
         loading: false,
       };
 

@@ -87,6 +87,7 @@ export const getDirectByIds = (token, data, mode = "MEETING_IDS") => {
         if (data.status === 200) {
           if (mode === "MEETING_IDS") {
             dispatch(getDirectByIdsSuccess(data.data));
+            return;
           }
           dispatch(setCurrentViewDirectDetail(...data.data));
         } else {
@@ -201,6 +202,46 @@ export const updateDirectSuccess = (data) => {
 export const updateDirectFail = (error) => {
   return {
     type: directTypes.UPDATE_DIRECT_FAIL,
+    payload: error,
+  };
+};
+
+// ---------------------------------------------------------------------------------
+// 1 - GET DIRECT LIST
+export const getFilterDirect = (token, form) => {
+  return (dispatch) => {
+    dispatch(getFilterDirectStart());
+    directApi
+      .getFilterDirect(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFilterDirectSuccess(data.data));
+        } else {
+          dispatch(getFilterDirectFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFilterDirectFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
+
+export const getFilterDirectStart = () => {
+  return {
+    type: directTypes.GET_FILTER_DIRECT_LIST_START,
+  };
+};
+
+export const getFilterDirectSuccess = (data) => {
+  return {
+    type: directTypes.GET_FILTER_DIRECT_LIST_SUCCESS,
+    payload: data,
+  };
+};
+
+export const getFilterDirectFail = (error) => {
+  return {
+    type: directTypes.GET_FILTER_DIRECT_LIST_FAIL,
     payload: error,
   };
 };

@@ -29,6 +29,7 @@ export default function filterDataReducer(state = defaultFilter, action) {
       let assTypes = action.payload.filter((cat) => cat.parent_id === 6);
       let leaderTypes = action.payload.filter((cat) => cat.parent_id === 7);
       let backgrounds = action.payload.filter((cat) => cat.parent_id === 8);
+      let directStatus = action.payload.filter((cat) => cat.parent_id === 9);
       return {
         ...state,
         categories: action.payload,
@@ -40,6 +41,7 @@ export default function filterDataReducer(state = defaultFilter, action) {
         assTypes: assTypes,
         leaderTypes: leaderTypes,
         backgrounds: backgrounds,
+        directStatus: directStatus,
         loading: false,
         err: "",
       };

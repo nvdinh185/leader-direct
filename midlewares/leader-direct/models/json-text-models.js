@@ -56,7 +56,7 @@ module.exports =  {
     assess_criteria: { type: 'STRING', length: 500 },
     percent_complete: { type: 'STRING', length: 255 },
     leader_opinion: { type: 'STRING', length: 500 },
-    status: { type: 'BOOLEAN', defaultValue: '1' }
+    status: { type: 'INTEGER', defaultValue: '1' }
   },
   direct_logs: {
     uuid: {
@@ -289,6 +289,7 @@ module.exports =  {
     id: { type: 'INTEGER', notNull: 1, primaryKey: 1, isUnique: 1 },
     parent_id: { type: 'INTEGER', notNull: 1 },
     children: { type: 'STRING', length: 500 },
+    value: { type: 'INTEGER', notNull: 1 },
     code: { type: 'STRING', notNull: 1, length: 50 },
     name: { type: 'STRING', length: 50 },
     description: { type: 'STRING', length: 255 },
