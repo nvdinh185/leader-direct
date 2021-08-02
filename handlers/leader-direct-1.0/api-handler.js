@@ -1246,14 +1246,14 @@ class ApiHandler {
     }
     let oldDirect = await leaderDirectModels.directs.getFirstRecord({ uuid: req.json_data.direct_uuid });
     req.json_data.assess_criteria.sort((a, b) => new Date(b.due_date).getTime() - new Date(a.due_date).getTime());
-    let directDueDate = "";
+    let directDueDate = null;
     if (req.json_data.assess_criteria && req.json_data.assess_criteria.length > 0) {
       directDueDate = req.json_data.assess_criteria[0].due_date;
-      console.log(directDueDate);
+      directDueDate = new Date(directDueDate).getTime();
     }
     let newDirect = {
       ...oldDirect,
-      due_date: new Date(directDueDate).getTime(),
+      due_date: directDueDate,
       assess_criteria: JSON.stringify(req.json_data.assess_criteria),
     };
     leaderDirectModels.directs
