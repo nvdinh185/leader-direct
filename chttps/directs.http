@@ -1,6 +1,6 @@
-# @baseHost = localhost
+@baseHost = localhost
 @basePort = 9232
-@baseHost = 10.16.150.69
+# @baseHost = 10.16.150.69
 @authToken = eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
 
 
@@ -44,4 +44,22 @@ Authorization: {{authToken}}
     "leader": 71,
     "executors": "[6]",
     "assessors": "[2,4]"
+}
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/update-direct-criteria
+User-Agent: rest-client
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "direct_uuid": "94676e20-15fe-489f-bb1a-53209c76eb32",
+    "assess_criteria": [
+        {
+            "organization": {"id": 3, "name": "P.TH"},
+            "created_time": "01/08/2021",
+            "due_date": "10/08/2021",
+            "description": "Test nhập criteria cho direct"
+        }
+    ]
 }

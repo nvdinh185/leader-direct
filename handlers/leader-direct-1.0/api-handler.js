@@ -1226,6 +1226,37 @@ class ApiHandler {
         next();
       });
   }
+  /**
+   * (137) POST /leader-direct/api/update-direct-criteria
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  async updateDirectCriteria(req, res, next) {
+    if (!req.json_data && !req.json_data.direct_uuid) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let oldDirect = await leaderDirectModels.directs.getFirstRecord({ uuid: req.json_data.direct_uuid });
+    let newDirect = { ...oldDirect, assess_criteria: JSON.stringify(req.json_data.assess_criteria) };
+    leaderDirectModels.directs
+      .updateOneRecord(newDirect, { uuid: req.json_data.direct_uuid })
+      .then((data) => {
+        req.finalJson = data;
+        next();
+      })
+      .catch((err) => {
+        req.error = err;
+        next();
+      });
+  }
 }
 
 module.exports = new ApiHandler();

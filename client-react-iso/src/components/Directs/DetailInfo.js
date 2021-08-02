@@ -18,7 +18,6 @@ export default function ({ currentDirect }) {
   useEffect(() => {
     if (categories?.[0] && currentDirect) {
       let directCat = categories.find((cat) => cat.id === currentDirect.category);
-      console.log(directCat);
       let bgColorCat = returnHexColor(directCat.bg_color);
       setCatgoryDisplay({ name: directCat.name, bgColor: bgColorCat });
     }
@@ -38,6 +37,11 @@ export default function ({ currentDirect }) {
           <HeadingWithIcon heading="Ngày Tạo" />
           <ClockIcon src={Clock} />
           {moment(currentDirect?.created_time).format("DD/MM/YYYY HH:mm")}
+        </Col>
+        <Col span={8}>
+          <HeadingWithIcon heading="Ngày Hết Hạn" />
+          <ClockIcon src={Clock} />
+          {currentDirect?.due_date ? moment(currentDirect?.due_date).format("DD/MM/YYYY HH:mm") : null}
         </Col>
       </Row>
       <div style={{ clear: "both", paddingTop: "10px" }}>

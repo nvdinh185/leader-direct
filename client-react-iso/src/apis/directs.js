@@ -23,3 +23,7 @@ export const createDirect = (token, data) => {
 export const updateDirect = (token, data) => {
   return callAPI("post", baseURL + "/update-direct", data, token);
 };
+
+export const updateDirectCriteria = (token, data) => {
+  return callAPI("post", baseURL + "/update-direct-criteria", data, token);
+};

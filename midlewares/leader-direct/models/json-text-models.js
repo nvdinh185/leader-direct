@@ -53,7 +53,7 @@ module.exports =  {
     created_user: { type: 'STRING', length: 255 },
     updated_time: { type: 'DATETIME' },
     updated_user: { type: 'STRING', length: 255 },
-    assess_criteria: { type: 'STRING', length: 500 },
+    assess_criteria: { type: 'STRING', length: 2000 },
     percent_complete: { type: 'STRING', length: 255 },
     leader_opinion: { type: 'STRING', length: 500 },
     status: { type: 'INTEGER', defaultValue: '1' }

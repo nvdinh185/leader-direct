@@ -9,10 +9,11 @@ import { OrgDeadCritWrapper } from "./OrgDeadCrit.style";
 import { getFilterDirectCrit } from "@redux/directCrits/actions";
 import DetailView from "@components/Directs/DetailView";
 import { changeDirectCrit } from "@redux/directCrits/actions";
+import OrgCritInfo from "./OrgCritInfo";
 
 const { Content } = Layout;
 
-export default function Contacts() {
+export default function OrgDeadCrit() {
   const token = useSelector((state) => state.Auth.idToken);
   const { filterDirectCrits, selectedId } = useSelector((state) => state.directCrits);
   const dispatch = useDispatch();
@@ -48,7 +49,9 @@ export default function Contacts() {
         <Layout className="isoContactBoxWrapper">
           <Content className="isoContactBox">
             <Scrollbar className="contactBoxScrollbar">
-              <DetailView currentDirect={selectedDCrit} showPageHeader={false}></DetailView>
+              <DetailView currentDirect={selectedDCrit} showPageHeader={false}>
+                <OrgCritInfo currentDirect={selectedDCrit}></OrgCritInfo>
+              </DetailView>
             </Scrollbar>
           </Content>
         </Layout>
