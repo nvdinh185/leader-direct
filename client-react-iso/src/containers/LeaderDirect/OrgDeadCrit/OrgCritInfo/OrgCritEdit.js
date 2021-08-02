@@ -9,10 +9,9 @@ import { TaskDescription } from "@containers/LeaderDirect/Meeting/Meeting.style"
 import { updateDirectCriteria } from "@apis/directs";
 import { errorAlert, successAlert } from "@components/AlertModal/ModalInfo";
 
-export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
+export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, userInfo }) {
   const view = useSelector((state) => state.App.view);
   const token = useSelector((state) => state.Auth.idToken);
-  const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const dispatch = useDispatch();
 
@@ -128,22 +127,22 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
             </>
           ) : (
             <p>
-              [{criteria?.organization.name}] -{" "}
+              [{criteria?.organization?.name}] -{" "}
               <span style={{ color: "red", fontWeight: "bold" }}>{moment(criteria?.due_date).format("DD/MM/yyyy")}</span> :{" "}
               {criteria?.description}
             </p>
           )}
         </Col>
-        <Col span={2}>
-          {editCrit ? (
-            <Button type={"primary"} icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
-          ) : (
-            <Button icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
-          )}
-          {userInfo?.isAdmin || userInfo.organization === criteria.organization.id ? (
+        {userInfo?.isAdmin || userInfo?.organization === criteria?.organization?.id ? (
+          <Col span={2}>
+            {editCrit ? (
+              <Button type={"primary"} icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
+            ) : (
+              <Button icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
+            )}
             <Button danger icon={<DeleteOutlined />} onClick={handleSubmitDelCrit}></Button>
-          ) : null}
-        </Col>
+          </Col>
+        ) : null}
       </Row>
     </TaskDescription>
   );

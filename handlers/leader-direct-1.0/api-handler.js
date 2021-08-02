@@ -1249,8 +1249,13 @@ class ApiHandler {
     let directDueDate = "";
     if (req.json_data.assess_criteria && req.json_data.assess_criteria.length > 0) {
       directDueDate = req.json_data.assess_criteria[0].due_date;
+      console.log(directDueDate);
     }
-    let newDirect = { ...oldDirect, due_date: directDueDate, assess_criteria: JSON.stringify(req.json_data.assess_criteria) };
+    let newDirect = {
+      ...oldDirect,
+      due_date: new Date(directDueDate).getTime(),
+      assess_criteria: JSON.stringify(req.json_data.assess_criteria),
+    };
     leaderDirectModels.directs
       .updateOneRecord(newDirect, { uuid: req.json_data.direct_uuid })
       .then((data) => {
