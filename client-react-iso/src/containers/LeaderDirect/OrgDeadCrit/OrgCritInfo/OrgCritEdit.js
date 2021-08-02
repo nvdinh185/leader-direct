@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFilterDirectCrit } from "@redux/directCrits/actions";
 
 import { Row, Col, Button, Input, DatePicker } from "antd";
-import { EditOutlined, CheckOutlined } from "@ant-design/icons";
+import { EditOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TaskDescription } from "@containers/LeaderDirect/Meeting/Meeting.style";
 import { updateDirectCriteria } from "@apis/directs";
 import { errorAlert, successAlert } from "@components/AlertModal/ModalInfo";
@@ -26,6 +26,7 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
         break;
       case "CRIT":
         setForm({ ...form, description: e.target.value });
+        break;
       default:
         break;
     }
@@ -41,8 +42,7 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
     setEditCrit(!editCrit);
   };
 
-  // Hàm này dùng chung giữa 2 component nên đưa lên component cha là thằng Info này
-  const handleCreateFormPost = (newCrit, oldCrit, critArr) => {
+  const createFormPost = (newCrit, oldCrit, critArr) => {
     let oldDirectCrits = [];
     // Nếu có thông tin rồi thì phải tìm cái cũ rồi add cái mớI vào
     if (critArr.length > 0) {
@@ -64,7 +64,7 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
     };
     // Khi edit thì lấy thông tin cũ ra rồi thay bằng cái mới vào
     // Tách logic này thành hàm riêng do để nhiều dòng rồi mắt
-    let newCritArray = handleCreateFormPost(newCrit, criteria, criteriaArr);
+    let newCritArray = createFormPost(newCrit, criteria, criteriaArr);
     let formToPost = {
       assess_criteria: newCritArray,
       direct_uuid: currentDirect.uuid,
@@ -80,6 +80,23 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
         errorAlert("Thất Bại", "Có lỗi khi cập nhập chỉ tiêu " + err);
       });
     setEditCrit(false);
+  };
+
+  const handleSubmitDelCrit = () => {
+    let foundIdx = criteriaArr.findIndex((crit) => crit.id === criteria.id);
+    criteriaArr.splice(foundIdx, 1);
+    let formToPost = {
+      assess_criteria: criteriaArr,
+      direct_uuid: currentDirect.uuid,
+    };
+    updateDirectCriteria(token, formToPost)
+      .then((res) => {
+        successAlert("Thành Công", "Bạn đã xoá chỉ tiêu cho chỉ đạo thành công");
+        dispatch(getFilterDirectCrit(token, { status: 1 }));
+      })
+      .catch((err) => {
+        errorAlert("Thất Bại", "Có lỗi khi xoá chỉ tiêu " + err);
+      });
   };
 
   return (
@@ -119,10 +136,13 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr }) {
         </Col>
         <Col span={2}>
           {editCrit ? (
-            <Button type={"primary"} block icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
+            <Button type={"primary"} icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
           ) : (
-            <Button block icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
+            <Button icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
           )}
+          {userInfo?.isAdmin || userInfo.organization === criteria.organization.id ? (
+            <Button danger icon={<DeleteOutlined />} onClick={handleSubmitDelCrit}></Button>
+          ) : null}
         </Col>
       </Row>
     </TaskDescription>

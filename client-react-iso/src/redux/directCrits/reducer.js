@@ -33,6 +33,14 @@ export default function directCritReducer(state = defaultDirectCrits, action) {
       if (action.payload.length === 0) {
         return { ...state, loading: false, err: "" };
       }
+      if (state.selectedId) {
+        return {
+          ...state,
+          directCrits: action.payload.data,
+          filterDirectCrits: action.payload.data,
+          loading: false,
+        };
+      }
       return {
         ...state,
         directCrits: action.payload.data,

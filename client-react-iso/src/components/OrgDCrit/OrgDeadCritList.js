@@ -12,10 +12,10 @@ export default function OrgDeadCritList(props) {
     const { selectedId, changeDirectCrit } = props;
     const activeClass = selectedId === direct.uuid ? "active" : "";
     const onChange = () => changeDirectCrit(direct.uuid);
-    const directCatInfo = _directTypes.find((cat) => cat.id === direct.category);
+    const directCatInfo = _directTypes?.find((cat) => cat.id === direct.category);
 
     return (
-      <OrgDeadCritSingleItemWrapper key={direct.uuid} bgColor={directCatInfo.bg_color}>
+      <OrgDeadCritSingleItemWrapper key={direct.uuid} bgColor={directCatInfo?.bg_color}>
         <div className={`${activeClass} isoSingleContact`} onClick={onChange}>
           <div className="isoAvatar">{directCatInfo?.code ? directCatInfo.code : null}</div>
           <div className="isoContactName">
