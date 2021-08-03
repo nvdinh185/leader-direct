@@ -14,10 +14,12 @@ import { getFilterDirectExe } from "@redux/directAsses/actions";
 
 export default function TaskDetail(props) {
   const token = useSelector((state) => state.Auth.idToken);
-  const exeHistories = useSelector((state) => state.directAsses.directExes);
   const directs = useSelector((state) => state.directAsses.directs);
+  const organizations = useSelector((state) => state.adminUser.organizations);
   const exeTypes = useSelector((state) => state.filterData.exeTypes);
   const directTypes = useSelector((state) => state.filterData.directTypes);
+  const exeHistories = useSelector((state) => state.directAsses.directExes);
+  const assHistories = useSelector((state) => state.directAsses.directAsses);
   const dispatch = useDispatch();
 
   const [currentDirect, setCurrentDirect] = useState();
@@ -29,6 +31,13 @@ export default function TaskDetail(props) {
       dispatch(getFilterDirectExe(token, { direct_uuid: props.task.direct_uuid, organization_id: props.task.organization_exe }));
     }
   }, [props.task]);
+
+  // Sau khi có lịch sử xử lý thì lấy các ass_logs theo các dx
+  useEffect(() => {
+    if (exeHistories && exeHistories.length > 0) {
+      // dispatch(getFilterDirectExe(token, { direct_uuid: props.task.direct_uuid, organization_id: props.task.organization_exe }));
+    }
+  }, [exeHistories]);
 
   // Props để set direct hiện tại được sử dụng
   useEffect(() => {
@@ -55,7 +64,14 @@ export default function TaskDetail(props) {
       <TaskAttachs task={props.task}></TaskAttachs>
       <Divider style={{ margin: "10px" }}></Divider>
       <OrgCritInfo isInDrawer={true} currentDirect={currentDirect}></OrgCritInfo>
-      <TaskAssessHistory task={props.task} taskType={taskType} exeTypes={exeTypes}></TaskAssessHistory>
+      <TaskAssessHistory
+        task={props.task}
+        taskType={taskType}
+        exeTypes={exeTypes}
+        exeHistories={exeHistories}
+        assHistories={assHistories}
+        organizations={organizations}
+      ></TaskAssessHistory>
     </LayoutWrapper>
   );
 }

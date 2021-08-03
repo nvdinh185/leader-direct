@@ -1663,7 +1663,12 @@ class UserRightsHandler {
       return;
     }
 
-    let jsonData = { ...req.json_data, updated_time: new Date().getTime(), updated_user: req.user.username };
+    let jsonData = {
+      ...req.json_data,
+      updated_time: new Date().getTime(),
+      updated_user: req.user.username,
+      organization: parseInt(req.json_data.organization),
+    };
 
     // update 1 bảng ghi vào csdl
     function_granted

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const baseURL = process.env.REACT_APP_BASE_URL;
-// export const baseURL = "http://10.16.150.69:9232/leader-direct/api";
+// export const baseURL = process.env.REACT_APP_BASE_URL;
+export const baseURL = "http://10.16.150.69:9232/leader-direct/api";
 
 // export const baseUserRightURL = process.env.REACT_APP_BASE_USER_RIGHT_URL;
 export const baseUserRightURL = "http://10.16.150.69:9232/leader-direct/user-rights";

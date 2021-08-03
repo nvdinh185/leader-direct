@@ -10,17 +10,33 @@ import DescriptionIcon from "@assets/images/icon/09-icon.svg";
  * @param {*} param0
  * @returns
  */
-function TimeLineWithAssess({ exe, organizations, exeTypes }) {
+function TimeLineWithAssess({ exe, organizations, exeTypes, assHistories, task }) {
   const [isEdit, setIsEdit] = useState(false);
-  let foundOrg = organizations.find((org) => org.id === exe.organization_id);
+  const [form, setForm] = useState();
+  let foundExeOrg = organizations.find((org) => org.id === exe.organization_id);
   let foundExeType = exeTypes.find((cat) => cat.id === exe.category);
-
+  let foundAssHistories = assHistories.find((ah) => ah.direct_org_uuid === exe.uuid);
   const handleSwitchEdit = () => {
     setIsEdit(!isEdit);
   };
 
   const handleSubmitAssess = () => {
+    let formToPost = {
+      ...form,
+      organization_ass: task.organization_id,
+      organization_exe: task.organization_exe,
+      direct_uuid: task.direct_uuid,
+      direct_ass_uuid: task.id,
+      direct_exe_uuid: exe.uuid,
+      direct_org_uuid: exe.direct_org_uuid,
+    };
+    // TODO: Dispatch action to insert or update data here
+    console.log(formToPost);
     setIsEdit(false);
+  };
+
+  const handleChangeForm = (e) => {
+    setForm({ description: e.target.value });
   };
 
   return (
@@ -28,20 +44,33 @@ function TimeLineWithAssess({ exe, organizations, exeTypes }) {
       <Row>
         <Col span={20} style={{ paddingRight: "10px" }}>
           <>
-            <Tag color={foundOrg.bg_color}>{foundOrg.name}</Tag>
-            <span style={{ color: foundExeType.text_color }}>{foundExeType.name}</span>
-            <p style={{ color: "#80808099" }}>{exe.description}</p>
+            <Tag color={foundExeOrg.bg_color}>{foundExeOrg.name}</Tag>
+            <span style={{ color: "grey", fontWeight: "bold" }}>{foundExeType.name}</span>
+            <p style={{ color: "grey" }}>{exe.description}</p>
           </>
           {isEdit ? (
             <>
-              <Input.TextArea placeholder="Nhập đánh giá thực hiện chỉ đạo"></Input.TextArea>
+              <Input.TextArea
+                value={form?.description}
+                onChange={handleChangeForm}
+                placeholder="Nhập đánh giá thực hiện chỉ đạo"
+              ></Input.TextArea>
               <Button block type="primary" onClick={handleSubmitAssess}>
                 Chấp Nhận
               </Button>
             </>
-          ) : (
-            <p style={{ backgroundColor: "grey", color: "white" }}>{exe.description}</p>
-          )}
+          ) : null}
+          {foundAssHistories && foundAssHistories.length > 0
+            ? foundAssHistories.map((fh) => (
+                <>
+                  <div style={{ paddingLeft: "10px", margin: "0 15px" }}>
+                    <p style={{ borderRadius: "5px", backgroundColor: "#f2f2f2", color: "GrayText", padding: "5px" }}>
+                      {fh.description}
+                    </p>
+                  </div>
+                </>
+              ))
+            : null}
         </Col>
         <Col span={4}>
           <Button onClick={handleSwitchEdit}>Đánh Giá</Button>
@@ -51,9 +80,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes }) {
   );
 }
 
-export default function TaskAssessHistory({ task, taskType, exeTypes }) {
-  const exeHistories = useSelector((state) => state.directAsses.directExes);
-  const organizations = useSelector((state) => state.adminUser.organizations);
+export default function TaskAssessHistory({ task, taskType, exeTypes, exeHistories, organizations, assHistories }) {
   return (
     <div style={{ width: "100%" }}>
       <Row>
@@ -66,7 +93,13 @@ export default function TaskAssessHistory({ task, taskType, exeTypes }) {
                 ? exeHistories.map((exe, idx) => {
                     return (
                       <Timeline.Item key={idx}>
-                        <TimeLineWithAssess exe={exe} organizations={organizations} exeTypes={exeTypes}></TimeLineWithAssess>
+                        <TimeLineWithAssess
+                          task={task}
+                          exe={exe}
+                          organizations={organizations}
+                          exeTypes={exeTypes}
+                          assHistories={assHistories}
+                        ></TimeLineWithAssess>
                       </Timeline.Item>
                     );
                   })

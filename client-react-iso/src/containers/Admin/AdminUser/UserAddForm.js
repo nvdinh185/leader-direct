@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Input, Form, Select } from "antd";
 import { UserOutlined, FileTextOutlined, IdcardOutlined } from "@ant-design/icons";
 import { createGrantedUser, updateGrantedUser } from "@redux/adminUsers/actions";
 import { useDispatch, useSelector } from "react-redux";
-import Transfers from "@components/uielements/transfer";
 
 const { Option } = Select;
 
@@ -108,7 +107,7 @@ export default function UserAddForm({
           >
             {organizations?.[0]
               ? organizations.map((org) => (
-                  <Option key={org.id} svalue={org.id}>
+                  <Option key={org.id} value={org.id}>
                     {org.name}
                   </Option>
                 ))
