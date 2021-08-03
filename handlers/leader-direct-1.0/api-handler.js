@@ -1053,10 +1053,11 @@ class ApiHandler {
       // TODO: Code đổi trạng thái bản ghi ở direct_assessments (Hoàn thành %, Hoàn thành, Xin gia hạn)
       let searchDUuidinDA = oldDirectOrgArr.map((dio) => dio.direct_uuid);
       let searchDOrginDA = oldDirectOrgArr.map((dio) => dio.organization_id);
-      let foundDAs = leaderDirectModels.direct_assessments.getAllData({
+      let foundDAs = await leaderDirectModels.direct_assessments.getAllData({
         direct_uuid: { $in: searchDUuidinDA },
         organization_exe: { $in: searchDOrginDA },
       });
+      console.log(foundDAs);
       let newDAs = foundDAs.map((da) => {
         // Tìm thằng này trong updateArr gởi lên được cập nhập trạng thái là bao nhiêu
         let foundExe = req.json_data.update_arr.find(
@@ -1065,6 +1066,7 @@ class ApiHandler {
         return {
           ...da,
           exec_status: DO_DX_STT_MAP[foundExe.exec_status].DO_ASS,
+          status: 1,
         };
       });
       // Cập nhập trạng thái dass theo do mới
@@ -1094,23 +1096,26 @@ class ApiHandler {
     }
    * 
    */
-  getFilterDirectOrg(req, res, next) {
+  async getFilterDirectOrg(req, res, next) {
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
     }
     let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
-    leaderDirectModels.direct_orgs
-      .getAllData(jsonWhere)
-      .then((data) => {
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        req.error = err;
-        next();
-      });
+    try {
+      let dOResult = await leaderDirectModels.direct_orgs.getAllData(jsonWhere);
+      let directResult;
+      if (dOResult) {
+        let dUuids = [...new Set(dOResult.map((dio) => dio.direct_uuid))];
+        directResult = await leaderDirectModels.directs.getAllData({ uuid: { $in: dUuids } });
+      }
+      req.finalJson = { directOrgs: dOResult, directs: directResult };
+      next();
+    } catch (err) {
+      req.error = err;
+      next();
+    }
   }
 
   /**
@@ -1231,23 +1236,27 @@ class ApiHandler {
     }
    * 
    */
-  getFilterDirectAss(req, res, next) {
+  async getFilterDirectAss(req, res, next) {
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
     }
     let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
-    leaderDirectModels.direct_assessments
-      .getAllData(jsonWhere)
-      .then((data) => {
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        req.error = err;
-        next();
-      });
+    try {
+      let dAResult = await leaderDirectModels.direct_assessments.getAllData(jsonWhere);
+      let directResult;
+      if (dAResult) {
+        let dUuids = [...new Set(dAResult.map((dia) => dia.direct_uuid))];
+        console.log(dUuids);
+        directResult = await leaderDirectModels.directs.getAllData({ uuid: { $in: dUuids } });
+      }
+      req.finalJson = { directAsses: dAResult, directs: directResult };
+      next();
+    } catch (err) {
+      req.error = err;
+      next();
+    }
   }
   /**
    * (137) POST /leader-direct/api/update-direct-criteria
@@ -1295,6 +1304,58 @@ class ApiHandler {
         req.error = err;
         next();
       });
+  }
+  /**
+   * (138) POST /leader-direct/api/update-direct-assessment
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: 
+   * {
+    "direct_uuid": "94676e20-15fe-489f-bb1a-53209c76eb32",
+    "assess_criteria": [
+        {
+            "organization": {"id": 3, "name": "P.TH"},
+            "created_time": "01/08/2021",
+            "due_date": "10/08/2021",
+            "description": "Test nhập criteria cho direct"
+        }
+      ]
+    }
+   * 
+   */
+  async updateDirectAssessments(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    // TODO: (1) Cập nhập trạng thái của DA đó về 2 (đã đánh giá)
+
+    // TODO: (2) Tạo 1 bản ghi đánh giá mới bên direct_assess_logs
+  }
+
+  /**
+   * (139) POST /leader-direct/api/get-filter-direct-exe
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   *
+   * SAMPLE INPUTS:
+   */
+  async getFilterDirectExe(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Không có dữ liệu theo yêu cầu";
+      next();
+      return;
+    }
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    try {
+      let resultDXs = await leaderDirectModels.direct_executes.getAllData(jsonWhere);
+      req.finalJson = resultDXs;
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
   }
 }
 

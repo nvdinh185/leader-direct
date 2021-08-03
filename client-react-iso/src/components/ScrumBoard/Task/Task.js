@@ -8,7 +8,8 @@ import TaskCard from "@components/ScrumBoard/Task/TaskCard/TaskCard";
 
 class TaskItem extends React.PureComponent {
   render() {
-    const { task, isDragging, isGroupedOver, provided, columnId, deleteTaskWatcher, openDrawer, closeDrawer } = this.props;
+    const { task, isDragging, isGroupedOver, provided, columnId, deleteTaskWatcher, openDrawer, closeDrawer, boardView } =
+      this.props;
     return (
       <Container
         isDragging={isDragging}
@@ -21,7 +22,7 @@ class TaskItem extends React.PureComponent {
           task={task}
           showDrawer={() =>
             openDrawer({
-              drawerType: COMMON.DRAWER_TASK_DETAIL,
+              drawerType: boardView === "DA" ? COMMON.DRAWER_TASK_DETAIL_ASS : COMMON.DRAWER_TASK_DETAIL,
               drawerProps: {
                 task: task,
                 columnId: columnId,

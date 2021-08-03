@@ -171,6 +171,7 @@ module.exports =  {
       foreignKey: 'FOREIGN KEY (organization_id) REFERENCES organizations(id)'
     },
     update_no: { type: 'INTEGER', notNull: 1 },
+    description: { type: 'STRING', length: 1000 },
     category: {
       type: 'INTEGER',
       notNull: 1,
@@ -219,8 +220,7 @@ module.exports =  {
     created_time: { type: 'DATETIME' },
     created_user: { type: 'STRING', length: 50 },
     is_editable: { type: 'BOOLEAN' },
-    status: { type: 'BOOLEAN', defaultValue: '1' },
-    update_no: { type: 'INTEGER', notNull: 1 }
+    status: { type: 'BOOLEAN', defaultValue: '1' }
   },
   direct_assess_logs: {
     id: { type: 'INTEGER', notNull: 1, autoIncrement: 1 },
@@ -252,6 +252,7 @@ module.exports =  {
     organization_exe: { type: 'INTEGER', notNull: 1 },
     organization_ass: { type: 'INTEGER', notNull: 1 },
     description: { type: 'STRING', length: 1000 },
+    update_no: { type: 'INTEGER', notNull: 1 },
     category: {
       type: 'INTEGER',
       notNull: 1,

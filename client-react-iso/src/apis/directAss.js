@@ -20,3 +20,7 @@ import { callAPI, baseURL } from "./config/index";
 export const getFilterDirectAss = (token, data) => {
   return callAPI("post", baseURL + "/get-filter-direct-ass", data, token);
 };
+
+export const getFilterDirectExe = (token, data) => {
+  return callAPI("post", baseURL + "/get-filter-direct-exe", data, token);
+};

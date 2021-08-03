@@ -70,6 +70,8 @@ const createBoardColsData = (data, field) => {
           created_at: item.created_time,
           updated_at: item.updated_time,
           direct_uuid: item.direct_uuid,
+          organization_exe: item.organization_exe ? item.organization_exe : null,
+          organization_id: item.organization_id ? item.organization_id : null,
         },
       };
     }, {});

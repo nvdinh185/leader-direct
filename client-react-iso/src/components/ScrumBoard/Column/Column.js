@@ -7,7 +7,7 @@ import TaskList from "@components/ScrumBoard/Task/TaskList/TaskList";
 import Title from "@components/ScrumBoard/Title";
 import { Container, Header } from "./Column.style";
 
-const Column = ({ title, column, tasks, index, boardId, isScrollable, isDragDisabled }) => {
+const Column = ({ title, column, tasks, index, boardId, isScrollable, isDragDisabled, boardView }) => {
   return (
     <Draggable draggableId={title} index={index}>
       {(provided, snapshot) => (
@@ -18,6 +18,7 @@ const Column = ({ title, column, tasks, index, boardId, isScrollable, isDragDisa
             </Title>
           </Header>
           <TaskList
+            boardView={boardView}
             isDragDisabled={isDragDisabled}
             listId={column.id}
             listType="QUOTE"

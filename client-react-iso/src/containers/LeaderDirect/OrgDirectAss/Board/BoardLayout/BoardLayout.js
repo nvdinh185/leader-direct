@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
-import { getDirectExeByDOs, getFilterDirectOrgStart, setBoardUpdateArr } from "@redux/directOrgs/actions";
+import { getFilterDirectAss } from "@redux/directAsses/actions";
+import { getDirectExeByDOs, setBoardUpdateArr } from "@redux/directOrgs/actions";
 
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
@@ -21,7 +22,6 @@ import { warningAlert } from "@components/AlertModal/ModalInfo";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import "@assets/styles/containers/BoardLayout.css";
-import { getFilterDirectAss } from "@redux/directAsses/actions";
 import { returnFromToUnixFromMomentMonth } from "@lib/utils/date";
 const { Option } = Select;
 const { Content } = Layout;
@@ -36,7 +36,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   const dispatch = useDispatch();
 
   const [backgroundUrl, setBackgroundUrl] = useState();
-  const [monthPicked, setMonthPicked] = useState();
+  const [monthPicked, setMonthPicked] = useState(moment(new Date()));
   const [fromToPicked, setFromToPicked] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +44,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
 
   function returnChangedDOArr(_directOrgs, _boardDOs) {
     let updateArr = _directOrgs.reduce((agg, directOrg) => {
-      let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
+      let boardItemStt = parseInt(boardDOs[directOrg?.uuid]?.column_id.split("-")[1]);
       if (boardItemStt !== directOrg.exec_status) {
         return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt, description: directOrg.description }];
       }
@@ -94,7 +94,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
         setSelectedOrg(e);
         break;
       case "MONTH":
-        console.log(e);
         // TODO: dispatch action to filter data here
         // Khi chọn month thì dẹp date range đi
         setFromToPicked([]);
@@ -122,8 +121,10 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
 
   // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
+    const newMonth = moment(new Date());
+    const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
     if (token) {
-      dispatch(getFilterDirectOrgStart(token, { organization_role: [21], status: 1 }));
+      dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to } }));
     }
   }, [token]);
 
@@ -142,6 +143,8 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       dispatch(setBoardUpdateArr(updateBoarArr));
     }
   }, [boardDOs]);
+
+  // Khi selectedorg thay đổi thì kéo theo sự thay đổi của dass filter luôn
 
   return (
     <>
@@ -226,9 +229,9 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
                   : null}
               </Select>
             </Filters>
-            <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
+            {/* <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
               Cập Nhập Dữ Liệu
-            </ButtonAdd>
+            </ButtonAdd> */}
           </Row>
         </HeaderSecondary>
         {loading ? (

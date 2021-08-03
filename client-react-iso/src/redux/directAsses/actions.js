@@ -73,3 +73,43 @@ export const getFilterDirectAssFail = (error) => {
     payload: error,
   };
 };
+
+// ---------------------------------------------------------------------------------
+// 1 - GET DIRECT LIST
+export const getFilterDirectExe = (token, form) => {
+  return (dispatch) => {
+    dispatch(getFilterDirectExeStart());
+    directAssApi
+      .getFilterDirectExe(token, form)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFilterDirectExeSuccess(data.data, form));
+        } else {
+          dispatch(getFilterDirectExeFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFilterDirectExeFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
+
+export const getFilterDirectExeStart = () => {
+  return {
+    type: directAssTypes.GET_FILTER_DIRECT_EXE_START,
+  };
+};
+
+export const getFilterDirectExeSuccess = (data, form) => {
+  return {
+    type: directAssTypes.GET_FILTER_DIRECT_EXE_SUCCESS,
+    payload: { data, form },
+  };
+};
+
+export const getFilterDirectExeFail = (error) => {
+  return {
+    type: directAssTypes.GET_FILTER_DIRECT_EXE_FAIL,
+    payload: error,
+  };
+};

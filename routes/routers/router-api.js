@@ -546,7 +546,7 @@ const funcPaths = {
       apiHandler.getFilterDirectAss,
     ],
     /**
-     * (136) POST /leader-direct/api/get-fitler-direct-ass
+     * (137) POST /leader-direct/api/get-fitler-direct-ass
      * - Yêu cầu ĐƯỢC PHÂN QUYỀN
      *
      * SAMPLE INPUTS:
@@ -556,6 +556,18 @@ const funcPaths = {
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.updateDirectCriteria,
+    ],
+    /**
+     * (138) POST /leader-direct/api/get-fitler-direct-ass
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-filter-direct-exe": [
+      expHandlers.setRequestParameter("/get-filter-direct-exe", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getFilterDirectExe,
     ],
   },
 };

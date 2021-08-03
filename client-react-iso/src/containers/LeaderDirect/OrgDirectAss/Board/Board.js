@@ -5,7 +5,6 @@ import scrumBoardActions from "@redux/scrumBoard/actions";
 
 import { reorder, reorderTasks } from "@lib/helpers/reorder";
 import Column from "../../../../components/ScrumBoard/Column/Column";
-import { PlusOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { ParentContainer, Container, AddListButton } from "./Board.style";
 import { filterSearchedComponents } from "@lib/helpers/searchTaskCard";
@@ -26,21 +25,28 @@ function Board({
   boardRenderWatcher,
 }) {
   const statuses = useSelector((state) => state.filterData.statuses);
-  const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
+  const directAsses = useSelector((state) => state.directAsses.directAssesFilter);
 
   // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
-    if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
+    if (statuses?.[0]) {
       // TODO: Đối với ass thì làm lại các status (gồm 11 + các status tiếp theo của ass 111 -> 114)
       let assStts = statuses.reduce((acc, stt) => {
-        if (stt.id >= 111) {
+        if (stt.id > 111) {
           return [...acc, stt];
         }
         return acc;
       }, []);
-      boardRenderWatcher({ statuses: assStts, data: directOrgs, field: "exec_status" });
+      if (boardRenderWatcher && directAsses?.[0]) {
+        boardRenderWatcher({ statuses: assStts, data: directAsses, field: "exec_status" });
+        return;
+      }
+      if (directAsses && directAsses.length === 0) {
+        boardRenderWatcher({ statuses: assStts, data: directAsses, field: "exec_status" });
+        return;
+      }
     }
-  }, [boardRenderWatcher, statuses, directOrgs]);
+  }, [boardRenderWatcher, statuses, directAsses]);
 
   const onDragEnd = ({ source, destination, type, draggableId }) => {
     // source= {
@@ -104,6 +110,7 @@ function Board({
                   boardId={"status"}
                   tasks={tasksWithinColumn}
                   isScrollable={withScrollableColumns}
+                  boardView="DA"
                 />
               );
             })}

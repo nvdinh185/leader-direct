@@ -27,7 +27,6 @@ export default function directAssReducer(state = defaultDirectAss, action) {
       };
     // ---------------------------------------------------------------------------------
     // 1 - CALL API DIRECT ORGS SECTION
-    // ---------------------------------------------------------------------------------
     case directAssTypes.GET_FILTER_DIRECT_ASS_START:
       return {
         ...state,
@@ -35,18 +34,44 @@ export default function directAssReducer(state = defaultDirectAss, action) {
       };
     case directAssTypes.GET_FILTER_DIRECT_ASS_SUCCESS:
       if (action.payload.length === 0) {
-        return { ...state, loading: false, err: "" };
+        return { ...state, directAssesFilter: [], loading: false, err: "" };
       }
       return {
         ...state,
         err: "",
-        directAsses: action.payload.data,
-        directAssesFilter: action.payload.data,
+        directs: action.payload.data.directs || [],
+        directAsses: action.payload.data.directAsses,
+        directAssesFilter: action.payload.data.directAsses,
         formFilter: action.payload.form,
         loading: false,
       };
 
     case directAssTypes.GET_FILTER_DIRECT_ASS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
+    // ---------------------------------------------------------------------------------
+    // 2 - CALL API DIRECT EXE SECTION
+    case directAssTypes.GET_FILTER_DIRECT_EXE_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directAssTypes.GET_FILTER_DIRECT_EXE_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, directExes: [], loading: false, err: "" };
+      }
+      return {
+        ...state,
+        directExes: action.payload.data,
+        formExeFilter: action.payload.form,
+        loading: false,
+        err: "",
+      };
+
+    case directAssTypes.GET_FILTER_DIRECT_EXE_FAIL:
       return {
         ...state,
         err: action.payload,

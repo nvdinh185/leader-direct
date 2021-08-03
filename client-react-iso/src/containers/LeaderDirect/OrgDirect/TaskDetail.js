@@ -9,16 +9,25 @@ import LayoutWrapper from "@components/utility/layoutWrapper";
 import TaskHistory from "./TaskDetail/TaskHistory";
 import TaskInfo from "./TaskDetail/TaskInfo";
 import TaskAttachs from "./TaskDetail/TaskAttachs";
-import TaskAssCriteria from "./TaskDetail/TaskAssCriteria";
+import OrgCritInfo from "../OrgDeadCrit/OrgCritInfo";
 
 export default function TaskDetail(props) {
   const [taskType, setTaskType] = useState();
   const histories = useSelector((state) => state.directOrgs.directExeDos);
+  const directs = useSelector((state) => state.directOrgs.directs);
   const exeTypes = useSelector((state) => state.filterData.exeTypes);
   const directTypes = useSelector((state) => state.filterData.directTypes);
   const dispatch = useDispatch();
 
+  const [currentDirect, setCurrentDirect] = useState();
   const [taskHistory, setTaskHistory] = useState();
+
+  useEffect(() => {
+    if (props.task && directs?.[0]) {
+      let foundDirect = directs.find((d) => d.uuid === props.task.direct_uuid);
+      setCurrentDirect(foundDirect);
+    }
+  }, [props.task, directs]);
 
   // Effect để lấy ra thông tin history của task này
   useEffect(() => {
@@ -50,8 +59,7 @@ export default function TaskDetail(props) {
       <Divider style={{ margin: "10px" }}></Divider>
       <TaskAttachs task={props.task}></TaskAttachs>
       <Divider style={{ margin: "10px" }}></Divider>
-      <TaskAssCriteria task={props.task}></TaskAssCriteria>
-      <Divider style={{ margin: "10px" }}></Divider>
+      <OrgCritInfo isInDrawer={true} currentDirect={currentDirect}></OrgCritInfo>
       <TaskHistory exeTypes={exeTypes} task={props.task} histories={taskHistory}></TaskHistory>
     </LayoutWrapper>
   );

@@ -8,7 +8,7 @@ const InnerTaskList = React.memo((props) => {
   // ---------------------------------------------------------------------------------
   // TODO: Write task to render task base on list task of columns
   // ---------------------------------------------------------------------------------
-  return props.tasks.map((task, index) => (
+  return props.tasks.map((task, index, boardView) => (
     <Draggable
       // Prop to disable drage and drop in column
       isDragDisabled={props.isDragDisabled}
@@ -18,6 +18,7 @@ const InnerTaskList = React.memo((props) => {
     >
       {(dragProvided, dragSnapshot) => (
         <TaskItem
+          boardView={props.boardView}
           key={task.id}
           task={task}
           columnId={props.columnId}
@@ -30,10 +31,10 @@ const InnerTaskList = React.memo((props) => {
   ));
 });
 
-const InnerList = ({ dropProvided, tasks, columnId, isDragDisabled }) => (
+const InnerList = ({ dropProvided, tasks, columnId, isDragDisabled, boardView }) => (
   <DropZone ref={dropProvided.innerRef}>
     <Scrollbars style={{ height: 500 }} autoHide>
-      <InnerTaskList isDragDisabled={isDragDisabled} tasks={tasks} columnId={columnId} />
+      <InnerTaskList boardView={boardView} isDragDisabled={isDragDisabled} tasks={tasks} columnId={columnId} />
       {dropProvided.placeholder}
     </Scrollbars>
   </DropZone>
@@ -51,6 +52,7 @@ const TaskList = ({
   column,
   tasks,
   title,
+  boardView,
   ...props
 }) => {
   return (
@@ -71,6 +73,7 @@ const TaskList = ({
           {internalScroll ? (
             <InnerList
               isDragDisabled={props.isDragDisabled}
+              boardView={boardView}
               tasks={tasks}
               title={title}
               columnId={column.id}

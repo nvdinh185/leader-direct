@@ -45,7 +45,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
 
   function returnChangedDOArr(_directOrgs, _boardDOs) {
     let updateArr = _directOrgs.reduce((agg, directOrg) => {
-      let boardItemStt = parseInt(boardDOs[directOrg.uuid].column_id.split("-")[1]);
+      let boardItemStt = parseInt(boardDOs[directOrg.uuid]?.column_id.split("-")[1]);
       if (boardItemStt !== directOrg.exec_status) {
         return [
           ...agg,

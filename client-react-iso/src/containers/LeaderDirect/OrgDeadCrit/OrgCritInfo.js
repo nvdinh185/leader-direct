@@ -7,7 +7,7 @@ import { Button, Divider, Space } from "antd";
 import OrgCritAddForm from "./OrgCritInfo/OrgCritAddForm";
 import OrgCritEdit from "./OrgCritInfo/OrgCritEdit";
 
-export default function OrgCritInfo({ currentDirect }) {
+export default function OrgCritInfo({ currentDirect, isInDrawer }) {
   const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
   const [isEdit, setIsEdit] = useState(false);
   const [isAssessor, setIsAssessor] = useState(false);
@@ -41,10 +41,10 @@ export default function OrgCritInfo({ currentDirect }) {
   // --------------------------------------------------------------------------------
   return (
     <>
-      <div>
+      <div style={{ width: "100%" }}>
         <HeadingWithIcon heading="Chỉ tiêu và hạn hoàn thành" iconSrc={DescriptionIcon} />
         <Space direction="vertical" style={{ width: "100%" }}>
-          {userInfo?.isAdmin || isAssessor ? (
+          {(userInfo?.isAdmin || isAssessor) && !isInDrawer ? (
             <Button icon={!isEdit ? <PlusCircleFilled style={{ color: "green" }} /> : <UpOutlined />} onClick={changeEditForm}>
               {isEdit ? null : "Thêm Mới"}
             </Button>
@@ -56,6 +56,7 @@ export default function OrgCritInfo({ currentDirect }) {
               {criteriaArr && criteriaArr[0]
                 ? criteriaArr.map((crit, idx) => (
                     <OrgCritEdit
+                      isInDrawer={isInDrawer}
                       key={idx}
                       criteria={crit}
                       criteriaArr={criteriaArr}
@@ -67,8 +68,7 @@ export default function OrgCritInfo({ currentDirect }) {
             </>
           )}
         </Space>
-
-        <Divider></Divider>
+        <Divider style={{ margin: "10px" }}></Divider>
       </div>
     </>
   );

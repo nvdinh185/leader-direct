@@ -10,6 +10,7 @@ export const BG_DIRECT_ORG_ASS = "BG_DI_ORG_ASS";
 
 // ---------------------------------------------------------------------------------
 export const DRAWER_TASK_DETAIL = "DRAWER_TASK_DETAIL";
+export const DRAWER_TASK_DETAIL_ASS = "DRAWER_TASK_DETAIL_ASS";
 
 // ---------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------

@@ -103,7 +103,8 @@ export default function directReducer(state = defaultDirectOrgs, action) {
       return {
         ...state,
         err: "",
-        directOrgs: action.payload,
+        directs: action.payload.directs || [],
+        directOrgs: action.payload.directOrgs,
         loading: false,
       };
 

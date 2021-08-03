@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFilterDirectCrit } from "@redux/directCrits/actions";
 
 import { Row, Col, Button, Input, DatePicker } from "antd";
-import { EditOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, CheckOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
 import { TaskDescription } from "@containers/LeaderDirect/Meeting/Meeting.style";
 import { updateDirectCriteria } from "@apis/directs";
 import { errorAlert, successAlert } from "@components/AlertModal/ModalInfo";
 
-export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, userInfo }) {
+export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, userInfo, isInDrawer }) {
   const view = useSelector((state) => state.App.view);
   const token = useSelector((state) => state.Auth.idToken);
   const organizations = useSelector((state) => state.adminUser.organizations);
@@ -101,10 +101,10 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, user
   return (
     <TaskDescription>
       <Row>
-        <Col span={22}>
+        <Col span={20}>
           {/* // --------------------------------------------------------------------------------	 */}
           {/* // CRIT EDIT SECTION	 */}
-          {editCrit ? (
+          {editCrit && !isInDrawer ? (
             <>
               <Row style={{ paddingRight: "5px" }}>
                 <Col span={8} style={{ paddingRight: "5px" }}>
@@ -127,16 +127,19 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, user
             </>
           ) : (
             <p>
-              [{criteria?.organization?.name}] -{" "}
+              <span style={{ color: "deepskyblue", fontWeight: "bold" }}>[{criteria?.organization?.name}]</span> -{" "}
               <span style={{ color: "red", fontWeight: "bold" }}>{moment(criteria?.due_date).format("DD/MM/yyyy")}</span> :{" "}
               {criteria?.description}
             </p>
           )}
         </Col>
-        {userInfo?.isAdmin || userInfo?.organization === criteria?.organization?.id ? (
-          <Col span={2}>
+        {(userInfo?.isAdmin || userInfo?.organization === criteria?.organization?.id) && !isInDrawer ? (
+          <Col span={4}>
             {editCrit ? (
-              <Button type={"primary"} icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
+              <>
+                <Button type={"primary"} icon={<CheckOutlined />} onClick={handleSubmitEditCrit}></Button>
+                <Button type={"default"} icon={<CloseOutlined />} onClick={handleSwitchEditCrit}></Button>
+              </>
             ) : (
               <Button icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
             )}

@@ -66,9 +66,10 @@ export default function TaskHistory({ exeTypes, task, histories }) {
 
   return (
     <>
-      <HeadingWithIcon heading={"Lịch Sử Xử Lý"} iconSrc={Clock} />
-      <br></br>
-      <Row style={{ ...rowStyle, marginBottom: "20px" }} gutter={gutter} justify="start">
+      <Row gutter={gutter} justify="start">
+        <HeadingWithIcon heading={"Lịch Sử Xử Lý"} iconSrc={Clock} />
+        <br></br>
+        <Divider dashed={true} style={{ margin: "0" }}></Divider>
         <Col span={24}>
           <ContentHolder>
             <Timeline>

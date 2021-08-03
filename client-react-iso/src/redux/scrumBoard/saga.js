@@ -12,11 +12,12 @@ function* boardRenderEffectSaga({ payload }) {
   let columns;
   let tasks;
   if (payload) {
+    console.log(payload);
     const [boardNCols, boardData] = generateColumnDnd(payload.statuses, payload.data, payload.field);
     boards = boardNCols.board;
     columns = boardNCols.columns;
     tasks = boardData ? boardData : [];
-    // console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
+    console.log("DEBUG CREATE BOARD ------------------------------------------------------------- ", boardNCols, boardData);
   }
 
   yield put(
