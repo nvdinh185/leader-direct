@@ -16,6 +16,7 @@ const { general, doHelper, daHelper, dxHelper, filterHelper } = require("./extds
 const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
 const mime = require("mime-types");
+const { DO_DX_STT_MAP, DO_DA_MAP } = require("./extds/createUpdate/GeneralHelper");
 class ApiHandler {
   constructor() {
     this.createDirect = this.createDirect.bind(this);
@@ -1046,11 +1047,33 @@ class ApiHandler {
       });
       // ---------------------------------------------------------------------------------
       // Khi sự kiện update direct org xảy ra thì tạo thêm bản ghi vào direct_executes đồng thời có logic tạo bản ghi mới
-      // ở bên direct_assessments_logs để báo cho đơn vị đánh giá cập nhập thông tin
+      // ở bên direct_assessments để báo cho đơn vị đánh giá cập nhập thông tin
       let result = await leaderDirectModels.direct_orgs.updateRows(updateDOArr, { uuid: { $in: uuidArr } });
-      // TODO: Code tạo mới bản ghi ở direct_assessments (tạo mới rồi update vào mảng histories của DO của thằng assess)
 
-      req.finalJson = { result, resultDx: { resultUpdate, resultInsert } };
+      // TODO: Code đổi trạng thái bản ghi ở direct_assessments (Hoàn thành %, Hoàn thành, Xin gia hạn)
+      let searchDUuidinDA = oldDirectOrgArr.map((dio) => dio.direct_uuid);
+      let searchDOrginDA = oldDirectOrgArr.map((dio) => dio.organization_id);
+      let foundDAs = leaderDirectModels.direct_assessments.getAllData({
+        direct_uuid: { $in: searchDUuidinDA },
+        organization_exe: { $in: searchDOrginDA },
+      });
+      let newDAs = foundDAs.map((da) => {
+        // Tìm thằng này trong updateArr gởi lên được cập nhập trạng thái là bao nhiêu
+        let foundExe = req.json_data.update_arr.find(
+          (exe) => exe.direct_uuid === da.direct_uuid && exe.organization_id === da.organization_exe
+        );
+        return {
+          ...da,
+          exec_status: DO_DX_STT_MAP[foundExe.exec_status].DO_ASS,
+        };
+      });
+      // Cập nhập trạng thái dass theo do mới
+      let daResult = leaderDirectModels.direct_assessments.updateRows(newDAs, {
+        direct_uuid: { $in: searchDUuidinDA },
+        organization_exe: { $in: searchDOrginDA },
+      });
+
+      req.finalJson = { result, resultDx: { resultUpdate, resultInsert }, resultDA: daResult };
       next();
     } catch (err) {
       console.log(err);
@@ -1137,11 +1160,10 @@ class ApiHandler {
    * (134) POST /leader-direct/api/get-count-data-by-criteria
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    * 
-   * SAMPLE INPUTS: {
-    "created_time": {"from": 1626189072000, "to": 1626354152767},
-    "exec_status": [11,12],
-    "organization_id": [5],
-    "organization_role": [21,22]
+   * SAMPLE INPUTS: 
+    {
+    "model": "direct_orgs",
+    "jsonWhere": {"organization_role": 22}
     }
    * 
    */
@@ -1167,11 +1189,12 @@ class ApiHandler {
    * (134) POST /leader-direct/api/get-filter-data-dynamic
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    * 
-   * SAMPLE INPUTS: {
-    "created_time": {"from": 1626189072000, "to": 1626354152767},
-    "exec_status": [11,12],
-    "organization_id": [5],
-    "organization_role": [21,22]
+   * SAMPLE INPUTS: 
+    {
+    "model": "directs",
+    "jsonWhere": {
+        "category": [35],
+        "meeting_id": [1]
     }
    * 
    */
@@ -1230,11 +1253,17 @@ class ApiHandler {
    * (137) POST /leader-direct/api/update-direct-criteria
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    * 
-   * SAMPLE INPUTS: {
-    "created_time": {"from": 1626189072000, "to": 1626354152767},
-    "exec_status": [11,12],
-    "organization_id": [5],
-    "organization_role": [21,22]
+   * SAMPLE INPUTS: 
+   * {
+    "direct_uuid": "94676e20-15fe-489f-bb1a-53209c76eb32",
+    "assess_criteria": [
+        {
+            "organization": {"id": 3, "name": "P.TH"},
+            "created_time": "01/08/2021",
+            "due_date": "10/08/2021",
+            "description": "Test nhập criteria cho direct"
+        }
+      ]
     }
    * 
    */

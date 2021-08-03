@@ -51,6 +51,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
           ...agg,
           {
             uuid: directOrg.uuid,
+            organization_id: directOrg.organization_id,
             direct_uuid: directOrg.direct_uuid,
             exec_status: boardItemStt,
             description: directOrg.description,

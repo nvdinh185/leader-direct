@@ -40,15 +40,23 @@ const DO_STATUS = {
 };
 
 const DO_DX_STT_MAP = {
-  11: { DX: 51, DO_ASS: 111 },
+  11: { DX: 51, DO_ASS: 112 },
   12: { DX: 52, DO_ASS: 112 },
-  13: { DX: 53, DO_ASS: 113 },
-  14: { DX: 54, DO_ASS: 113 },
+  13: { DX: 53, DO_ASS: 112 },
+  14: { DX: 54, DO_ASS: 114 },
   15: { DX: 55, DO_ASS: 115 },
   111: { DX: 61 },
   112: { DX: 62 },
   113: { DX: 63 },
   114: { DX: 64 },
+};
+
+const DO_DA_MAP = {
+  51: { DX: 51, DO_ASS: 112 },
+  52: { DX: 52, DO_ASS: 112 },
+  53: { DX: 53, DO_ASS: 112 },
+  54: { DX: 54, DO_ASS: 114 },
+  55: { DX: 55, DO_ASS: 115 },
 };
 
 /**
@@ -74,4 +82,4 @@ const generateUUID = () => {
   });
 };
 
-module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP, ASS_TYPES, D_STATUS };
+module.exports = { generateUUID, ORG_ROLE, DX_STATUS, DO_STATUS, DO_DX_STT_MAP, ASS_TYPES, D_STATUS, DO_DA_MAP };
