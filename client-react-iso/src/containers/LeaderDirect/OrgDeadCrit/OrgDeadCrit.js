@@ -10,6 +10,8 @@ import { getFilterDirectCrit } from "@redux/directCrits/actions";
 import DetailView from "@components/Directs/DetailView";
 import { changeDirectCrit } from "@redux/directCrits/actions";
 import OrgCritInfo from "./OrgCritInfo";
+import moment from "moment";
+import { returnFromToUnixFromMomentMonth } from "@lib/utils/date";
 
 const { Content } = Layout;
 
@@ -24,6 +26,12 @@ export default function OrgDeadCrit() {
   useEffect(() => {
     dispatch(getFilterDirectCrit(token, { status: 1 }));
   }, []);
+
+  const handleGetEditedCrit = (e) => {
+    const newMonth = moment(e);
+    const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
+    dispatch(getFilterDirectCrit(token, { status: 2, created_time: { from: from, to: to } }));
+  };
 
   return (
     <Layout
@@ -40,6 +48,7 @@ export default function OrgDeadCrit() {
         {/* -------------------------------------- List Card View ----------------------------------------- */}
         <div className="isoContactListBar">
           <OrgDeadCritList
+            handleGetEditedCrit={handleGetEditedCrit}
             directs={filterDirectCrits}
             selectedDCrit={selectedDCrit}
             changeDirectCrit={(uuid) => dispatch(changeDirectCrit(uuid))}
@@ -49,9 +58,11 @@ export default function OrgDeadCrit() {
         <Layout className="isoContactBoxWrapper">
           <Content className="isoContactBox">
             <Scrollbar className="contactBoxScrollbar">
-              <DetailView currentDirect={selectedDCrit} showPageHeader={false}>
-                <OrgCritInfo currentDirect={selectedDCrit}></OrgCritInfo>
-              </DetailView>
+              {selectedDCrit ? (
+                <DetailView currentDirect={selectedDCrit} showPageHeader={false}>
+                  <OrgCritInfo currentDirect={selectedDCrit}></OrgCritInfo>
+                </DetailView>
+              ) : null}
             </Scrollbar>
           </Content>
         </Layout>

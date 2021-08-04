@@ -49,7 +49,7 @@ const WDContactListWrapper = styled.div`
 
     .ant-input {
       border: none;
-      height: 69px;
+      height: 50px;
       font-size: 14px;
       font-weight: 400;
       color: ${palette("text", 0)};

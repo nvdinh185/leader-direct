@@ -30,9 +30,6 @@ export default function directCritReducer(state = defaultDirectCrits, action) {
         loading: true,
       };
     case directCritTypes.GET_FILTER_DIRECT_CRIT_SUCCESS:
-      if (action.payload.length === 0) {
-        return { ...state, loading: false, err: "" };
-      }
       if (state.selectedId) {
         return {
           ...state,
@@ -45,7 +42,7 @@ export default function directCritReducer(state = defaultDirectCrits, action) {
         ...state,
         directCrits: action.payload.data,
         filterDirectCrits: action.payload.data,
-        selectedId: action.payload.data[0]?.uuid,
+        selectedId: action.payload.data[0]?.uuid || "",
         loading: false,
       };
 

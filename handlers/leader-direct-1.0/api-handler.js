@@ -1293,6 +1293,7 @@ class ApiHandler {
       ...oldDirect,
       due_date: directDueDate,
       assess_criteria: JSON.stringify(req.json_data.assess_criteria),
+      status: 2,
     };
     leaderDirectModels.directs
       .updateOneRecord(newDirect, { uuid: req.json_data.direct_uuid })

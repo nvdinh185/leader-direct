@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { InputSearch } from "@components/uielements/input";
 import { OrgDeadCritListWrapper, OrgDeadCritSingleItemWrapper } from "./OrgDeadCritList.style";
 import Scrollbar from "@components/utility/customScrollBar";
+import { Button, Col, DatePicker, Row } from "antd";
 
-export default function OrgDeadCritList(props) {
-  const [search, setSearch] = React.useState("");
+export default function OrgDeadCritList({ handleGetEditedCrit, ...props }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [monthPicked, setMonthPicked] = useState(moment(new Date()));
   const directTypes = useSelector((state) => state.filterData.directTypes);
 
+  // ---------------------------------------------------------------------------------
   function singleContact(direct, _directTypes) {
     const { selectedId, changeDirectCrit } = props;
     const activeClass = selectedId === direct.uuid ? "active" : "";
@@ -26,6 +31,7 @@ export default function OrgDeadCritList(props) {
       </OrgDeadCritSingleItemWrapper>
     );
   }
+  // ---------------------------------------------------------------------------------
 
   function filterContacts(directs, search) {
     search = search.toUpperCase();
@@ -37,9 +43,40 @@ export default function OrgDeadCritList(props) {
   }
 
   const contacts = filterContacts(props.directs, search);
+
+  // ---------------------------------------------------------------------------------
   return (
     <OrgDeadCritListWrapper className="isoContactListWrapper">
       <InputSearch placeholder={"Tìm Kiếm"} value={search} onChange={onChange} className="isoSearchBar" />
+      <Row>
+        <Col span={12}>
+          <Button block onClick={() => handleGetEditedCrit(monthPicked)}>
+            Lấy DS Đã Cập Nhập
+          </Button>
+        </Col>
+        <Col span={12}>
+          <DatePicker
+            open={isOpen}
+            onChange={() => {
+              if (monthPicked) {
+                setMonthPicked("");
+              }
+            }}
+            onOpenChange={() => {
+              setIsOpen(!isOpen);
+            }}
+            onPanelChange={(v) => {
+              setMonthPicked(v);
+              setIsOpen(false);
+            }}
+            value={monthPicked}
+            style={{ width: "100%" }}
+            placeholder="Chọn Tháng"
+            format="MM/YYYY"
+            mode="month"
+          ></DatePicker>
+        </Col>
+      </Row>
       {contacts && contacts.length > 0 ? (
         <div className="isoContactList">
           <Scrollbar className="contactListScrollbar" style={{ height: "calc(100vh - 200px)" }}>

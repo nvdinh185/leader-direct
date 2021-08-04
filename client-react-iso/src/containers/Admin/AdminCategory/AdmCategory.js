@@ -9,7 +9,6 @@ import useWindowSize from "@lib/hooks/useWindowSize";
 import Box from "@components/utility/box";
 import PageHeader from "@components/utility/pageHeader";
 import LayoutWrapper from "@components/utility/layoutWrapper";
-import IntlMessages from "@components/utility/intlMessages";
 import EditableCell from "@components/TableComp/EditableCell";
 import EditableRow from "@components/TableComp/EditableRow";
 import basicStyle from "@assets/styles/constants";
@@ -105,9 +104,10 @@ export default function AdminCategory() {
                   {categories?.length > 0 ? (
                     <Table
                       // loading={loading}
+                      childrenColumnName="antdChildren"
                       columns={cols}
                       rowClassName={() => "editable-row"}
-                      dataSource={categories && categories.length !== 0 ? categories : null}
+                      dataSource={categories?.[0] ? categories : []}
                       scroll={{ y: 400 }}
                       pagination={{
                         pageSize: 30,
