@@ -569,6 +569,18 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.getFilterDirectExe,
     ],
+    /**
+     * (139) POST /leader-direct/api/get-fitler-direct-ass
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/update-direct-assessment-logs": [
+      expHandlers.setRequestParameter("/update-direct-assessment-logs", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.updateDirectAssessmentLogs,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

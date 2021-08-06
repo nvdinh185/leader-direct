@@ -24,3 +24,7 @@ export const getFilterDirectAss = (token, data) => {
 export const getFilterDirectExe = (token, data) => {
   return callAPI("post", baseURL + "/get-filter-direct-exe", data, token);
 };
+
+export const updateDirectAssessLogs = (token, data) => {
+  return callAPI("post", baseURL + "/update-direct-assessment-logs", data, token);
+};

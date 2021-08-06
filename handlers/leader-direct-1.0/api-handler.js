@@ -16,7 +16,7 @@ const { general, doHelper, daHelper, dxHelper, filterHelper } = require("./extds
 const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
 const mime = require("mime-types");
-const { DO_DX_STT_MAP, DO_DA_MAP } = require("./extds/createUpdate/GeneralHelper");
+const { DO_DX_STT_MAP, DO_DA_MAP, generateUUID } = require("./extds/createUpdate/GeneralHelper");
 class ApiHandler {
   constructor() {
     this.createDirect = this.createDirect.bind(this);
@@ -1307,7 +1307,7 @@ class ApiHandler {
       });
   }
   /**
-   * (138) POST /leader-direct/api/update-direct-assessment
+   * (138) POST /leader-direct/api/update-direct-assessment-logs
    *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
    * 
    * SAMPLE INPUTS: 
@@ -1324,15 +1324,54 @@ class ApiHandler {
     }
    * 
    */
-  async updateDirectAssessments(req, res, next) {
+  async updateDirectAssessmentLogs(req, res, next) {
     if (!req.json_data) {
       req.error = "Dữ liệu post req.json_data không hợp lệ";
       next();
       return;
     }
-    // TODO: (1) Cập nhập trạng thái của DA đó về 2 (đã đánh giá)
-
-    // TODO: (2) Tạo 1 bản ghi đánh giá mới bên direct_assess_logs
+    console.log("CALL IN UPDATE ASSS LOGS --", req.json_data);
+    // TODO: (1) Nếu ko có truyền lên log_uuid thì gọi hàm tạo mới
+    let result;
+    if (!req.json_data.log_uuid) {
+      leaderDirectModels.direct_assess_logs
+        .insertOneRecord({
+          ...req.json_data,
+          created_time: new Date().getTime(),
+          created_user: req.user.username,
+          uuid: generateUUID(),
+        })
+        .then(async (data) => {
+          let oldAss = await leaderDirectModels.direct_assessments.getFirstRecord({ uuid: req.json_data.direct_ass_uuid });
+          result = await leaderDirectModels.direct_assessments.updateOneRecord(
+            { ...oldAss, updated_user: req.user.username, updated_time: new Date().getTime(), status: 2 },
+            { uuid: oldAss.uuid }
+          );
+          req.finalJson = { directAssLog: data, directAss: result };
+          next();
+        })
+        .catch((err) => {
+          console.log(err);
+          req.error = err;
+          next();
+        });
+      return;
+    }
+    // TODO: (2) Nếu có log_uuid truyền lên thì gọi hàm update
+    // Khi update lại thông tin thì ko cần thay đổi gì trạng thái của dass cả
+    try {
+      let oldDassLog = await leaderDirectModels.direct_assess_logs.getFirstRecord({ uuid: req.json_data.log_uuid });
+      result = await leaderDirectModels.direct_assess_logs.updateOneRecord(
+        { ...oldDassLog, ...req.json_data, updated_user: req.user.username, updated_time: new Date().getTime() },
+        { uuid: oldDassLog.uuid }
+      );
+      req.finalJson = result;
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
   }
 
   /**

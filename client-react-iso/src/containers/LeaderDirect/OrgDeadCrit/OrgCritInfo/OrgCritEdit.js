@@ -3,7 +3,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { getFilterDirectCrit } from "@redux/directCrits/actions";
 
-import { Row, Col, Button, Input, DatePicker } from "antd";
+import { Row, Col, Button, Input, DatePicker, Popconfirm } from "antd";
 import { EditOutlined, CheckOutlined, DeleteOutlined, CloseOutlined } from "@ant-design/icons";
 import { TaskDescription } from "@containers/LeaderDirect/Meeting/Meeting.style";
 import { updateDirectCriteria } from "@apis/directs";
@@ -143,7 +143,15 @@ export default function OrgCritEdit({ currentDirect, criteria, criteriaArr, user
             ) : (
               <Button icon={<EditOutlined />} onClick={handleSwitchEditCrit}></Button>
             )}
-            <Button danger icon={<DeleteOutlined />} onClick={handleSubmitDelCrit}></Button>
+            <Popconfirm
+              placement="topRight"
+              title={"Bạn có chắc chắn muốn xóa đánh giá này"}
+              onConfirm={handleSubmitDelCrit}
+              okText="Chấp Nhận"
+              cancelText="Bỏ Qua"
+            >
+              <Button danger icon={<DeleteOutlined />}></Button>
+            </Popconfirm>
           </Col>
         ) : null}
       </Row>

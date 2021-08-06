@@ -13,3 +13,17 @@ Authorization: {{authToken}}
 }
 
 ###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/update-direct-assessment-logs
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "log_uuid": "dcecd58b-5c3b-4c97-830e-096de143f140",
+    "description": "asdfasd edit 1",
+    "direct_ass_uuid": "a049c6e0-4f24-4396-8a19-9c32ea6b6518",
+    "direct_exe_uuid": "09ba8442-b300-485e-a953-ecf9d49a9f80",
+    "direct_org_uuid": "c1d0dd21-7df5-436e-9413-4529b5604dbe",
+    "direct_uuid": "94676e20-15fe-489f-bb1a-53209c76eb32",
+    "organization_ass": 2,
+    "organization_exe": 3
+}
