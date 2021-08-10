@@ -125,6 +125,8 @@ const WDContactListWrapper = styled.div`
 `;
 
 const OrgDeadCritSingleItemWrapper = styled.div`
+  background-color: ${(props) => (props.selectedId === "active" ? "whitesmoke" : "none")};
+
   .isoSingleContact {
     width: 100%;
     margin: 0;
@@ -171,7 +173,19 @@ const OrgDeadCritSingleItemWrapper = styled.div`
 
     .isoContactName {
       h3 {
-        font-size: 15px;
+        font-size: 10px;
+      }
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @supports (-webkit-line-clamp: 2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: initial;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
 

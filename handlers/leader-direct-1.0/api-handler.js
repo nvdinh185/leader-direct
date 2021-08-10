@@ -1289,22 +1289,41 @@ class ApiHandler {
       directDueDate = req.json_data.assess_criteria[0].due_date;
       directDueDate = new Date(directDueDate).getTime();
     }
-    let newDirect = {
-      ...oldDirect,
-      due_date: directDueDate,
-      assess_criteria: JSON.stringify(req.json_data.assess_criteria),
-      status: 2,
-    };
-    leaderDirectModels.directs
-      .updateOneRecord(newDirect, { uuid: req.json_data.direct_uuid })
-      .then((data) => {
-        req.finalJson = data;
-        next();
-      })
-      .catch((err) => {
-        req.error = err;
-        next();
+    // Kiểm tra nếu trong assess_criteria có đủ assessors thì đổi status thành 2
+    try {
+      let dAssesorArr = JSON.parse(oldDirect.assessors);
+      let dAssCritArr = req.json_data.assess_criteria.map((crit) => crit.organization.id);
+      let isComplete = true;
+
+      dAssesorArr.forEach((assessor) => {
+        if (dAssCritArr.includes(assessor)) {
+          return;
+        }
+        isComplete = false;
       });
+
+      let newDirect = {
+        ...oldDirect,
+        updated_time: new Date().getTime(),
+        due_date: directDueDate,
+        assess_criteria: JSON.stringify(req.json_data.assess_criteria),
+        status: isComplete ? 2 : 1,
+      };
+      leaderDirectModels.directs
+        .updateOneRecord(newDirect, { uuid: req.json_data.direct_uuid })
+        .then((data) => {
+          req.finalJson = data;
+          next();
+        })
+        .catch((err) => {
+          req.error = err;
+          next();
+        });
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
   }
   /**
    * (138) POST /leader-direct/api/update-direct-assessment-logs

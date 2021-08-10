@@ -1,30 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+import { Button, Col, DatePicker, Row, Select, Tooltip } from "antd";
 import { InputSearch } from "@components/uielements/input";
 import { OrgDeadCritListWrapper, OrgDeadCritSingleItemWrapper } from "./OrgDeadCritList.style";
 import Scrollbar from "@components/utility/customScrollBar";
-import { Button, Col, DatePicker, Row } from "antd";
+
+const { Option } = Select;
 
 export default function OrgDeadCritList({ handleGetEditedCrit, ...props }) {
+  const directTypes = useSelector((state) => state.filterData.directTypes);
+
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [monthPicked, setMonthPicked] = useState(moment(new Date()));
-  const directTypes = useSelector((state) => state.filterData.directTypes);
+  const [selectStatus, setSelectStatus] = useState();
 
   // ---------------------------------------------------------------------------------
   function singleContact(direct, _directTypes) {
-    const { selectedId, changeDirectCrit } = props;
-    const activeClass = selectedId === direct.uuid ? "active" : "";
+    const { selectedDCrit, changeDirectCrit } = props;
+    const activeClass = selectedDCrit?.uuid === direct.uuid ? "active" : "";
     const onChange = () => changeDirectCrit(direct.uuid);
     const directCatInfo = _directTypes?.find((cat) => cat.id === direct.category);
 
     return (
-      <OrgDeadCritSingleItemWrapper key={direct.uuid} bgColor={directCatInfo?.bg_color}>
+      <OrgDeadCritSingleItemWrapper key={direct.uuid} bgColor={directCatInfo?.bg_color} selectedId={activeClass}>
         <div className={`${activeClass} isoSingleContact`} onClick={onChange}>
           <div className="isoAvatar">{directCatInfo?.code ? directCatInfo.code : null}</div>
           <div className="isoContactName">
-            <h3>{direct.description ? direct.description : "No Description"}</h3>
+            <Tooltip placement="topLeft" title={direct.description ? direct.description : "No Description"}>
+              <p>{direct.description ? direct.description : "No Description"}</p>
+            </Tooltip>
           </div>
           {/* TODO: Add more button here */}
         </div>
@@ -44,15 +50,22 @@ export default function OrgDeadCritList({ handleGetEditedCrit, ...props }) {
 
   const contacts = filterContacts(props.directs, search);
 
+  useEffect(() => {
+    if (monthPicked && selectStatus) {
+      handleGetEditedCrit(monthPicked, selectStatus);
+    }
+  }, [selectStatus, monthPicked]);
+
   // ---------------------------------------------------------------------------------
   return (
     <OrgDeadCritListWrapper className="isoContactListWrapper">
       <InputSearch placeholder={"Tìm Kiếm"} value={search} onChange={onChange} className="isoSearchBar" />
       <Row>
         <Col span={12}>
-          <Button block onClick={() => handleGetEditedCrit(monthPicked)}>
-            Lấy DS Đã Cập Nhập
-          </Button>
+          <Select defaultValue={1} style={{ width: "100%" }} onChange={(e) => setSelectStatus(e)}>
+            <Option value={1}>Chưa Cập Nhập</Option>
+            <Option value={2}>Đã Cập Nhập</Option>
+          </Select>
         </Col>
         <Col span={12}>
           <DatePicker
@@ -80,7 +93,7 @@ export default function OrgDeadCritList({ handleGetEditedCrit, ...props }) {
       {contacts && contacts.length > 0 ? (
         <div className="isoContactList">
           <Scrollbar className="contactListScrollbar" style={{ height: "calc(100vh - 200px)" }}>
-            {contacts.map((contact) => singleContact(contact, directTypes))}
+            {contacts.map((contact) => singleContact(contact, directTypes, props))}
           </Scrollbar>
         </div>
       ) : (
