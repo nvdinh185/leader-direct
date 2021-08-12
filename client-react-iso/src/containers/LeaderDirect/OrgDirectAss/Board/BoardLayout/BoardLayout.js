@@ -28,6 +28,7 @@ const { Content } = Layout;
 
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openModal }) => {
   const token = useSelector((state) => state.Auth.idToken);
+  const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
@@ -51,29 +52,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       return agg;
     }, []);
     return updateArr;
-  }
-
-  function handleUpdateDOStatus() {
-    let updateArr = returnChangedDOArr(directOrgs, boardDOs);
-    if (updateArr.length > 0) {
-      dispatch(
-        openModal({
-          modalType: COMMON.UPDATE_TASK_DESC_MODAL,
-          modalProps: {
-            width: size.width > 1200 ? size.width * 0.7 : size.width * 0.9,
-            title: "Cập Nhập Trạng Thái Chỉ Đạo",
-            updateArr: updateArr,
-            centered: true,
-            initialValues: {},
-            okText: "Cập Nhập",
-            cancelText: "Bỏ Qua",
-            destroyOnClose: true,
-          },
-        })
-      );
-      return;
-    }
-    warningAlert("Thông Báo", "Bạn không thực hiện thay đổi gì cả!");
   }
 
   const handleChangeFilter = (e, mode) => {
@@ -123,10 +101,14 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   useEffect(() => {
     const newMonth = moment(new Date());
     const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
-    if (token) {
-      dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to } }));
+    if (token && userInfo) {
+      if (userInfo.isAdmin) {
+        dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to } }));
+        return;
+      }
+      dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to }, organization_ass: userInfo.organization }));
     }
-  }, [token]);
+  }, [token, userInfo]);
 
   // Effect call khi có sự thay đổi directOrgs ở redux thì gọi API lấy lại direct exe
   useEffect(() => {

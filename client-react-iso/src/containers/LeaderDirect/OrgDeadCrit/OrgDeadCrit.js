@@ -57,6 +57,10 @@ export default function OrgDeadCrit() {
 
   const handleGetEditedCrit = (month, e) => {
     const newMonth = moment(month);
+    if (!newMonth) {
+      dispatch(getFilterDirectCrit(token, { status: e }));
+      return;
+    }
     const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
     dispatch(getFilterDirectCrit(token, { status: e, created_time: { from: from, to: to } }));
   };

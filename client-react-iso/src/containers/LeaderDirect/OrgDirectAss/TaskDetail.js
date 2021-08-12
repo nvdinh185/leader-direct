@@ -10,7 +10,7 @@ import TaskInfo from "./TaskDetail/TaskInfo";
 import TaskAttachs from "./TaskDetail/TaskAttachs";
 import OrgCritInfo from "../OrgDeadCrit/OrgCritInfo";
 import TaskAssessHistory from "./TaskDetail/TaskAssessHistory";
-import { getFilterDirectExe } from "@redux/directAsses/actions";
+import { getFilterDirectAssLogs, getFilterDirectExe } from "@redux/directAsses/actions";
 
 export default function TaskDetail(props) {
   const token = useSelector((state) => state.Auth.idToken);
@@ -19,7 +19,7 @@ export default function TaskDetail(props) {
   const exeTypes = useSelector((state) => state.filterData.exeTypes);
   const directTypes = useSelector((state) => state.filterData.directTypes);
   const exeHistories = useSelector((state) => state.directAsses.directExes);
-  const assHistories = useSelector((state) => state.directAsses.directAsses);
+  const assLogs = useSelector((state) => state.directAsses.directAssLogs);
   const dispatch = useDispatch();
 
   const [currentDirect, setCurrentDirect] = useState();
@@ -29,6 +29,14 @@ export default function TaskDetail(props) {
   useEffect(() => {
     if (props.task) {
       dispatch(getFilterDirectExe(token, { direct_uuid: props.task.direct_uuid, organization_id: props.task.organization_exe }));
+      dispatch(
+        getFilterDirectAssLogs(token, {
+          // direct_uuid: props.task.direct_uuid,
+          direct_ass_uuid: props.task.id,
+          organization_exe: props.task.organization_exe,
+          organization_ass: props.task.organization_id,
+        })
+      );
     }
   }, [props.task]);
 
@@ -69,8 +77,8 @@ export default function TaskDetail(props) {
         taskType={taskType}
         exeTypes={exeTypes}
         exeHistories={exeHistories}
-        assHistories={assHistories}
         organizations={organizations}
+        assLogs={assLogs}
       ></TaskAssessHistory>
     </LayoutWrapper>
   );

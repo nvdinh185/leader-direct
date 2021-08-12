@@ -8,7 +8,6 @@ import DescriptionIcon from "@assets/images/icon/06-icon.svg";
 import { returnHexColor } from "@lib/utils/string";
 
 export default function TaskInfo({ task, taskType, currentDirect, exeHistories }) {
-  console.log(taskType);
   return (
     <>
       <Row>

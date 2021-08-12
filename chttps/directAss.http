@@ -27,3 +27,17 @@ Authorization: {{authToken}}
     "organization_ass": 2,
     "organization_exe": 3
 }
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-filter-direct-ass-logs
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "direct_ass_uuid": "a049c6e0-4f24-4396-8a19-9c32ea6b6518",
+    "organization_exe": 3,
+    "organization_ass": 2
+}
+
+###
+

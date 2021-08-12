@@ -8,7 +8,6 @@ const formatTime = (milisecond, mode) => {
 };
 
 const filterCriteriaBuilder = (reqJsonData, ...fields) => {
-  console.log(fields);
   let jsonWhere = {};
   fields.forEach((field) => {
     if (field.includes("time") || field.includes("date")) {
@@ -22,7 +21,6 @@ const filterCriteriaBuilder = (reqJsonData, ...fields) => {
     jsonWhere[field] = fieldWhere;
     return;
   });
-  console.log("DEBUG JSON-WHERE ------------------------------------------------------------- \n", jsonWhere);
   return jsonWhere;
 };
 

@@ -1416,6 +1416,34 @@ class ApiHandler {
       next();
     }
   }
+  /**
+   * (136) POST /leader-direct/api/get-filter-direct-ass-logs
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "exec_status": [11,12],
+    "organization_id": [5],
+    "organization_role": [21,22]
+    }
+   * 
+   */
+  async getFilterDirectAssLogs(req, res, next) {
+    if (!req.json_data) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    try {
+      let directResult = await leaderDirectModels.direct_assess_logs.getAllData(jsonWhere);
+      req.finalJson = directResult;
+      next();
+    } catch (err) {
+      req.error = err;
+      next();
+    }
+  }
 }
 
 module.exports = new ApiHandler();

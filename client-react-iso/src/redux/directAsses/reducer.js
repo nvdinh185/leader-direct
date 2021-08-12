@@ -77,6 +77,31 @@ export default function directAssReducer(state = defaultDirectAss, action) {
         err: action.payload,
         loading: false,
       };
+    // ---------------------------------------------------------------------------------
+    // 2 - CALL API DIRECT EXE SECTION
+    case directAssTypes.GET_FILTER_DIRECT_ASS_LOGS_START:
+      return {
+        ...state,
+        loading: true,
+      };
+    case directAssTypes.GET_FILTER_DIRECT_ASS_LOGS_SUCCESS:
+      if (action.payload.length === 0) {
+        return { ...state, directAssLogs: [], loading: false, err: "" };
+      }
+      return {
+        ...state,
+        directAssLogs: action.payload.data,
+        formAssLogsFilter: action.payload.form,
+        loading: false,
+        err: "",
+      };
+
+    case directAssTypes.GET_FILTER_DIRECT_ASS_LOGS_FAIL:
+      return {
+        ...state,
+        err: action.payload,
+        loading: false,
+      };
 
     default:
       return state;

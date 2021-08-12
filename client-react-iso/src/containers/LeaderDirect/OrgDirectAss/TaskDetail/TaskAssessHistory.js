@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Tag, Space, Timeline, Divider, Button, Input } from "antd";
 import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import DescriptionIcon from "@assets/images/icon/09-icon.svg";
+import { updateDirectAssessLogs } from "@apis/directAss";
+import { errorAlert, successAlert } from "@components/AlertModal/ModalInfo";
+import { getFilterDirectAssLogs } from "@redux/directAsses/actions";
+import moment from "moment";
 
 /**
  * Load lịch sử xử lý kèm với nút đánh giá theo từng lịch sử, sau đó người dùng
@@ -10,12 +14,25 @@ import DescriptionIcon from "@assets/images/icon/09-icon.svg";
  * @param {*} param0
  * @returns
  */
-function TimeLineWithAssess({ exe, organizations, exeTypes, assHistories, task }) {
+function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs }) {
+  const token = useSelector((state) => state.Auth.idToken);
+  const dispatch = useDispatch();
+
   const [isEdit, setIsEdit] = useState(false);
   const [form, setForm] = useState();
+
   let foundExeOrg = organizations.find((org) => org.id === exe.organization_id);
   let foundExeType = exeTypes.find((cat) => cat.id === exe.category);
-  let foundAssHistories = assHistories.find((ah) => ah.direct_org_uuid === exe.uuid);
+  let filterAssLogs = assLogs?.filter((al) => al.direct_exe_uuid === exe.uuid);
+
+  let revAssLogs = filterAssLogs?.map((ass) => {
+    let foundAssOrg = organizations.find((org) => org.id === ass.organization_ass);
+    return {
+      ...ass,
+      organization_ass_detail: foundAssOrg,
+    };
+  });
+
   const handleSwitchEdit = () => {
     setIsEdit(!isEdit);
   };
@@ -31,7 +48,24 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, assHistories, task }
       direct_org_uuid: exe.direct_org_uuid,
     };
     // TODO: Dispatch action to insert or update data here
-    console.log(formToPost);
+    if (token) {
+      updateDirectAssessLogs(token, formToPost)
+        .then((res) => {
+          successAlert("Thành Công", "Bạn đã cập nhập đánh giá cho thực hiện chỉ đạo thành công");
+          dispatch(
+            getFilterDirectAssLogs(token, {
+              // direct_uuid: props.task.direct_uuid,
+              direct_ass_uuid: task.id,
+              organization_exe: task.organization_exe,
+              organization_ass: task.organization_id,
+            })
+          );
+          // Dispatch action để lấy lại ass logs ở đây
+        })
+        .catch((err) => {
+          errorAlert("Thất Bại", `Có lỗi khi thực hiện đánh giá: ${err}`);
+        });
+    }
     setIsEdit(false);
   };
 
@@ -60,12 +94,13 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, assHistories, task }
               </Button>
             </>
           ) : null}
-          {foundAssHistories && foundAssHistories.length > 0
-            ? foundAssHistories.map((fh) => (
+          {revAssLogs
+            ? revAssLogs?.map((fal) => (
                 <>
                   <div style={{ paddingLeft: "10px", margin: "0 15px" }}>
                     <p style={{ borderRadius: "5px", backgroundColor: "#f2f2f2", color: "GrayText", padding: "5px" }}>
-                      {fh.description}
+                      <span style={{ color: "grey", fontWeight: "bold" }}>[{fal?.organization_ass_detail?.name}]</span> -{" "}
+                      <span style={{ color: "orange" }}>{moment(fal?.due_date).format("DD/MM/yyyy")}</span>: {fal.description}
                     </p>
                   </div>
                 </>
@@ -80,7 +115,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, assHistories, task }
   );
 }
 
-export default function TaskAssessHistory({ task, taskType, exeTypes, exeHistories, organizations, assHistories }) {
+export default function TaskAssessHistory({ task, exeTypes, exeHistories, organizations, assLogs }) {
   return (
     <div style={{ width: "100%" }}>
       <Row>
@@ -96,9 +131,9 @@ export default function TaskAssessHistory({ task, taskType, exeTypes, exeHistori
                         <TimeLineWithAssess
                           task={task}
                           exe={exe}
+                          assLogs={assLogs}
                           organizations={organizations}
                           exeTypes={exeTypes}
-                          assHistories={assHistories}
                         ></TimeLineWithAssess>
                       </Timeline.Item>
                     );

@@ -26,6 +26,8 @@ function Board({
 }) {
   const statuses = useSelector((state) => state.filterData.statuses);
   const directAsses = useSelector((state) => state.directAsses.directAssesFilter);
+  const directs = useSelector((state) => state.directAsses.directs);
+  const organizations = useSelector((state) => state.adminUser.organizations);
 
   // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
@@ -37,16 +39,28 @@ function Board({
         }
         return acc;
       }, []);
+      let displayDirectAsses = [];
+      if (directAsses?.[0] && directs?.[0] && organizations?.[0]) {
+        displayDirectAsses = directAsses.map((ass) => {
+          let foundDirect = directs.find((dir) => dir.uuid === ass.direct_uuid);
+          let foundExeOrg = organizations.find((org) => org.id === ass.organization_exe);
+          return {
+            ...ass,
+            description: foundDirect.description,
+            organization_exe_detail: foundExeOrg,
+          };
+        });
+      }
       if (boardRenderWatcher && directAsses?.[0]) {
-        boardRenderWatcher({ statuses: assStts, data: directAsses, field: "exec_status" });
+        boardRenderWatcher({ statuses: assStts, data: displayDirectAsses, field: "exec_status" });
         return;
       }
       if (directAsses && directAsses.length === 0) {
-        boardRenderWatcher({ statuses: assStts, data: directAsses, field: "exec_status" });
+        boardRenderWatcher({ statuses: assStts, data: displayDirectAsses, field: "exec_status" });
         return;
       }
     }
-  }, [boardRenderWatcher, statuses, directAsses]);
+  }, [boardRenderWatcher, statuses, directAsses, organizations]);
 
   const onDragEnd = ({ source, destination, type, draggableId }) => {
     // source= {

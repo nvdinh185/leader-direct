@@ -12,8 +12,10 @@ import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 export default function ({ currentDirect }) {
   const categories = useSelector((state) => state.filterData.categories);
   const [categoryDisplay, setCatgoryDisplay] = useState();
+  const organizations = useSelector((state) => state.adminUser.organizations);
 
-  // Trường hợp refresh lại page thì chỉ có
+  const [displayAssOrgs, setDisplayAssOrgs] = useState();
+  const [displayExeOrgs, setDisplayExeOrgs] = useState();
 
   useEffect(() => {
     if (categories?.[0] && currentDirect) {
@@ -22,6 +24,21 @@ export default function ({ currentDirect }) {
       setCatgoryDisplay({ name: directCat.name, bgColor: bgColorCat });
     }
   }, [categories, currentDirect]);
+
+  useEffect(() => {
+    if (organizations?.[0] && currentDirect) {
+      let exeOrgIds = JSON.parse(currentDirect.executors);
+      let exeOrgs = organizations.filter((org) => {
+        return exeOrgIds.includes(org.id);
+      });
+      let assOrgIds = JSON.parse(currentDirect.assessors);
+      let assOrgs = organizations.filter((org) => {
+        return assOrgIds.includes(org.id);
+      });
+      setDisplayExeOrgs(exeOrgs);
+      setDisplayAssOrgs(assOrgs);
+    }
+  }, [currentDirect, organizations]);
 
   return (
     <>
@@ -47,6 +64,22 @@ export default function ({ currentDirect }) {
       <div style={{ clear: "both", paddingTop: "10px" }}>
         <HeadingWithIcon heading="Mô Tả" iconSrc={DescriptionIcon} />
         <TaskDescription>{currentDirect?.description}</TaskDescription>
+      </div>
+      <div style={{ clear: "both", paddingTop: "10px" }}>
+        <HeadingWithIcon heading="Đơn Vị Đánh Giá" iconSrc={DescriptionIcon} />
+        {displayAssOrgs
+          ? displayAssOrgs.map((org) => {
+              return <Tag key={org.id}>{org.name}</Tag>;
+            })
+          : null}
+      </div>
+      <div style={{ clear: "both", paddingTop: "10px" }}>
+        <HeadingWithIcon heading="Đơn Vị Thực Hiện" iconSrc={DescriptionIcon} />
+        {displayExeOrgs
+          ? displayExeOrgs.map((org) => {
+              return <Tag key={org.id}>{org.name}</Tag>;
+            })
+          : null}
       </div>
     </>
   );

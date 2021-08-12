@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { Card, Badge, Popconfirm, Tooltip } from "antd";
+import { Card, Badge, Popconfirm, Tooltip, Avatar } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import ClockIcon from "@assets/images/icon/17.svg";
 import CommentsIcon from "@assets/images/icon/09-icon.svg";
@@ -25,7 +25,7 @@ const TaskCard = ({ task, showDrawer, isChanged }) => {
           width: "100%",
           borderRadius: "10px",
           backgroundColor: "#ffffff",
-          // boxShadow: "0 0 4px rgba(0,0,0,0.15)",
+          // boxShadow: "0 0 4px rgba(0,0,0,0.15)",s
         }}
         bodyStyle={{ padding: 0 }}
         headStyle={{ borderBottom: "none", fontSize: 13, color: "#788195", padding: "0 15px" }}
@@ -56,7 +56,14 @@ const TaskCard = ({ task, showDrawer, isChanged }) => {
             </CardComment>
           </FooterLeft>
           <span style={{ display: "flex" }}>
-            <SettingOutlined style={{ fontSize: "18px", color: "grey", opacity: "0.6" }}></SettingOutlined>
+            {/* <SettingOutlined style={{ fontSize: "18px", color: "grey", opacity: "0.6" }}></SettingOutlined> */}
+            <div>
+              <Tooltip key={task.id} title={task.organization_exe_detail?.name} placement="top">
+                <Avatar style={{ backgroundColor: task.organization_exe_detail?.bg_color }}>
+                  {task.organization_exe_detail?.code}
+                </Avatar>
+              </Tooltip>
+            </div>
           </span>
         </CardFooter>
       </Card>
