@@ -16,7 +16,7 @@ const { general, doHelper, daHelper, dxHelper, filterHelper } = require("./extds
 const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
 const mime = require("mime-types");
-const { DO_DX_STT_MAP, DO_DA_MAP, generateUUID } = require("./extds/createUpdate/GeneralHelper");
+const { DO_DX_STT_MAP, DO_STATUS, generateUUID } = require("./extds/createUpdate/GeneralHelper");
 class ApiHandler {
   constructor() {
     this.createDirect = this.createDirect.bind(this);
@@ -1363,7 +1363,12 @@ class ApiHandler {
         .then(async (data) => {
           let oldAss = await leaderDirectModels.direct_assessments.getFirstRecord({ uuid: req.json_data.direct_ass_uuid });
           result = await leaderDirectModels.direct_assessments.updateOneRecord(
-            { ...oldAss, updated_user: req.user.username, updated_time: new Date().getTime(), status: 2 },
+            {
+              ...oldAss,
+              updated_user: req.user.username,
+              updated_time: new Date().getTime(),
+              exec_status: DO_STATUS.ASS_COMPLETE,
+            },
             { uuid: oldAss.uuid }
           );
           req.finalJson = { directAssLog: data, directAss: result };

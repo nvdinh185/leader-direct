@@ -14,7 +14,7 @@ import moment from "moment";
  * @param {*} param0
  * @returns
  */
-function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs }) {
+function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs, userInfo }) {
   const token = useSelector((state) => state.Auth.idToken);
   const dispatch = useDispatch();
 
@@ -40,7 +40,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs }) {
   const handleSubmitAssess = () => {
     let formToPost = {
       ...form,
-      organization_ass: task.organization_id,
+      organization_ass: userInfo.organization,
       organization_exe: task.organization_exe,
       direct_uuid: task.direct_uuid,
       direct_ass_uuid: task.id,
@@ -95,15 +95,13 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs }) {
             </>
           ) : null}
           {revAssLogs
-            ? revAssLogs?.map((fal) => (
-                <>
-                  <div style={{ paddingLeft: "10px", margin: "0 15px" }}>
-                    <p style={{ borderRadius: "5px", backgroundColor: "#f2f2f2", color: "GrayText", padding: "5px" }}>
-                      <span style={{ color: "grey", fontWeight: "bold" }}>[{fal?.organization_ass_detail?.name}]</span> -{" "}
-                      <span style={{ color: "orange" }}>{moment(fal?.due_date).format("DD/MM/yyyy")}</span>: {fal.description}
-                    </p>
-                  </div>
-                </>
+            ? revAssLogs?.map((fal, idx) => (
+                <div key={idx} style={{ paddingLeft: "10px", margin: "0 15px" }}>
+                  <p style={{ borderRadius: "5px", backgroundColor: "#f2f2f2", color: "GrayText", padding: "5px" }}>
+                    <span style={{ color: "grey", fontWeight: "bold" }}>[{fal?.organization_ass_detail?.name}]</span> -{" "}
+                    <span style={{ color: "orange" }}>{moment(fal?.due_date).format("DD/MM/yyyy")}</span>: {fal.description}
+                  </p>
+                </div>
               ))
             : null}
         </Col>
@@ -115,7 +113,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs }) {
   );
 }
 
-export default function TaskAssessHistory({ task, exeTypes, exeHistories, organizations, assLogs }) {
+export default function TaskAssessHistory({ task, exeTypes, exeHistories, organizations, assLogs, userInfo }) {
   return (
     <div style={{ width: "100%" }}>
       <Row>
@@ -134,6 +132,7 @@ export default function TaskAssessHistory({ task, exeTypes, exeHistories, organi
                           assLogs={assLogs}
                           organizations={organizations}
                           exeTypes={exeTypes}
+                          userInfo={userInfo}
                         ></TimeLineWithAssess>
                       </Timeline.Item>
                     );

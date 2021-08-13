@@ -19,8 +19,18 @@ export default function directAssReducer(state = defaultDirectAss, action) {
       };
 
     case directAssTypes.FILTER_ORG_ARR_REDUX:
-      let orgArr = action.payload;
-      let newOrgArrData = state.directAsses?.filter((da) => orgArr.includes(da.organization_exe));
+      if (!action.payload) {
+        return {
+          ...state,
+        };
+      }
+      if (action.payload?.length === 0) {
+        return {
+          ...state,
+          directAssesFilter: state.directAsses,
+        };
+      }
+      let newOrgArrData = state.directAsses?.filter((da) => action.payload.includes(da.organization_exe));
       return {
         ...state,
         directAssesFilter: newOrgArrData,

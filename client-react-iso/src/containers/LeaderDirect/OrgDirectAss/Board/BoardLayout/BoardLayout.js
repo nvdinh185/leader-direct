@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
-import { getFilterDirectAss } from "@redux/directAsses/actions";
-import { getDirectExeByDOs, setBoardUpdateArr } from "@redux/directOrgs/actions";
+import { filterOrgRedux, getFilterDirectAss } from "@redux/directAsses/actions";
+import { getDirectExeByDOs } from "@redux/directOrgs/actions";
 
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
@@ -17,8 +17,6 @@ import { variables } from "@assets/styles/variables";
 import { Scrollbars } from "react-custom-scrollbars";
 import { DateRangepicker } from "@components/uielements/datePicker";
 import { Filters, HeaderSecondary } from "./BoardLayout.style";
-import { ButtonAdd } from "@components/Admin/ButtonAdd";
-import { warningAlert } from "@components/AlertModal/ModalInfo";
 import useWindowSize from "@lib/hooks/useWindowSize";
 
 import "@assets/styles/containers/BoardLayout.css";
@@ -29,10 +27,10 @@ const { Content } = Layout;
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openModal }) => {
   const token = useSelector((state) => state.Auth.idToken);
   const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
+  const directAsses = useSelector((state) => state.directAsses.directAssesFilter);
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
-  const boardDOs = useSelector((state) => state.scrumBoard.tasks);
   const loading = useSelector((state) => state.directAsses.loading);
   const dispatch = useDispatch();
 
@@ -42,17 +40,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   const [selectedOrg, setSelectedOrg] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const size = useWindowSize();
-
-  function returnChangedDOArr(_directOrgs, _boardDOs) {
-    let updateArr = _directOrgs.reduce((agg, directOrg) => {
-      let boardItemStt = parseInt(boardDOs[directOrg?.uuid]?.column_id.split("-")[1]);
-      if (boardItemStt !== directOrg.exec_status) {
-        return [...agg, { uuid: directOrg.uuid, exec_status: boardItemStt, description: directOrg.description }];
-      }
-      return agg;
-    }, []);
-    return updateArr;
-  }
 
   const handleChangeFilter = (e, mode) => {
     switch (mode) {
@@ -86,6 +73,16 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
     }
   };
 
+  // Effect theo dõi sự thay đổi của select org rồi dispatch action để thay đổi
+  useEffect(() => {
+    // Nếu có sự thay đổi của dữ liệu dass thì cũng dispatch cái để thay đổi select org này
+    if (directAsses?.[0]) {
+      dispatch(filterOrgRedux(selectedOrg));
+      return;
+    }
+    dispatch(filterOrgRedux(selectedOrg));
+  }, [selectedOrg, directAsses]);
+
   // Khi có backgrounds trong store thì set riêng giá trị background
   useEffect(() => {
     if (backgrounds && backgrounds?.[0] && !backgroundUrl) {
@@ -117,14 +114,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       dispatch(getDirectExeByDOs(token, { uuidArr }));
     }
   }, [directOrgs]);
-
-  // Khi giá trị task trong board thay chuyển từ cột này qua cột khác thì dispatch function để update arr thay đổi
-  useEffect(() => {
-    if (Object.keys(boardDOs).length > 0) {
-      let updateBoarArr = returnChangedDOArr(directOrgs, boardDOs);
-      dispatch(setBoardUpdateArr(updateBoarArr));
-    }
-  }, [boardDOs]);
 
   // Khi selectedorg thay đổi thì kéo theo sự thay đổi của dass filter luôn
 

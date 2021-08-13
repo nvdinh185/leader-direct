@@ -37,6 +37,7 @@ const DO_STATUS = {
   ASS_EXE: 112,
   ASS_EXE_CMPLT: 114,
   ASS_ACC_EX1: 115,
+  ASS_COMPLETE: 116,
 };
 
 const DO_DX_STT_MAP = {

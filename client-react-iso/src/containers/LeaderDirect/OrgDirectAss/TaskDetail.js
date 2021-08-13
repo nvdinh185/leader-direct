@@ -14,6 +14,7 @@ import { getFilterDirectAssLogs, getFilterDirectExe } from "@redux/directAsses/a
 
 export default function TaskDetail(props) {
   const token = useSelector((state) => state.Auth.idToken);
+  const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
   const directs = useSelector((state) => state.directAsses.directs);
   const organizations = useSelector((state) => state.adminUser.organizations);
   const exeTypes = useSelector((state) => state.filterData.exeTypes);
@@ -34,7 +35,7 @@ export default function TaskDetail(props) {
           // direct_uuid: props.task.direct_uuid,
           direct_ass_uuid: props.task.id,
           organization_exe: props.task.organization_exe,
-          organization_ass: props.task.organization_id,
+          // organization_ass: props.task.organization_id,
         })
       );
     }
@@ -79,6 +80,7 @@ export default function TaskDetail(props) {
         exeHistories={exeHistories}
         organizations={organizations}
         assLogs={assLogs}
+        userInfo={userInfo}
       ></TaskAssessHistory>
     </LayoutWrapper>
   );
