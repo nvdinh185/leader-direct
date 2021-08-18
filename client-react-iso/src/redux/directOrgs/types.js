@@ -2,6 +2,7 @@
 // I. NONE API TYPES SECTION
 // ------------------------------------------------------------------------------------------
 export const SET_BOARD_UPDATE_ARR = "SET_BOARD_UPDATE_ARR";
+export const FILTER_DIRECT_ORG_ARR_REDUX = "FILTER_DIRECT_ORG_ARR_REDUX";
 
 // ------------------------------------------------------------------------------------------
 // 0 - REDUX SAGA ACTIONS

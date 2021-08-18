@@ -26,18 +26,38 @@ function Board({
   boardRenderWatcher,
 }) {
   const statuses = useSelector((state) => state.filterData.statuses);
-  const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
+  const directOrgs = useSelector((state) => state.directOrgs.directOrgFilter);
+  const directs = useSelector((state) => state.directOrgs.directs);
+  const organizations = useSelector((state) => state.adminUser.organizations);
 
   // Dựng board có id là status dựa trên giá trị field exec_status của direct_orgs
   useEffect(() => {
-    if (boardRenderWatcher && statuses?.[0] && directOrgs?.[0]) {
+    if (statuses?.[0]) {
       let exeStts = statuses.reduce((acc, stt) => {
         if (stt.id < 111) {
           return [...acc, stt];
         }
         return acc;
       }, []);
-      boardRenderWatcher({ statuses: exeStts, data: directOrgs, field: "exec_status" });
+      let displayDirectOrgs = [];
+      if (directOrgs?.[0] && directs?.[0] && organizations?.[0]) {
+        displayDirectOrgs = directOrgs.map((dorg) => {
+          let foundDirect = directs.find((dir) => dir.uuid === dorg.direct_uuid);
+          let foundExeOrg = organizations.find((org) => org.id === dorg.organization_id);
+          return {
+            ...dorg,
+            description: foundDirect.description,
+            organization_exe_detail: foundExeOrg,
+          };
+        });
+      }
+      if (boardRenderWatcher && directOrgs?.[0]) {
+        boardRenderWatcher({ statuses: exeStts, data: displayDirectOrgs, field: "exec_status" });
+      }
+      if (boardRenderWatcher && directOrgs?.length === 0) {
+        boardRenderWatcher({ statuses: statuses, data: directOrgs, field: "exec_status" });
+        return;
+      }
     }
   }, [boardRenderWatcher, statuses, directOrgs]);
 

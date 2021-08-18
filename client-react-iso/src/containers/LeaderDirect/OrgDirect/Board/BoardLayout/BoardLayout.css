@@ -5,3 +5,7 @@
 .ant-picker-range-separator span {
   color: white;
 }
+
+.select-org-board {
+  min-width: 150px;
+}

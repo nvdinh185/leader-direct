@@ -18,6 +18,13 @@ export const setBoardUpdateArr = (updateArr) => {
     payload: updateArr,
   };
 };
+
+export const filterDirectOrgRedux = (orgArr) => {
+  return {
+    type: directOrgTypes.FILTER_DIRECT_ORG_ARR_REDUX,
+    payload: orgArr,
+  };
+};
 // ---------------------------------------------------------------------------------
 // II. API DISPATCH SECTION
 // ---------------------------------------------------------------------------------
@@ -188,6 +195,25 @@ export const updateDirectOrgExecStatusFail = (error) => {
 };
 
 // ------------------------------------------------------------------------------------------
+export const getFilterDirectOrg = (token, data) => {
+  console.log("DEBUG ---", token);
+
+  return (dispatch) => {
+    dispatch(getFilterDirectOrgStart());
+    directOrgApi
+      .getFilterDirectOrg(token, data)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch(getFilterDirectOrgSuccess(data.data));
+        } else {
+          dispatch(getFilterDirectOrgFail(data));
+        }
+      })
+      .catch((err) => {
+        dispatch(getFilterDirectOrgFail(err.reponse ? err.response.data : err));
+      });
+  };
+};
 export const getFilterDirectOrgStart = (token, data) => {
   return {
     type: directOrgTypes.GET_FILTER_DIRECT_ORG_START,

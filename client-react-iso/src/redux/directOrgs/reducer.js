@@ -17,6 +17,24 @@ export default function directReducer(state = defaultDirectOrgs, action) {
         ...state,
         boardUpdateArr: action.payload,
       };
+
+    case directOrgTypes.FILTER_DIRECT_ORG_ARR_REDUX:
+      if (!action.payload) {
+        return {
+          ...state,
+        };
+      }
+      if (action.payload?.length === 0) {
+        return {
+          ...state,
+          directOrgFilter: state.directOrgs,
+        };
+      }
+      let newOrgArrData = state.directOrgs?.filter((da) => action.payload.includes(da.organization_id));
+      return {
+        ...state,
+        directOrgFilter: newOrgArrData,
+      };
     // ---------------------------------------------------------------------------------
     // 1 - CALL API DIRECT ORGS SECTION
     // ---------------------------------------------------------------------------------
@@ -68,29 +86,6 @@ export default function directReducer(state = defaultDirectOrgs, action) {
       };
 
     // ---------------------------------------------------------------------------------
-    case directOrgTypes.GET_DIRECT_EXE_BY_DOS_START:
-      return {
-        ...state,
-        loading: true,
-      };
-    case directOrgTypes.GET_DIRECT_EXE_BY_DOS_SUCCESS:
-      if (action.payload.length === 0) {
-        return { ...state, loading: false };
-      }
-      return {
-        ...state,
-        err: "",
-        directExeDos: action.payload,
-        loading: false,
-      };
-
-    case directOrgTypes.GET_DIRECT_EXE_BY_DOS_FAIL:
-      return {
-        ...state,
-        err: action.payload,
-        loading: false,
-      };
-    // ---------------------------------------------------------------------------------
     case directOrgTypes.GET_FILTER_DIRECT_ORG_START:
       return {
         ...state,
@@ -98,13 +93,15 @@ export default function directReducer(state = defaultDirectOrgs, action) {
       };
     case directOrgTypes.GET_FILTER_DIRECT_ORG_SUCCESS:
       if (action.payload.length === 0) {
-        return { ...state, loading: false };
+        return { ...state, directOrgFilter: [], loading: false };
       }
       return {
         ...state,
         err: "",
         directs: action.payload.directs || [],
         directOrgs: action.payload.directOrgs,
+        directOrgFilter: action.payload.directOrgs,
+        formFilter: action.payload.form,
         loading: false,
       };
 

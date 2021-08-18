@@ -85,6 +85,7 @@ export const Filters = styled.div`
   font-weight: 500;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 
   @media only screen and (max-width: 767px) {
     flex-shrink: 0;

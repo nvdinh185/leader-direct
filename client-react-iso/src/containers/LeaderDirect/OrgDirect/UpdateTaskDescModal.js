@@ -50,9 +50,8 @@ export default function UpdateTaskDescModal(props) {
         {props.updateArr
           ? props.updateArr.map((updateObj, idx) => {
               return (
-                <>
+                <div key={idx}>
                   <Form.Item
-                    key={idx}
                     label={<BoardLabelWrapper>{updateObj.description}</BoardLabelWrapper>}
                     name={updateObj.uuid}
                     rules={[
@@ -65,7 +64,7 @@ export default function UpdateTaskDescModal(props) {
                     <Input.TextArea placeholder="Nhập Mô Tả" />
                   </Form.Item>
                   <br></br>
-                </>
+                </div>
               );
             })
           : null}

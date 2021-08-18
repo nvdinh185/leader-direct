@@ -13,6 +13,7 @@ export const getDirectExeByDOs = (token, data) => {
 };
 
 export const getFilterDirectOrg = (token, data) => {
+  console.log(token);
   return callAPI("post", baseURL + "/get-filter-direct-org", data, token);
 };
 

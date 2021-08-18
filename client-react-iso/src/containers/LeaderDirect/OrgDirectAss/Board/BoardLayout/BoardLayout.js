@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import modalActions from "@redux/modal/actions";
 import scrumBoardActions from "@redux/scrumBoard/actions";
 import { filterOrgRedux, getFilterDirectAss } from "@redux/directAsses/actions";
-import { getDirectExeByDOs } from "@redux/directOrgs/actions";
 
 import "moment/locale/vi";
 import locale from "antd/es/date-picker/locale/vi_VN";
@@ -27,17 +26,16 @@ const { Content } = Layout;
 const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openModal }) => {
   const token = useSelector((state) => state.Auth.idToken);
   const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
-  const directAsses = useSelector((state) => state.directAsses.directAssesFilter);
+  const directAsses = useSelector((state) => state.directAsses.directAsseses);
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const organizations = useSelector((state) => state.adminUser.organizations);
-  const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
   const loading = useSelector((state) => state.directAsses.loading);
   const dispatch = useDispatch();
 
   const [backgroundUrl, setBackgroundUrl] = useState();
   const [monthPicked, setMonthPicked] = useState(moment(new Date()));
   const [fromToPicked, setFromToPicked] = useState([]);
-  const [selectedOrg, setSelectedOrg] = useState();
+  const [selectedOrg, setSelectedOrg] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const size = useWindowSize();
 
@@ -76,11 +74,13 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // Effect theo dõi sự thay đổi của select org rồi dispatch action để thay đổi
   useEffect(() => {
     // Nếu có sự thay đổi của dữ liệu dass thì cũng dispatch cái để thay đổi select org này
-    if (directAsses?.[0]) {
+    if (directAsses?.[0] && selectedOrg.length > 0) {
       dispatch(filterOrgRedux(selectedOrg));
       return;
     }
-    dispatch(filterOrgRedux(selectedOrg));
+    if (selectedOrg.length === 0) {
+      dispatch(filterOrgRedux([]));
+    }
   }, [selectedOrg, directAsses]);
 
   // Khi có backgrounds trong store thì set riêng giá trị background
@@ -106,16 +106,6 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
       dispatch(getFilterDirectAss(token, { created_time: { from: from, to: to }, organization_ass: userInfo.organization }));
     }
   }, [token, userInfo]);
-
-  // Effect call khi có sự thay đổi directOrgs ở redux thì gọi API lấy lại direct exe
-  useEffect(() => {
-    if (directOrgs?.[0]) {
-      let uuidArr = directOrgs.map((dO) => dO.uuid);
-      dispatch(getDirectExeByDOs(token, { uuidArr }));
-    }
-  }, [directOrgs]);
-
-  // Khi selectedorg thay đổi thì kéo theo sự thay đổi của dass filter luôn
 
   return (
     <>

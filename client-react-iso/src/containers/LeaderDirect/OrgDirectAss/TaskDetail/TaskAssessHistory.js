@@ -57,7 +57,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs, userI
               // direct_uuid: props.task.direct_uuid,
               direct_ass_uuid: task.id,
               organization_exe: task.organization_exe,
-              organization_ass: task.organization_id,
+              // organization_ass: task.organization_id,
             })
           );
           // Dispatch action để lấy lại ass logs ở đây
