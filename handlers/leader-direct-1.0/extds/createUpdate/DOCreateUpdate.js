@@ -1,5 +1,6 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID, ORG_ROLE, DX_STATUS, ASS_TYPES, DO_STATUS } = require("./GeneralHelper");
+const { generateUUID } = require("./GeneralHelper");
+const { ORG_ROLE, DX_STATUS, ASS_TYPES, DO_STATUS } = require("../constants/index");
 const { createInitDirectExeHelper } = require("./DXCreateUpdate");
 const { createInitDirectAssHelper, createDirectAssHelper } = require("./DACreateUpate");
 

@@ -58,6 +58,10 @@ const routes = [
     path: "blank-page",
     component: lazy(() => import("@containers/BlankPage")),
   },
+  {
+    path: "rp-direct",
+    component: lazy(() => import("@containers/Report/DirectReport")),
+  },
 ];
 
 export default function AppRouter(props) {

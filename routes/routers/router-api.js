@@ -593,6 +593,30 @@ const funcPaths = {
       postHandler.jsonProcess,
       apiHandler.getFilterDirectAssLogs,
     ],
+    /**
+     * (139) POST /leader-direct/api/get-repor-direct-agg-excel
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-report-direct-agg-excel": [
+      expHandlers.setRequestParameter("/get-report-direct-agg-excel", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getReportDirectAggExcel,
+    ],
+    /**
+     * (139) POST /leader-direct/api/get-report-direct-detail-excel
+     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+     *
+     * SAMPLE INPUTS:
+     */
+    "/get-report-direct-detail-excel": [
+      expHandlers.setRequestParameter("/get-report-direct-detail-excel", "functionCode"),
+      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      postHandler.jsonProcess,
+      apiHandler.getReportDirectDetailExcel,
+    ],
   },
 };
 module.exports = new Router(funcPaths, API).getExpressRouter();

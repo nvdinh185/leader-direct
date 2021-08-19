@@ -16,6 +16,6 @@ export const formatTime = (milisecond, mode) => {
  */
 export const returnFromToUnixFromMomentMonth = (momentMonth) => {
   let month = momentMonth?.valueOf();
-  let monthAdd = moment(momentMonth?.add(1, "M"))?.valueOf();
+  let monthAdd = moment(moment(momentMonth?.add(1, "M")).subtract(1, "day")).valueOf();
   return { from: month, to: monthAdd };
 };

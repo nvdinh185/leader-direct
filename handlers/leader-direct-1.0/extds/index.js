@@ -3,6 +3,7 @@ const daHelper = require("./createUpdate/DACreateUpate");
 const dxHelper = require("./createUpdate/DXCreateUpdate");
 const general = require("./createUpdate/GeneralHelper");
 const filterHelper = require("./filterData/filterHelper");
+const reportHelper = require("./processData/reportHelper");
 
 module.exports = {
   general,
@@ -10,4 +11,5 @@ module.exports = {
   doHelper,
   dxHelper,
   filterHelper,
+  reportHelper,
 };

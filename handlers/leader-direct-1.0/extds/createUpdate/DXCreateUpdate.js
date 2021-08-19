@@ -1,5 +1,6 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID, DO_DX_STT_MAP, DO_STATUS } = require("./GeneralHelper");
+const { generateUUID } = require("./GeneralHelper");
+const { DO_DX_STT_MAP, DO_STATUS } = require("../constants/index");
 
 // ---------------------------------------------------------------------------------
 // 0 - CREATE AND UPDATE DIRECT ORG WITH UUID

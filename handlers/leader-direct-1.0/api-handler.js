@@ -11,12 +11,19 @@
 
 // hoặc sử dụng trực tiếp mô hình để giao tiếp csdl
 // (nó hỗ trợ tự ràng buộc kiểu dữ liệu trước khi insert, update)
-const leaderDirectModels = require("../../midlewares/leader-direct/models");
-const { general, doHelper, daHelper, dxHelper, filterHelper } = require("./extds/index");
-const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
 const fs = require("fs");
+const path = require("path");
 const mime = require("mime-types");
-const { DO_DX_STT_MAP, DO_STATUS, generateUUID } = require("./extds/createUpdate/GeneralHelper");
+const XlsxTemplate = require("xlsx-template");
+
+const leaderDirectModels = require("../../midlewares/leader-direct/models");
+const userightModels = require("../../midlewares/granted-users/models");
+const dbOrigin = leaderDirectModels.meetings.getDb().getDbInstance().client.db("leader-direct-2021");
+
+const { general, doHelper, daHelper, dxHelper, filterHelper, reportHelper } = require("./extds/index");
+const { generateUUID } = require("./extds/createUpdate/GeneralHelper");
+const { DO_DX_STT_MAP, DO_STATUS } = require("./extds/constants/index");
+
 class ApiHandler {
   constructor() {
     this.createDirect = this.createDirect.bind(this);
@@ -1447,6 +1454,138 @@ class ApiHandler {
     } catch (err) {
       req.error = err;
       next();
+    }
+  }
+  /**
+   * (136) POST /leader-direct/api/get-report-direct-agg-excel
+   *   * - Yêu cầu ĐƯỢC PHÂN QUYỀN
+   * 
+   * SAMPLE INPUTS: {
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    }
+   * 
+   */
+  async getReportDirectAggExcel(req, res, next) {
+    if (!req.json_data && !req.json_data.organizations) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let { from, to } = req.json_data.created_time;
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    try {
+      // TODO: (1) Lấy tất cả dữ liệu directs và direct exe
+      let organizationArr = await userightModels.organizations.getAllData({});
+      let directOrgArr = await leaderDirectModels.direct_orgs.getAllData({ created_time: jsonWhere.created_time });
+
+      // TODO: (2) Filter lại dữ liệu theo org truyền lên (khác -1 tức là lọc theo đơn vị)
+      if (!req.json_data.organizations.includes(-1)) {
+        organizationArr = organizationArr.filter((org) => req.json_data.organizations.includes(org.id));
+      }
+      let rpResult = reportHelper.filterDataForReportAgg(organizationArr, directOrgArr, req.json_data);
+
+      let values = {
+        reportDate: new Date(),
+        from: general.convertDateToDDMMYYY(new Date(from)),
+        to: general.convertDateToDDMMYYY(new Date(to)),
+        aggReports: rpResult,
+      };
+      // TODO: (2) Trường hợp excel true thì xuất excel (ngược lại thì trả về dữ liệu rpResult)
+      if (req.json_data.isExcelExport === true) {
+        fs.readFile(path.join("excel-templates", "bao-cao-tong-hop.xlsx"), function (err, data) {
+          var template = new XlsxTemplate(data);
+          var sheetNumber = 1;
+          template.substitute(sheetNumber, values);
+          // Chuyển file binary sang dạng base64
+          var data = template.generate({ type: "base64" });
+          res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // mime type
+          res.setHeader("Content-Disposition", "attachment; filename=bao-cao-tong-hop.xlsx");
+          res.send(data);
+        });
+        return;
+      }
+      req.finalJson = rpResult;
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+    }
+  }
+
+  /**
+   *
+   */
+  async getReportDirectDetailExcel(req, res, next) {
+    if (!req.json_data && !req.json_data.organizations) {
+      req.error = "Dữ liệu post req.json_data không hợp lệ";
+      next();
+      return;
+    }
+    let { from, to } = req.json_data.created_time;
+    let jsonWhere = filterHelper.filterCriteriaBuilder(req.json_data, ...Object.keys(req.json_data));
+    try {
+      // TODO: Lấy các dữ liệu về meeting, directs, direct exe trong khoảng thời gian truyền lên
+      let categoryArr = await leaderDirectModels.categories.getAllData({});
+      let organizationArr = await userightModels.organizations.getAllData({});
+      let meetingRes = await leaderDirectModels.meetings.getAllData({ created_time: jsonWhere.created_time });
+      let directRes = await leaderDirectModels.directs.getAllData({ created_time: jsonWhere.created_time });
+      let directOrgRes = await leaderDirectModels.direct_orgs.getAllData({ created_time: jsonWhere.created_time });
+      let directExeRes = await leaderDirectModels.direct_executes.getAllData({ created_time: jsonWhere.created_time });
+
+      let rpDetailRes = reportHelper.filterDataForReportDetail(
+        categoryArr,
+        organizationArr,
+        meetingRes,
+        directRes,
+        directOrgRes,
+        directExeRes,
+        req.json_data
+      );
+
+      // TODO: Tạo display cho 2 trường filter theo lãnh đạo và tiến độ
+      let displayLeaderFilterStr = "";
+      let displayExeStatusFilterStr = "";
+      if (!req.json_data.leaders.includes(-1)) {
+        let displayLeaderFilter = categoryArr.filter((cat) => req.json_data.leaders.includes(cat.id));
+        displayLeaderFilter = displayLeaderFilter.map((dLead) => dLead.name);
+        displayLeaderFilterStr = displayLeaderFilter.concat(", ");
+      }
+      if (!req.json_data.statuses.includes(-1)) {
+        let displayExeStatusFilter = categoryArr.filter((cat) => req.json_data.statuses.includes(cat.id));
+        displayExeStatusFilter = displayExeStatusFilter.map((dStt) => dStt.name);
+        displayExeStatusFilterStr = displayExeStatusFilter.concat(", ");
+      }
+      console.log(displayLeaderFilterStr);
+      let values = {
+        reportDate: new Date(),
+        from: general.convertDateToDDMMYYY(new Date(from)),
+        to: general.convertDateToDDMMYYY(new Date(to)),
+        leaderFilter: displayLeaderFilterStr,
+        execStatusFilter: displayExeStatusFilterStr,
+        detailReports: rpDetailRes,
+      };
+
+      if (req.json_data.isExcelExport === true) {
+        fs.readFile(path.join("excel-templates", "bao-cao-chi-tiet.xlsx"), function (err, data) {
+          var template = new XlsxTemplate(data);
+          var sheetNumber = 1;
+          template.substitute(sheetNumber, values);
+          // Chuyển file binary sang dạng base64
+          var data = template.generate({ type: "base64" });
+          res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // mime type
+          res.setHeader("Content-Disposition", "attachment; filename=bao-cao-chi-tiet.xlsx");
+          res.send(data);
+        });
+        return;
+      }
+      req.finalJson = rpDetailRes;
+      next();
+    } catch (err) {
+      console.log(err);
+      req.error = err;
+      next();
+      return;
     }
   }
 }

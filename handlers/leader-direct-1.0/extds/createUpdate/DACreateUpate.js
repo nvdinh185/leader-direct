@@ -1,5 +1,6 @@
 const leaderDirectModels = require("../../../../midlewares/leader-direct/models");
-const { generateUUID, DO_STATUS, ORG_ROLE } = require("./GeneralHelper");
+const { generateUUID } = require("./GeneralHelper");
+const { DO_STATUS, ORG_ROLE } = require("../constants/index");
 
 // ---------------------------------------------------------------------------------
 // 0 - CREATE UPDATE DIRECT ASSESSMENTS

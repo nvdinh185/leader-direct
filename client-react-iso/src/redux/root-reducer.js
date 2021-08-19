@@ -13,6 +13,7 @@ import directCritReducer from "@redux/directCrits/reducer";
 import directOrgReducer from "@redux/directOrgs/reducer";
 import directAssReducer from "@redux/directAsses/reducer";
 import filterDataReducer from "@redux/filterData/reducer";
+import reportReducer from "@redux/reports/reducer";
 import Contacts from "@redux/contacts/reducer";
 
 export default combineReducers({
@@ -26,6 +27,7 @@ export default combineReducers({
   directOrgs: directOrgReducer,
   directAsses: directAssReducer,
   filterData: filterDataReducer,
+  reports: reportReducer,
   ThemeSwitcher,
   LanguageSwitcher,
   scrumBoard,
