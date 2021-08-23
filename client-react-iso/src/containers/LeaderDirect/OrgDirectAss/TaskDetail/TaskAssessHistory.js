@@ -5,7 +5,7 @@ import HeadingWithIcon from "@components/ScrumBoard/HeadingWithIcon";
 import DescriptionIcon from "@assets/images/icon/09-icon.svg";
 import { updateDirectAssessLogs } from "@apis/directAss";
 import { errorAlert, successAlert } from "@components/AlertModal/ModalInfo";
-import { getFilterDirectAssLogs } from "@redux/directAsses/actions";
+import { getFilterDirectAss, getFilterDirectAssLogs } from "@redux/directAsses/actions";
 import moment from "moment";
 
 /**
@@ -16,6 +16,7 @@ import moment from "moment";
  */
 function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs, userInfo }) {
   const token = useSelector((state) => state.Auth.idToken);
+  const formFilter = useSelector((state) => state.directAsses.formFilter);
   const dispatch = useDispatch();
 
   const [isEdit, setIsEdit] = useState(false);
@@ -60,6 +61,7 @@ function TimeLineWithAssess({ exe, organizations, exeTypes, task, assLogs, userI
               // organization_ass: task.organization_id,
             })
           );
+          dispatch(getFilterDirectAss(token, formFilter));
           // Dispatch action để lấy lại ass logs ở đây
         })
         .catch((err) => {

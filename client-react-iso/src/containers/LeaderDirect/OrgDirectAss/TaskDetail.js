@@ -41,13 +41,6 @@ export default function TaskDetail(props) {
     }
   }, [props.task]);
 
-  // Sau khi có lịch sử xử lý thì lấy các ass_logs theo các dx
-  useEffect(() => {
-    if (exeHistories && exeHistories.length > 0) {
-      // dispatch(getFilterDirectExe(token, { direct_uuid: props.task.direct_uuid, organization_id: props.task.organization_exe }));
-    }
-  }, [exeHistories]);
-
   // Props để set direct hiện tại được sử dụng
   useEffect(() => {
     if (props.task && directs?.[0] && directTypes?.[0]) {
@@ -78,8 +71,8 @@ export default function TaskDetail(props) {
         taskType={taskType}
         exeTypes={exeTypes}
         exeHistories={exeHistories}
-        organizations={organizations}
         assLogs={assLogs}
+        organizations={organizations}
         userInfo={userInfo}
       ></TaskAssessHistory>
     </LayoutWrapper>

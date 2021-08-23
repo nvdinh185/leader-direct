@@ -31,6 +31,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   const backgrounds = useSelector((state) => state.filterData.backgrounds);
   const token = useSelector((state) => state.Auth.idToken);
   const userInfo = useSelector((state) => state.Auth.grantedUserInfo);
+  const directs = useSelector((state) => state.directOrgs.directs);
   const directOrgs = useSelector((state) => state.directOrgs.directOrgs);
   const directOrgFilter = useSelector((state) => state.directOrgs.directOrgFilter);
   const organizations = useSelector((state) => state.adminUser.organizations);
@@ -46,10 +47,11 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
 
   const size = useWindowSize();
 
-  function returnChangedDOArr(_directOrgs, _boardDOs) {
+  function returnChangedDOArr(_directOrgs, _boardDOs, _directs) {
     if (_directOrgs && _directOrgs.length > 0) {
       let updateArr = _directOrgs.reduce((agg, directOrg) => {
         let boardItemStt = parseInt(boardDOs[directOrg.uuid]?.column_id.split("-")[1]);
+        let foundDirect = _directs?.find((direct) => direct.uuid === directOrg.direct_uuid);
         if (boardItemStt !== directOrg.exec_status) {
           return [
             ...agg,
@@ -58,7 +60,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
               organization_id: directOrg.organization_id,
               direct_uuid: directOrg.direct_uuid,
               exec_status: boardItemStt,
-              description: directOrg.description,
+              description: foundDirect?.description,
             },
           ];
         }
@@ -69,7 +71,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   }
 
   function handleUpdateDOStatus() {
-    let updateArr = returnChangedDOArr(directOrgFilter, boardDOs);
+    let updateArr = returnChangedDOArr(directOrgFilter, boardDOs, directs);
     if (updateArr.length > 0) {
       dispatch(
         openModal({
@@ -126,7 +128,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
   // ------------------------------------------------------------------------------------------
   // Mới vào chương trình thì chạy cái này để lấy chỉ đạo theo đơn vị của mình
   useEffect(() => {
-    // Nếu có token và userInfo thì mới gọi hàm dispatch lấy dữ liệu
+    // Nếu có token và userInfo thì mới gọi hàm dispatch lấy dữ liệu (và set selectedOrg là organization của user luôn)
     if (token && userInfo) {
       const newMonth = moment(new Date());
       const { from, to } = returnFromToUnixFromMomentMonth(newMonth.startOf("month"));
@@ -135,6 +137,7 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
         return;
       }
       dispatch(getFilterDirectOrg(token, { created_time: { from: from, to: to }, organization_id: userInfo.organization }));
+      setSelectedOrg([userInfo.organization]);
     }
   }, [token, userInfo]);
 
@@ -234,25 +237,29 @@ const BoardLayout = ({ children, setSearchText, boards, currentBoard = "", openM
                 disabledDate={(date) => date > new Date()}
                 name="date"
               ></DatePicker>
-              <Select
-                className="select-org-board"
-                placeholder="Chọn Đơn Vị"
-                maxTagTextLength={10}
-                maxTagCount={4}
-                value={selectedOrg}
-                onChange={(v) => handleChangeFilter(v, "SELECT")}
-                mode="multiple"
-                allowClear
-                style={{ minWidth: "200px", maxWidth: "60%", minHeight: "35px" }}
-              >
-                {organizations
-                  ? organizations.map((org, idx) => (
-                      <Option key={idx} value={org.id}>
-                        {org.name}
-                      </Option>
-                    ))
-                  : null}
-              </Select>
+              {/* Nếu là admin thì dựng cái select theo organization lên (ko thì bỏ qua) */}
+              {userInfo?.isAdmin ? (
+                <Select
+                  className="select-org-board"
+                  placeholder="Chọn Đơn Vị"
+                  maxTagTextLength={10}
+                  maxTagCount={4}
+                  value={selectedOrg}
+                  onChange={(v) => handleChangeFilter(v, "SELECT")}
+                  mode="multiple"
+                  allowClear
+                  style={{ minWidth: "200px", maxWidth: "60%", minHeight: "35px" }}
+                >
+                  {organizations
+                    ? organizations.map((org, idx) => (
+                        <Option key={idx} value={org.id}>
+                          {org.name}
+                        </Option>
+                      ))
+                    : null}
+                </Select>
+              ) : null}
+
               <ButtonAdd style={{ fontWeight: "bold" }} className="btnUpdateDOStatus" size="large" onClick={handleUpdateDOStatus}>
                 Cập Nhập Dữ Liệu
               </ButtonAdd>
