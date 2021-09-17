@@ -810,7 +810,7 @@ class ApiHandler {
     }
 
     let jsonData = req.paramS;
-    // console.log(jsonData.id);
+    console.log(jsonData.uuid);
 
     leaderDirectModels.attachments
       .getFirstRecord({ uuid: jsonData.uuid })

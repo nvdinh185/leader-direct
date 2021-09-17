@@ -1,2 +1,93 @@
-POST http://10.16.150.69:9232/leader-direct/api/get-meeting
-Authorization: eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+@baseHost = localhost
+@basePort = 9232
+# @baseHost = 10.16.150.69
+@authToken = eyJ1c2VybmFtZSI6ImhpZXUucXVhbmciLCJkZXZpY2VfaWQiOm51bGwsImlhdCI6MTYyNTM5OTM1NDg2OCwiZXhwIjoxNjU2OTM1MzU0ODY4fQ==.WXl0QU5DUmZNNTFHeVA3R3dzYklRcUdjOXVEclpLbGJsQ1pGRGxmd3dlNnZkd1dBZHNqVkcxY2VsOTI0bkhhcWUzNmprcHFLa2M3KzZlaFV3TFF5UHc9PQ==
+
+
+GET http://{{baseHost}}:{{basePort}}/leader-direct/api/get-attachment-by-id
+Authorization: {{authToken}}
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-meeting
+Authorization: {{authToken}}
+
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/get-filter-meeting
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "created_time": {"from": 1626189072000, "to": 1626354152767},
+    "category": [42]
+}
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/create-meeting
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: {{authToken}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Giao Ban Tháng 7
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+43
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Mô Tả Giao Ban Tháng 7
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="icon.jpg"
+# Content-Type: image/png
+
+< ./1.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/create-meeting
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: {{authToken}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Giao Ban Tháng 7 lần 2
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+43
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Mô Tả Giao Ban Tháng 7 lần 2
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+
+###
+POST http://{{baseHost}}:{{basePort}}/leader-direct/api/update-meeting
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: {{authToken}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Giao Ban Tháng 7 sửa
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+43
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="status"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="id"
+
+3
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="icon.jpg"
+
+< ./1.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
