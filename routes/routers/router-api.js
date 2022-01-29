@@ -60,12 +60,12 @@ const funcPaths = {
      *
      * SAMPLE INPUTS:
      */
-    "/get-attachment-by-id": [
-      expHandlers.setRequestParameter("/get-attachment-by-id", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getAttachmentById,
-    ],
+    // "/get-attachment-by-id": [
+    //   expHandlers.setRequestParameter("/get-attachment-by-id", "functionCode"),
+    //   ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+    //   postHandler.jsonProcess,
+    //   apiHandler.getAttachmentById,
+    // ],
   },
 
   // Các lệnh POST của /api này:
@@ -78,8 +78,8 @@ const funcPaths = {
      * SAMPLE INPUTS:
      */
     "/get-meeting": [
-      expHandlers.setRequestParameter("/get-meeting", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      // expHandlers.setRequestParameter("/get-meeting", "functionCode"),
+      // ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.getMeeting,
     ],
@@ -91,8 +91,8 @@ const funcPaths = {
      * SAMPLE INPUTS:
      */
     "/create-meeting": [
-      expHandlers.setRequestParameter("/create-meeting", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
+      // expHandlers.setRequestParameter("/create-meeting", "functionCode"),
+      // ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.formProcess,
       apiHandler.createAttachments,
       apiHandler.createMeeting,
@@ -206,304 +206,6 @@ const funcPaths = {
       ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
       postHandler.jsonProcess,
       apiHandler.updateDirect,
-    ],
-
-    /**
-     * (108) POST /leader-direct/api/get-direct-org
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-direct-exe-by-dos": [
-      expHandlers.setRequestParameter("/get-direct-exe-by-dos", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectExesByDOs,
-    ],
-
-    /**
-     * (109) POST /leader-direct/api/get-direct-by-org
-     *
-     * Lấy Chỉ Đạo Đơn Vị Theo Mã Đơn Vị (organization-id)
-     *
-     *
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-direct-by-org": [
-      expHandlers.setRequestParameter("/get-direct-by-org", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectByOrg,
-    ],
-
-    /**
-     * (110) POST /leader-direct/api/get-direct-org-all
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-direct-org-all": [
-      expHandlers.setRequestParameter("/get-direct-org-all", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectOrgAll,
-    ],
-
-    /**
-     * (111) POST /leader-direct/api/create-direct-org
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/create-direct-org": [
-      expHandlers.setRequestParameter("/create-direct-org", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.createDirectOrg,
-    ],
-
-    /**
-     * (112) POST /leader-direct/api/update-direct-org
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/update-direct-org": [
-      expHandlers.setRequestParameter("/update-direct-org", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateDirectOrg,
-    ],
-
-    /**
-     * (113) POST /leader-direct/api/get-direct-exe
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-direct-exe": [
-      expHandlers.setRequestParameter("/get-direct-exe", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectExe,
-    ],
-
-    /**
-     * (114) POST /leader-direct/api/create-direct-exe
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/create-direct-exe": [
-      expHandlers.setRequestParameter("/create-direct-exe", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.formProcess,
-      apiHandler.createAttachments,
-      apiHandler.createDirectExe,
-    ],
-
-    /**
-     * (115) POST /leader-direct/api/update-direct-exe
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/update-direct-exe": [
-      expHandlers.setRequestParameter("/update-direct-exe", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateDirectExe,
-    ],
-
-    /**
-     * (116) POST /leader-direct/api/get-category
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-category": [
-      expHandlers.setRequestParameter("/get-category", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getCategory,
-    ],
-
-    /**
-     * (117) POST /leader-direct/api/create-category
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/create-category": [
-      expHandlers.setRequestParameter("/create-category", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.createCategory,
-    ],
-
-    /**
-     * (118) POST /leader-direct/api/update-category
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/update-category": [
-      expHandlers.setRequestParameter("/update-category", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateCategory,
-    ],
-
-    /**
-     * (121) POST /leader-direct/api/get-attachment-by-ids
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-attachment-by-ids": [
-      expHandlers.setRequestParameter("/get-attachment-by-ids", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getAttachmentByIds,
-    ],
-
-    /**
-     * (122) POST /leader-direct/api/get-attachments
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-attachments": [
-      expHandlers.setRequestParameter("/get-attachments", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getAttachments,
-    ],
-
-    /**
-     * (123) POST /leader-direct/api/create-menu
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/create-menu": [
-      expHandlers.setRequestParameter("/create-menu", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.createMenu,
-    ],
-
-    /**
-     * (124) POST /leader-direct/api/update-attachment
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/update-menu": [
-      expHandlers.setRequestParameter("/update-menu", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateMenu,
-    ],
-
-    /**
-     * (125) POST /leader-direct/api/get-file
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-
-    "/get-file": [
-      expHandlers.setRequestParameter("/get-file", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getFile,
-    ],
-
-    /**
-     * (126) POST /leader-direct/api/get-direct-loops
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-
-    "/get-direct-loops": [
-      expHandlers.setRequestParameter("/get-direct-loops", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectLoops,
-    ],
-
-    /**
-     * (127) POST /leader-direct/api/update-direct-loop
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-
-    "/update-direct-loop": [
-      expHandlers.setRequestParameter("/update-direct-loop", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateDirectLoop,
-    ],
-
-    /**
-     * (128) POST /leader-direct/api/get-direct-by-ids
-     *
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-
-    "/get-direct-by-ids": [
-      expHandlers.setRequestParameter("/get-direct-by-ids", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getDirectByIds,
-    ],
-
-    /**
-     * (129) POST /leader-direct/api/get-filter-direct
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-    "/get-filter-direct": [
-      expHandlers.setRequestParameter("/get-filter-direct", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getFilterDirect,
-    ],
-
-    /**
-     * (130) POST /leader-direct/api/get-meeting-by-id
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS:
-     */
-
-    "/get-meeting-by-id": [
-      expHandlers.setRequestParameter("/get-meeting-by-id", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.getMeetingById,
-    ],
-
-    /**
-     * (131) POST /leader-direct/api/update-direct-org-exec-status
-     * - Yêu cầu ĐƯỢC PHÂN QUYỀN
-     *
-     * SAMPLE INPUTS: {execStatus: 52, status: 12}
-     */
-
-    "/update-direct-org-exec-status": [
-      expHandlers.setRequestParameter("/update-direct-org-exec-status", "functionCode"),
-      ...verifyGrantedChain, // Hàm xử lý POST json data trả về req.json_data
-      postHandler.jsonProcess,
-      apiHandler.updateDirectOrgExecStatus,
     ],
   },
 };
